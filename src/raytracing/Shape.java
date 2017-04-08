@@ -10,11 +10,19 @@ public abstract class Shape {
     protected Material material;
 
     /**
-     * Returns the point at which the shape is hit by the ray.
+     * Returns the point at which the shape is hit by the ray. If there is multiple points the
+     * one closest to the ray's origin is returned
      * @param ray The ray which to test against
-     * @return Point where shape is hit. Returns null if not hit.
+     * @return Closest intersection point in front of the ray. Null if none.
      */
     public abstract Vector3D intersect(Ray ray);
+
+    /**
+     * Returns the normal at the given point
+     * @param point the at where to calculate normal
+     * @return normal calculated from point
+     */
+    public abstract Vector3D getNormalAtPoint(Vector3D point);
 
     /**
      * Getter for shape's material

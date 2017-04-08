@@ -6,6 +6,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  * Abstract class for a shape
  */
 public abstract class Shape {
+    protected Vector3D position;
     protected Material material;
 
     /**

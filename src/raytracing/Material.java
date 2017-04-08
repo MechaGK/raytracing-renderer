@@ -10,4 +10,8 @@ public class Material {
      * Color of the material
      */
     public Color color;
+
+    public Material(Color color) {
+        this.color = color;
+    }
 }

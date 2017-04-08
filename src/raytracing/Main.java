@@ -9,15 +9,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Main {
     public static void main(String[] args) {
         // For testing purposes. Should probably be done by some classes
-        Vector2D viewportSize = new Vector2D(10, 10);
         Vector3D cameraOrigin = new Vector3D(0, 0, 0);
+        Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
-        int imageResolutionX = 500;
-        int imageResolutionY = 500;
+        int imageResolutionX = 100;
+        int imageResolutionY = 100;
 
         BufferedImage image = new BufferedImage(imageResolutionX, imageResolutionY,
                 BufferedImage.TYPE_INT_ARGB);
@@ -30,41 +31,39 @@ public class Main {
         shapes.add(sphere1);
         shapes.add(sphere2);
 
-        Vector3D raysDirection = new Vector3D(0, 0, 1);
-
         // Rendering scene to image with orthogonal "camera"
-        for (int y = 0; y < imageResolutionY; y++) {
-            for (int x = 0; x < imageResolutionX; x++) {
-                Vector3D rayOrigin = new Vector3D(
-                        -(viewportSize.getX() / 2) + ((viewportSize.getX() / imageResolutionX) * x),
-                        -(viewportSize.getY() / 2) + ((viewportSize.getY() / imageResolutionY) * y),
-                        0).add(cameraOrigin);
+        Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, 10, 10);
 
-                Ray ray = new Ray(rayOrigin, raysDirection);
+        Iterator<CameraRay> cameraRays = camera.rays(imageResolutionX, imageResolutionY);
+        CameraRay cameraRay;
+        Ray ray;
 
-                Vector3D closestHit = null;
-                Shape closestShape = null;
-                double closestHitDistance = Double.MAX_VALUE;
+        while(cameraRays.hasNext()) {
+             cameraRay = cameraRays.next();
+             ray = cameraRay.ray;
 
-                Vector3D hit;
-                double distance;
+            Vector3D closestHit = null;
+            Shape closestShape = null;
+            double closestHitDistance = Double.MAX_VALUE;
 
-                for (Shape shape : shapes) {
-                    hit = shape.intersect(ray);
+            Vector3D hit;
+            double distance;
 
-                    if (hit == null) continue;
+            for (Shape shape : shapes) {
+                hit = shape.intersect(ray);
 
-                    distance = hit.distance(cameraOrigin);
-                    if (distance < closestHitDistance) {
-                        closestHit = hit;
-                        closestShape = shape;
-                        closestHitDistance = distance;
-                    }
+                if (hit == null) continue;
+
+                distance = hit.distance(cameraOrigin);
+                if (distance < closestHitDistance) {
+                    closestHit = hit;
+                    closestShape = shape;
+                    closestHitDistance = distance;
                 }
+            }
 
-                if (closestHit != null) {
-                    image.setRGB(x, y, closestShape.colorAtPoint(closestHit).getRGB());
-                }
+            if (closestHit != null) {
+                image.setRGB(cameraRay.x, cameraRay.y, closestShape.colorAtPoint(closestHit).getRGB());
             }
         }
 

@@ -21,9 +21,9 @@ public class Sphere extends Shape {
     @Override
     public Vector3D intersect(Ray ray) {
         double b = 2 * ray.direction.dotProduct(ray.origin.subtract(position));
-        double c = Math.pow(ray.origin.subtract(position).getNorm1(), 2) - Math.pow(radius, 2);
+        double c = Math.pow(ray.origin.subtract(position).getNorm(), 2) - radius * radius;
 
-        double discriminant = Math.pow(b, 2) - 4 * c;
+        double discriminant = b * b - 4 * c;
 
         if (discriminant > 0) {
             double t0 = (-b + Math.sqrt(discriminant)) / 2;
@@ -31,17 +31,14 @@ public class Sphere extends Shape {
 
             if (t0 < 0) { // Point given by t0 is behind the ray
                 return ray.getPoint(t1);
-            }
-            else if (t1 < 0) { // Point given by t1 is behind the ray
+            } else if (t1 < 0) { // Point given by t1 is behind the ray
                 return ray.getPoint(t0);
-            }
-            else {
+            } else {
                 double t = Math.min(t0, t1);
                 return ray.getPoint(t);
             }
-        }
-        else if (discriminant == 0) {
-            double t = -(b/2);
+        } else if (discriminant == 0) {
+            double t = -(b / 2);
 
             return ray.getPoint(t);
         }

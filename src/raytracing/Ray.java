@@ -8,12 +8,22 @@ public class Ray {
 
     /**
      * Creates a ray from a given origin and direction.
-     * @param origin The origin of the ray.
+     *
+     * @param origin    The origin of the ray.
      * @param direction The direction of the ray. Is normalized internally.
      */
     public Ray(Vector3D origin, Vector3D direction) {
         this.origin = origin;
         this.direction = direction.normalize();
+    }
+
+    /**
+     * Returns a point on the ray given a constant
+     * @param t the constant
+     * @return point on the ray
+     */
+    public Vector3D getPoint(double t) {
+        return origin.add(direction.scalarMultiply(t));
     }
 
 }

@@ -36,16 +36,8 @@ public class Sphere extends Shape {
                 return ray.getPoint(t0);
             }
             else {
-                Vector3D p0 = ray.getPoint(t0);
-                Vector3D p1 = ray.getPoint(t1);
-
-                // Determining the closest point
-                if (ray.origin.distance(p0) > ray.origin.distance(p1)) {
-                    return p1;
-                }
-                else {
-                    return p0;
-                }
+                double t = Math.min(t0, t1);
+                return ray.getPoint(t);
             }
         }
         else if (discriminant == 0) {

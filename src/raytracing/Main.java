@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
+        // For testing purposes. Should probably be done by some classes
         Vector2D viewportSize = new Vector2D(10, 10);
 
         int imageResolutionX = 500;
@@ -23,6 +24,7 @@ public class Main {
 
         Vector3D raysDirection = new Vector3D(0, 0, 1);
 
+        // Rendering scene to image with orthogonal "camera"
         for (int y = 0; y < imageResolutionY; y++) {
             for (int x = 0; x < imageResolutionX; x++) {
                 Vector3D rayOrigin = new Vector3D(
@@ -30,9 +32,10 @@ public class Main {
                         -(viewportSize.getY() / 2) + ((viewportSize.getY() / imageResolutionY) * y), 0);
 
                 Ray ray = new Ray(rayOrigin, raysDirection);
+                Vector3D point = shape.intersect(ray);
 
-                if (shape.intersect(ray) != null) {
-                    image.setRGB(x, y, Color.red.getRGB());
+                if (point != null) {
+                    image.setRGB(x, y, shape.colorAtPoint(point).getRGB());
                 }
             }
         }

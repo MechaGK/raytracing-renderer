@@ -4,6 +4,8 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.math3.geometry.Vector;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import java.awt.*;
+
 /**
  * Class used to represent a sphere
  * Math is based the analytic solution shown at
@@ -49,5 +51,13 @@ public class Sphere extends Shape {
     @Override
     public Vector3D getNormalAtPoint(Vector3D point) {
         return point.subtract(position).normalize();
+    }
+
+    @Override
+    public Color colorAtPoint(Vector3D point) {
+        double sigma = Math.atan2(point.getZ(), point.getX());
+        double theta = Math.acos(position.getY() / radius);
+
+        return material.getColor(sigma, theta);
     }
 }

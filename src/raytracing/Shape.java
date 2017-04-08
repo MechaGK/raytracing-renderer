@@ -1,6 +1,9 @@
 package raytracing;
 
+import org.apache.commons.math3.geometry.Vector;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
+import java.awt.*;
 
 /**
  * Abstract class for a shape
@@ -23,6 +26,13 @@ public abstract class Shape {
      * @return normal calculated from point
      */
     public abstract Vector3D getNormalAtPoint(Vector3D point);
+
+    /**
+     * Returns the color at the point based on material only
+     * @param point The point to base the color on
+     * @return Color of the shape at the specified point
+     */
+    public abstract Color colorAtPoint(Vector3D point);
 
     /**
      * Getter for shape's material

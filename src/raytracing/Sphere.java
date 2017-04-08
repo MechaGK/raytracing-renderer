@@ -20,7 +20,7 @@ public class Sphere extends Shape {
 
     @Override
     public Vector3D intersect(Ray ray) {
-        double b = 2 * ray.direction.dotProduct(ray.origin.add(position));
+        double b = 2 * ray.direction.dotProduct(ray.origin.subtract(position));
         double c = Math.pow(ray.origin.subtract(position).getNorm1(), 2) - Math.pow(radius, 2);
 
         double discriminant = Math.pow(b, 2) - 4 * c;

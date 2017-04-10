@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 /**
  * For testing. Doesn't support directions other directions than (0, 0, 1).
- * Origin of rays are not rotated as they should
+ * Origin of raysIterator are not rotated as they should
  */
 public class OrthogonalCamera extends Camera {
     private int width;
@@ -65,7 +65,7 @@ public class OrthogonalCamera extends Camera {
     }
 
     @Override
-    public Iterator<CameraRay> rays(int resolutionX, int resolutionY) {
+    public Iterator<CameraRay> raysIterator(int resolutionX, int resolutionY) {
         return new RaysIterator(resolutionX, resolutionY);
     }
 }

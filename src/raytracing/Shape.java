@@ -25,14 +25,14 @@ public abstract class Shape {
      * @param point the at where to calculate normal
      * @return normal calculated from point
      */
-    public abstract Vector3D getNormalAtPoint(Vector3D point);
+    public abstract Vector3D getNormal(Vector3D point);
 
     /**
      * Returns the color at the point based on material only
      * @param point The point to base the color on
      * @return Color of the shape at the specified point
      */
-    public abstract Color colorAtPoint(Vector3D point);
+    public abstract Color getColor(Vector3D point);
 
     /**
      * Getter for shape's material

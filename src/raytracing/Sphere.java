@@ -49,12 +49,12 @@ public class Sphere extends Shape {
     }
 
     @Override
-    public Vector3D getNormalAtPoint(Vector3D point) {
+    public Vector3D getNormal(Vector3D point) {
         return point.subtract(position).normalize();
     }
 
     @Override
-    public Color colorAtPoint(Vector3D point) {
+    public Color getColor(Vector3D point) {
         double sigma = Math.atan2(point.getZ(), point.getX());
         double theta = Math.acos(position.getY() / radius);
 

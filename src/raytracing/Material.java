@@ -10,9 +10,11 @@ public class Material {
      * Color of the material
      */
     public Color color;
+    public float albedo = 0.18f;
 
-    public Material(Color color) {
+    public Material(Color color, float albedo) {
         this.color = color;
+        this.albedo = albedo;
     }
 
     /**

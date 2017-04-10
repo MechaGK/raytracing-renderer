@@ -14,8 +14,8 @@ public class Main {
         // Creating a scene
         Scene scene = new Scene();
 
-        Shape sphere1 = new Sphere(new Material(Color.red), new Vector3D(0, 0, 5), 4);
-        Shape sphere2 = new Sphere(new Material(Color.green), new Vector3D(3, 3, 10), 3);
+        Shape sphere1 = new Sphere(new Material(Color.red, 0.18f), new Vector3D(0, 0, 5), 4);
+        Shape sphere2 = new Sphere(new Material(Color.green, 0.18f), new Vector3D(3, 3, 10), 3);
 
         scene.add(sphere1);
         scene.add(sphere2);

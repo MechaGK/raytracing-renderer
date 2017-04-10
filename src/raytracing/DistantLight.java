@@ -10,8 +10,14 @@ import java.awt.*;
 public class DistantLight extends Light {
     private Vector3D direction;
 
+    /**
+     * Creates a new distant light
+     * @param direction The direction of the new point light. Is normalized internally.
+     * @param intensity Intensity of the new point light
+     * @param color Color of the new point light
+     */
     public DistantLight(Vector3D direction, float intensity, Color color) {
-        this.direction = direction;
+        this.direction = direction.normalize();
         this.intensity = intensity;
         this.color = color;
     }

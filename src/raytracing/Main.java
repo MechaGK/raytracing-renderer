@@ -66,7 +66,7 @@ public class Main {
             Vector3D hit;
             double distance;
 
-            for (Shape shape : scene) {
+            for (Shape shape : scene.getShapes()) {
                 hit = shape.intersect(ray);
 
                 if (hit == null) continue;

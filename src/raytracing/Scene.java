@@ -2,12 +2,15 @@ package raytracing;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
- * Class for holding shapes. Just a container for a ArrayList but it could grow smarter...
+ * Class for holding shapes and lights.
+ * Just a container for a ArrayLists but it could grow smarter...
  */
-public class Scene implements Iterable<Shape> {
+public class Scene {
     private ArrayList<Shape> shapes = new ArrayList<>();
+    private ArrayList<Light> lights = new ArrayList<>();
 
     public void add(Shape shape) {
         shapes.add(shape);
@@ -17,8 +20,19 @@ public class Scene implements Iterable<Shape> {
         shapes.remove(shape);
     }
 
-    @Override
-    public Iterator<Shape> iterator() {
-        return shapes.iterator();
+    public void add(Light light) {
+        lights.add(light);
+    }
+
+    public void remove(Light light) {
+        lights.remove(light);
+    }
+
+    public List<Shape> getShapes() {
+        return shapes;
+    }
+
+    public List<Light> getLights() {
+        return lights;
     }
 }

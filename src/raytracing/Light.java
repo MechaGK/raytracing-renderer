@@ -5,7 +5,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import java.awt.*;
 
 /**
- * Created by Mads Grau Kristensen <madsgrau@gmail.com> on 10/04/2017.
+ * A class for a spherical light.
  */
 public class Light {
     private Vector3D position;

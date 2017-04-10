@@ -10,6 +10,11 @@ public class Material {
      * Color of the material
      */
     public Color color;
+
+    /**
+     * Albedo is a measure for reflectance or optical brightness.
+     * src: https://en.wikipedia.org/wiki/Albedo
+     */
     public float albedo = 0.18f;
 
     public Material(Color color, float albedo) {

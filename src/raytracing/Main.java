@@ -14,21 +14,24 @@ public class Main {
         // Creating a scene
         Scene scene = new Scene();
 
-        Shape sphere1 = new Sphere(new Material(Color.red, 0.18f), new Vector3D(0, 0, 5), 4);
-        Shape sphere2 = new Sphere(new Material(Color.green, 0.18f), new Vector3D(3, 3, 10), 3);
+        Shape sphere1 = new Sphere(new Material(Color.white, 0.18f), new Vector3D(2, 1, 0), 2);
+        Shape sphere2 = new Sphere(new Material(Color.white, 0.18f), new Vector3D(-2, -1, 2), 1);
+
+        Light light = new DistantLight(new Vector3D(3, 2, 1), 10, Color.white);
 
         scene.add(sphere1);
         scene.add(sphere2);
+        scene.add(light);
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(0, 0, 0);
+        Vector3D cameraOrigin = new Vector3D(0, 0, -10);
         Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
         Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, 10, 10);
 
         // Rendering scene to image and saving to disk
-        int resolutionX = 100;
-        int resolutionY = 100;
+        int resolutionX = 500;
+        int resolutionY = 500;
 
         BufferedImage image = renderScene(scene, camera, resolutionX, resolutionY);
         saveImage(image, "test.png");
@@ -42,8 +45,11 @@ public class Main {
      * 2. Test if any shape is hit by the ray. If any of them is take the hit closest to the ray's origin
      * 3. If any shape was hit, color the pixel the color of the shape at the point
      * This is done for every ray from the camera. The number of rays are based on the image's resolution
-     * @param scene Scene containing the shapes to render
-     * @param camera Camera to render the scene from
+     * <p>
+     * Only distant lights are supported
+     *
+     * @param scene       Scene containing the shapes to render
+     * @param camera      Camera to render the scene from
      * @param resolutionX Horizontal resolution of the final image
      * @param resolutionY Vertical resolution of the final image
      * @return BufferedImage colored after scene contents
@@ -51,6 +57,15 @@ public class Main {
     public static BufferedImage renderScene(Scene scene, Camera camera, int resolutionX, int resolutionY) {
         BufferedImage image = new BufferedImage(resolutionX, resolutionY, BufferedImage.TYPE_INT_ARGB);
         Iterator<CameraRay> cameraRays = camera.raysIterator(resolutionX, resolutionY);
+
+        DistantLight theLight = null;
+
+        for (Light light : scene.getLights()) {
+            if (light instanceof DistantLight) {
+                theLight = (DistantLight) light;
+                break;
+            }
+        }
 
         CameraRay cameraRay;
         Ray ray;
@@ -81,11 +96,104 @@ public class Main {
 
             if (closestHit != null) {
                 Color shapeColor = closestShape.getColor(closestHit);
-                image.setRGB(cameraRay.x, cameraRay.y, shapeColor.getRGB());
+
+                Vector3D hitNormal = closestShape.getNormal(closestHit);
+
+                Color lightColor = getIllumination(scene, closestShape.material, closestHit, hitNormal);
+
+                Color finalColor = colorMultiply(shapeColor, lightColor);
+
+                image.setRGB(cameraRay.x, cameraRay.y, finalColor.getRGB());
             }
         }
 
         return image;
+    }
+
+    /**
+     * Finds the illumination at a specific point in the scene with a given normal.
+     * Only supports distant lights at the moment and no shadows.
+     * Calculations based on diffuse rendering from
+     * https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/diffuse-lambertian-shading
+     *
+     * @param scene    The scene
+     * @param material The material of the object which the point is on
+     * @param point    The point at which to find the illumination
+     * @param normal   The normal to base the illumination of
+     * @return The color of the total illumination
+     */
+    public static Color getIllumination(Scene scene, Material material, Vector3D point, Vector3D normal) {
+        normal = normal.normalize();
+
+        Color finalColor = new Color(0f, 0f, 0f);
+
+        DistantLight distantLight;
+        Color color;
+
+        for (Light light : scene.getLights()) {
+            if (light instanceof DistantLight) {
+                distantLight = (DistantLight) light;
+
+                Vector3D lightIncident = distantLight.direction.scalarMultiply(-1);
+
+                float number = (float) (material.albedo / Math.PI * light.intensity
+                        * Math.max(0f, normal.dotProduct(lightIncident)));
+
+                color = colorMultiply(light.color, number);
+                finalColor = colorAdd(color, finalColor);
+            }
+        }
+
+        return finalColor;
+    }
+
+    /**
+     * A method for adding two colors
+     *
+     * @param color1
+     * @param color2
+     * @return The addition of color1 and color2
+     */
+    private static Color colorAdd(Color color1, Color color2) {
+        return new Color(
+                color1.getRed() + color2.getRed(),
+                color1.getGreen() + color2.getGreen(),
+                color1.getBlue() + color2.getBlue());
+    }
+
+
+    /**
+     * A method to multiply a color with a float. Because Java doesn't support extension methods
+     *
+     * @param color A given color
+     * @param value A float
+     * @return A new color where every component is multiplied by f
+     */
+    public static Color colorMultiply(Color color, float value) {
+        float[] rgb = color.getRGBColorComponents(null);
+        float red = Math.min(rgb[0] * value, 1f);
+        float green = Math.min(rgb[1] * value, 1f);
+        float blue = Math.min(rgb[2] * value, 1f);
+
+        return new Color(red, green, blue);
+    }
+
+    /**
+     * A method to multiply a color with a float. Because Java doesn't support extension methods
+     *
+     * @param color1 A given color
+     * @param color2 A float
+     * @return A new color where every component is multiplied by f
+     */
+    public static Color colorMultiply(Color color1, Color color2) {
+        float[] rgb1 = color1.getRGBColorComponents(null);
+        float[] rgb2 = color2.getRGBColorComponents(null);
+
+        float red = Math.min(rgb1[0] * rgb2[0], 1f);
+        float green = Math.min(rgb1[1] * rgb2[1], 1f);
+        float blue = Math.min(rgb1[2] * rgb2[2], 1f);
+
+        return new Color(red, green, blue);
     }
 
     public static void saveImage(BufferedImage image, String fileName) {

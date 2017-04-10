@@ -8,7 +8,7 @@ import java.awt.*;
  * Light which lights the whole scene evenly from a specific direction
  */
 public class DistantLight extends Light {
-    private Vector3D direction;
+    public Vector3D direction;
 
     /**
      * Creates a new distant light

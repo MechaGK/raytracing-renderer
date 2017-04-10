@@ -7,14 +7,7 @@ import java.awt.*;
 /**
  * A class for a spherical light.
  */
-public class Light {
-    private Vector3D position;
-    private float intensity;
-    private Color color;
-
-    public Light(Vector3D position, float intensity, Color color) {
-        this.position = position;
-        this.intensity = intensity;
-        this.color = color;
-    }
+public abstract class Light {
+    protected Color color;
+    protected float intensity;
 }

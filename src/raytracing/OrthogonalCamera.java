@@ -40,7 +40,7 @@ public class OrthogonalCamera extends Camera {
         public CameraRay next() {
             Vector3D rayOrigin = new Vector3D(
                     -(width / 2) + ((width / resWidth) * x),
-                    -(height / 2) + ((height / resHeight) * y),
+                    (height / 2) - ((height / resHeight) * y),
                     0).add(origin);
 
             Ray ray = new Ray(rayOrigin, direction);

@@ -82,15 +82,6 @@ public class Main {
         BufferedImage image = new BufferedImage(resolutionX, resolutionY, BufferedImage.TYPE_INT_ARGB);
         Iterator<CameraRay> cameraRays = camera.raysIterator(resolutionX, resolutionY);
 
-        DistantLight theLight = null;
-
-        for (Light light : scene.getLights()) {
-            if (light instanceof DistantLight) {
-                theLight = (DistantLight) light;
-                break;
-            }
-        }
-
         CameraRay cameraRay;
         Ray ray;
 

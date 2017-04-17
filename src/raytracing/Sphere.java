@@ -19,6 +19,8 @@ public class Sphere extends Shape {
 
     @Override
     public Vector3D intersect(Ray ray) {
+        Vector3D position = getPosition();
+
         double b = 2 * ray.direction.dotProduct(ray.origin.subtract(position));
         double c = Math.pow(ray.origin.subtract(position).getNorm(), 2) - radius * radius;
 
@@ -47,13 +49,13 @@ public class Sphere extends Shape {
 
     @Override
     public Vector3D getNormal(Vector3D point) {
-        return point.subtract(position).normalize();
+        return point.subtract(getPosition()).normalize();
     }
 
     @Override
     public Color getColor(Vector3D point) {
         double sigma = Math.atan2(point.getZ(), point.getX());
-        double theta = Math.acos(position.getY() / radius);
+        double theta = Math.acos(getPosition().getY() / radius);
 
         return material.getColor(sigma, theta);
     }

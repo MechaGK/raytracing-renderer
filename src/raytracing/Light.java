@@ -10,4 +10,9 @@ import java.awt.*;
 public abstract class Light {
     protected Color color;
     protected float intensity;
+
+    public Light(Color color, float intensity) {
+        this.color = color;
+        this.intensity = intensity;
+    }
 }

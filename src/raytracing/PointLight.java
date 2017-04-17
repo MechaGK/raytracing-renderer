@@ -17,8 +17,7 @@ public class PointLight extends Light {
      * @param color Color of the new point light
      */
     public PointLight(Vector3D position, float intensity, Color color) {
+        super(color, intensity);
         this.position = position;
-        this.intensity = intensity;
-        this.color = color;
     }
 }

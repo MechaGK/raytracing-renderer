@@ -17,8 +17,7 @@ public class DistantLight extends Light {
      * @param color Color of the new point light
      */
     public DistantLight(Vector3D direction, float intensity, Color color) {
+        super(color, intensity);
         this.direction = direction.normalize();
-        this.intensity = intensity;
-        this.color = color;
     }
 }

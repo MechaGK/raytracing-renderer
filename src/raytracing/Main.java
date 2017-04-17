@@ -10,25 +10,38 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class Main {
-    public static void main(String[] args) {
-        // Creating a scene
-        Scene scene = new Scene();
 
-        Shape sphere1 = new Sphere(new Material(Color.cyan, 0.18f), new Vector3D(0.8, 2, 1.2), 2);
-        Shape sphere2 = new Sphere(new Material(Color.cyan, 0.18f), new Vector3D(1, 2, -1.2), 2);
-        
+    public static Scene inappropriateScene;
+    public static Scene simpleScene;
+
+    public static void createScenes() {
+        inappropriateScene = new Scene();
+
+        Shape sphere1 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(0.8, 2, 1.2), 2);
+        Shape sphere2 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(1, 2, -1.2), 2);
+
         int i;
         for (i = 0; i < 7; ++i)
-            scene.add(new Sphere(new Material(Color.white, 0.18f), new Vector3D(1+i, 1+i*i*0.04, 0), 1));
-        scene.add(new Sphere(new Material(Color.white, 0.18f), new Vector3D(1+i, 1+i*i*0.04, 0), 1.1f));
-        
+            inappropriateScene.add(new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(1 + i, 1 + i * i * 0.04, 0), 1));
+        inappropriateScene.add(new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(1 + i, 1 + i * i * 0.04, 0), 1.1f));
+
         Light light = new DistantLight(new Vector3D(3, 2, 1), 10, Color.pink);
         Light light2 = new DistantLight(new Vector3D(-3, 2, -1), 10, Color.orange);
 
-        scene.add(sphere1);
-        scene.add(sphere2);
-        scene.add(light);
-        scene.add(light2);
+        inappropriateScene.add(sphere1);
+        inappropriateScene.add(sphere2);
+        inappropriateScene.add(light);
+        inappropriateScene.add(light2);
+
+        simpleScene = new Scene();
+        Shape sphere = new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 1);
+        simpleScene.add(sphere);
+
+    }
+
+    public static void main(String[] args) {
+        // Creating a scene
+        createScenes();
 
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(6, 0.5, -10);
@@ -37,13 +50,13 @@ public class Main {
         // Rendering scene to image and saving to disk
         final int resolutionX = 960;
         final int resolutionY = 600;
-        
-        final double aspectRatio = (double)resolutionX / (double)resolutionY;
+
+        final double aspectRatio = (double) resolutionX / (double) resolutionY;
         final double scale = 10;
-        
-        Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, scale*aspectRatio, scale);
-        
-        BufferedImage image = renderScene(scene, camera, resolutionX, resolutionY);
+
+        Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, scale * aspectRatio, scale);
+
+        BufferedImage image = renderScene(simpleScene, camera, resolutionX, resolutionY);
         saveImage(image, "test.png");
     }
 

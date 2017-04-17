@@ -27,12 +27,15 @@ public class Main {
         Vector3D cameraOrigin = new Vector3D(0, 0, -10);
         Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
-        Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, 10, 10);
-
         // Rendering scene to image and saving to disk
-        int resolutionX = 500;
-        int resolutionY = 500;
-
+        final int resolutionX = 960;
+        final int resolutionY = 600;
+        
+        final double aspectRatio = (double)resolutionX / (double)resolutionY;
+        final double scale = 10;
+        
+        Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, scale*aspectRatio, scale);
+        
         BufferedImage image = renderScene(scene, camera, resolutionX, resolutionY);
         saveImage(image, "test.png");
     }

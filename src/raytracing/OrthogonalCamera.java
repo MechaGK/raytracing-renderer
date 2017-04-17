@@ -9,8 +9,8 @@ import java.util.Iterator;
  * Origin of raysIterator are not rotated as they should
  */
 public class OrthogonalCamera extends Camera {
-    private int width;
-    private int height;
+    private double width;
+    private double height;
 
     private Vector3D origin;
 
@@ -39,8 +39,8 @@ public class OrthogonalCamera extends Camera {
         @Override
         public CameraRay next() {
             Vector3D rayOrigin = new Vector3D(
-                    -(width / 2) + (((float)width / resWidth) * x),
-                    -(height / 2) + (((float)height / resHeight) * y),
+                    -(width / 2) + ((width / resWidth) * x),
+                    -(height / 2) + ((height / resHeight) * y),
                     0).add(origin);
 
             Ray ray = new Ray(rayOrigin, direction);
@@ -57,7 +57,7 @@ public class OrthogonalCamera extends Camera {
         }
     }
 
-    public OrthogonalCamera(Vector3D origin, Vector3D direction, int width, int height) {
+    public OrthogonalCamera(Vector3D origin, Vector3D direction, double width, double height) {
         this.origin = origin;
         this.direction = direction.normalize();
         this.width = width;

@@ -14,18 +14,25 @@ public class Main {
         // Creating a scene
         Scene scene = new Scene();
 
-        Shape sphere1 = new Sphere(new Material(Color.white, 0.18f), new Vector3D(2, 1, 0), 2);
-        Shape sphere2 = new Sphere(new Material(Color.white, 0.18f), new Vector3D(-2, -1, 2), 1);
-
-        Light light = new DistantLight(new Vector3D(3, 2, 1), 10, Color.white);
+        Shape sphere1 = new Sphere(new Material(Color.cyan, 0.18f), new Vector3D(0.8, 2, 1.2), 2);
+        Shape sphere2 = new Sphere(new Material(Color.cyan, 0.18f), new Vector3D(1, 2, -1.2), 2);
+        
+        int i;
+        for (i = 0; i < 7; ++i)
+            scene.add(new Sphere(new Material(Color.white, 0.18f), new Vector3D(1+i, 1+i*i*0.04, 0), 1));
+        scene.add(new Sphere(new Material(Color.white, 0.18f), new Vector3D(1+i, 1+i*i*0.04, 0), 1.1f));
+        
+        Light light = new DistantLight(new Vector3D(3, 2, 1), 10, Color.pink);
+        Light light2 = new DistantLight(new Vector3D(-3, 2, -1), 10, Color.orange);
 
         scene.add(sphere1);
         scene.add(sphere2);
         scene.add(light);
+        scene.add(light2);
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(0, 0, -10);
-        Vector3D cameraDirection = new Vector3D(0, 0, 1);
+        Vector3D cameraOrigin = new Vector3D(6, 0.5, -10);
+        Vector3D cameraDirection = new Vector3D(-0.4, 0, 1);
 
         // Rendering scene to image and saving to disk
         final int resolutionX = 960;

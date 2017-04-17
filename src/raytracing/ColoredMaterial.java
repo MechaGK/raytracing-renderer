@@ -2,9 +2,6 @@ package raytracing;
 
 import java.awt.*;
 
-/**
- * Created by Mads Grau Kristensen <madsgrau@gmail.com> on 17/04/2017.
- */
 public class ColoredMaterial extends Material {
     private Color color;
 

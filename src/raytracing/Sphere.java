@@ -1,7 +1,5 @@
 package raytracing;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.math3.geometry.Vector;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.awt.*;

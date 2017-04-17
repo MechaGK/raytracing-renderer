@@ -15,8 +15,7 @@ public class Sphere extends Shape {
     protected float radius;
 
     public Sphere(Material material, Vector3D position, float radius) {
-        this.material = material;
-        this.position = position;
+        super(material, position);
         this.radius = radius;
     }
 

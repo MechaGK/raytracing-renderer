@@ -12,6 +12,11 @@ public abstract class Shape {
     protected Vector3D position;
     protected Material material;
 
+    public Shape(Material material, Vector3D position) {
+        this.position = position;
+        this.material = material;
+    }
+
     /**
      * Returns the point at which the shape is hit by the ray. If there is multiple points the
      * one closest to the ray's origin is returned

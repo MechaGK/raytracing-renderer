@@ -34,9 +34,10 @@ public class Main {
         inappropriateScene.add(light2);
 
         simpleScene = new Scene();
-        Shape sphere = new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 1);
+        Shape sphere = new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 3);
+        light = new DistantLight(new Vector3D(2, -4, 3), 15, Color.white);
         simpleScene.add(sphere);
-
+        simpleScene.add(light);
     }
 
     public static void main(String[] args) {

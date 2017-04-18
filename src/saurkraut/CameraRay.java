@@ -1,4 +1,4 @@
-package raytracing;
+package saurkraut;
 
 public class CameraRay {
     public final Ray ray;

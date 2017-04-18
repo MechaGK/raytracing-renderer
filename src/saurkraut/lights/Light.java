@@ -1,4 +1,4 @@
-package raytracing.lights;
+package saurkraut.lights;
 
 import java.awt.*;
 

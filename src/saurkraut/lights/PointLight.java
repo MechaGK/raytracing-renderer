@@ -1,7 +1,6 @@
-package raytracing.lights;
+package saurkraut.lights;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import raytracing.lights.Light;
 
 import java.awt.*;
 

@@ -1,8 +1,8 @@
-package raytracing.shapes;
+package saurkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import raytracing.Material;
-import raytracing.Ray;
+import saurkraut.Material;
+import saurkraut.Ray;
 
 import java.awt.*;
 

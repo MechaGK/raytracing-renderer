@@ -1,7 +1,7 @@
-package raytracing;
+package saurkraut;
 
-import raytracing.lights.Light;
-import raytracing.shapes.Shape;
+import saurkraut.lights.Light;
+import saurkraut.shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.List;

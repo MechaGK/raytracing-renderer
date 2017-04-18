@@ -1,10 +1,11 @@
-package raytracing;
+package saurkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import raytracing.lights.DistantLight;
-import raytracing.lights.Light;
-import raytracing.shapes.*;
-import raytracing.util.ColorUtil;
+import saurkraut.lights.DistantLight;
+import saurkraut.lights.Light;
+import saurkraut.shapes.*;
+import saurkraut.util.ColorUtil;
+import saurkraut.shapes.Shape;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,8 +22,8 @@ public class Main {
     public static void createScenes() {
         inappropriateScene = new Scene();
 
-        raytracing.shapes.Shape sphere1 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(0.8, 2, 1.2), 2);
-        raytracing.shapes.Shape sphere2 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(1, 2, -1.2), 2);
+        Shape sphere1 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(0.8, 2, 1.2), 2);
+        Shape sphere2 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(1, 2, -1.2), 2);
 
         int i;
         for (i = 0; i < 7; ++i)
@@ -38,7 +39,7 @@ public class Main {
         inappropriateScene.add(light2);
 
         simpleScene = new Scene();
-        raytracing.shapes.Shape sphere = new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 3);
+        Shape sphere = new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 3);
         light = new DistantLight(new Vector3D(2, -4, 3), 15, Color.white);
         simpleScene.add(sphere);
         simpleScene.add(light);
@@ -94,13 +95,13 @@ public class Main {
             ray = cameraRay.ray;
 
             Vector3D closestHit = null;
-            raytracing.shapes.Shape closestShape = null;
+            Shape closestShape = null;
             double closestHitDistance = Double.MAX_VALUE;
 
             Vector3D hit;
             double distance;
 
-            for (raytracing.shapes.Shape shape : scene.getShapes()) {
+            for (Shape shape : scene.getShapes()) {
                 hit = shape.intersect(ray);
 
                 if (hit == null) continue;

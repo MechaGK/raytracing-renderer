@@ -1,9 +1,9 @@
-package raytracing;
+package saurkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import raytracing.lights.DistantLight;
-import raytracing.lights.Light;
-import raytracing.util.ColorUtil;
+import saurkraut.lights.DistantLight;
+import saurkraut.lights.Light;
+import saurkraut.util.ColorUtil;
 
 import java.awt.*;
 
@@ -23,7 +23,7 @@ public class PhongShader {
      * @param point The point at which to find the illumination
      * @return The color of the total illumination
      */
-    public static Color diffuse(Scene scene, raytracing.shapes.Shape shape, Vector3D point) {
+    public static Color diffuse(Scene scene, saurkraut.shapes.Shape shape, Vector3D point) {
         Vector3D normal = shape.getNormal(point);
         Material material = shape.getMaterial();
 

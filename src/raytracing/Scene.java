@@ -1,7 +1,9 @@
 package raytracing;
 
+import raytracing.lights.Light;
+import raytracing.shapes.Shape;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**

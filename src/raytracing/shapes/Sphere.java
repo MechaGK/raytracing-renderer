@@ -1,6 +1,8 @@
-package raytracing;
+package raytracing.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import raytracing.Material;
+import raytracing.Ray;
 
 import java.awt.*;
 

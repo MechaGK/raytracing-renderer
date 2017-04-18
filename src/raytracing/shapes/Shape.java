@@ -1,4 +1,4 @@
-package raytracing;
+package raytracing.shapes;
 
 import org.apache.commons.math3.geometry.Vector;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -6,6 +6,8 @@ import org.apache.commons.math3.geometry.partitioning.Transform;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.transform.FastCosineTransformer;
+import raytracing.Material;
+import raytracing.Ray;
 
 import java.awt.*;
 import java.lang.reflect.Array;

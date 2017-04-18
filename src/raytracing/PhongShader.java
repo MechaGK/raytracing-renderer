@@ -1,6 +1,8 @@
 package raytracing;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import raytracing.lights.DistantLight;
+import raytracing.lights.Light;
 import raytracing.util.ColorUtil;
 
 import java.awt.*;
@@ -21,7 +23,7 @@ public class PhongShader {
      * @param point The point at which to find the illumination
      * @return The color of the total illumination
      */
-    public static Color diffuse(Scene scene, Shape shape, Vector3D point) {
+    public static Color diffuse(Scene scene, raytracing.shapes.Shape shape, Vector3D point) {
         Vector3D normal = shape.getNormal(point);
         Material material = shape.getMaterial();
 
@@ -36,10 +38,10 @@ public class PhongShader {
 
                 Vector3D lightIncident = distantLight.direction.scalarMultiply(-1);
 
-                float number = (float) (material.albedo / Math.PI * light.intensity
+                float number = (float) (material.albedo / Math.PI * light.getIntensity()
                         * Math.max(0f, normal.dotProduct(lightIncident)));
 
-                color = ColorUtil.multiply(light.color, number);
+                color = ColorUtil.multiply(light.getColor(), number);
                 finalColor = ColorUtil.add(color, finalColor);
             }
         }

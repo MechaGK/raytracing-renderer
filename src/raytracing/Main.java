@@ -113,9 +113,7 @@ public class Main {
             if (closestHit != null) {
                 Color shapeColor = closestShape.getColor(closestHit);
 
-                Vector3D hitNormal = closestShape.getNormal(closestHit);
-
-                Color lightColor = getIllumination(scene, closestShape.material, closestHit, hitNormal);
+                Color lightColor = PhongShader.diffuse(scene, closestShape, closestHit);
 
                 Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
 
@@ -124,43 +122,6 @@ public class Main {
         }
 
         return image;
-    }
-
-    /**
-     * Finds the illumination at a specific point in the scene with a given normal.
-     * Only supports distant lights at the moment and no shadows.
-     * Calculations based on diffuse rendering from
-     * https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/diffuse-lambertian-shading
-     *
-     * @param scene    The scene
-     * @param material The material of the object which the point is on
-     * @param point    The point at which to find the illumination
-     * @param normal   The normal to base the illumination of
-     * @return The color of the total illumination
-     */
-    public static Color getIllumination(Scene scene, Material material, Vector3D point, Vector3D normal) {
-        normal = normal.normalize();
-
-        Color finalColor = new Color(0f, 0f, 0f);
-
-        DistantLight distantLight;
-        Color color;
-
-        for (Light light : scene.getLights()) {
-            if (light instanceof DistantLight) {
-                distantLight = (DistantLight) light;
-
-                Vector3D lightIncident = distantLight.direction.scalarMultiply(-1);
-
-                float number = (float) (material.albedo / Math.PI * light.intensity
-                        * Math.max(0f, normal.dotProduct(lightIncident)));
-
-                color = ColorUtil.multiply(light.color, number);
-                finalColor = ColorUtil.add(color, finalColor);
-            }
-        }
-
-        return finalColor;
     }
 
 

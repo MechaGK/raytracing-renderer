@@ -90,16 +90,27 @@ public class Main {
         CameraRay cameraRay;
         Ray ray;
 
-        while (cameraRays.hasNext()) {
-            cameraRay = cameraRays.next();
-            ray = cameraRay.ray;
+        long shadedPoints = 0;
 
+        long shadingTime = 0;
+        long shadingStart, shadingEnd;
+
+        long testingTime = 0;
+        long testStart, testEnd;
+
+        long startTime = System.nanoTime();
+
+        while (cameraRays.hasNext()) {
             Vector3D closestHit = null;
             Shape closestShape = null;
             double closestHitDistance = Double.MAX_VALUE;
 
             Vector3D hit;
             double distance;
+
+            testStart = System.nanoTime();
+            cameraRay = cameraRays.next();
+            ray = cameraRay.ray;
 
             for (Shape shape : scene.getShapes()) {
                 hit = shape.intersect(ray);
@@ -114,16 +125,34 @@ public class Main {
                 }
             }
 
+            testEnd = System.nanoTime();
+            testingTime += testEnd - testStart;
+
             if (closestHit != null) {
+                shadedPoints++;
+
+                shadingStart = System.nanoTime();
                 Color shapeColor = closestShape.getColor(closestHit);
 
                 Color lightColor = PhongShader.diffuse(scene, closestShape, closestHit);
 
                 Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
+                shadingEnd = System.nanoTime();
+                shadingTime += shadingEnd - shadingStart;
 
                 image.setRGB(cameraRay.x, cameraRay.y, finalColor.getRGB());
             }
         }
+
+        long endTime = System.nanoTime();
+
+        System.out.format("Total render time %d ms\n", ((endTime - startTime) / 1000000));
+        System.out.format("Testing for intersections took %d ms\n", testingTime / 1000000);
+
+        System.out.format("Shading took %d ms\n", shadingTime / 1000000);
+        System.out.format("Shaded %d points\n", shadedPoints);
+
+        System.out.format("Shading took %f ms per 1000nd point\n", (shadingTime / 1000000f) / (shadedPoints / 1000f));
 
         return image;
     }

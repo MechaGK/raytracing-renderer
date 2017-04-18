@@ -101,47 +101,36 @@ public class Main {
         long startTime = System.nanoTime();
 
         while (cameraRays.hasNext()) {
-            Vector3D closestHit = null;
-            Shape closestShape = null;
-            double closestHitDistance = Double.MAX_VALUE;
-
-            Vector3D hit;
-            double distance;
-
             testStart = System.nanoTime();
             cameraRay = cameraRays.next();
             ray = cameraRay.ray;
 
-            for (Shape shape : scene.getShapes()) {
-                hit = shape.intersect(ray);
+            RayHit rayHit = scene.castRay(ray);
 
-                if (hit == null) continue;
-
-                distance = hit.distance(ray.origin);
-                if (distance < closestHitDistance) {
-                    closestHit = hit;
-                    closestShape = shape;
-                    closestHitDistance = distance;
-                }
+            if (rayHit == null) {
+                // No shape hit by ray. Continue to next ray.
+                continue;
             }
+
+            Shape shape = rayHit.shape;
+            Vector3D hit = rayHit.point;
 
             testEnd = System.nanoTime();
             testingTime += testEnd - testStart;
 
-            if (closestHit != null) {
-                shadedPoints++;
 
-                shadingStart = System.nanoTime();
-                Color shapeColor = closestShape.getColor(closestHit);
+            shadedPoints++;
 
-                Color lightColor = PhongShader.diffuse(scene, closestShape, closestHit);
+            shadingStart = System.nanoTime();
+            Color shapeColor = shape.getColor(hit);
 
-                Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
-                shadingEnd = System.nanoTime();
-                shadingTime += shadingEnd - shadingStart;
+            Color lightColor = PhongShader.diffuse(scene, shape, hit);
 
-                image.setRGB(cameraRay.x, cameraRay.y, finalColor.getRGB());
-            }
+            Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
+            shadingEnd = System.nanoTime();
+            shadingTime += shadingEnd - shadingStart;
+
+            image.setRGB(cameraRay.x, cameraRay.y, finalColor.getRGB());
         }
 
         long endTime = System.nanoTime();

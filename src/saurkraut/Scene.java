@@ -1,5 +1,6 @@
 package saurkraut;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import saurkraut.lights.Light;
 import saurkraut.shapes.Shape;
 
@@ -36,5 +37,39 @@ public class Scene {
 
     public List<Light> getLights() {
         return lights;
+    }
+
+    /**
+     * Find first shape hit by ray (by distance to ray origin). Returns null if no hit
+     * @param ray Ray to test with
+     * @return RayHit with first shape and where it was hit. Null if nothing was hit
+     */
+    public RayHit castRay(Ray ray) {
+        Vector3D closestHit = null;
+        Shape closestShape = null;
+        double closestHitDistance = Double.MAX_VALUE;
+
+        Vector3D hit;
+        double distance;
+
+        for (Shape shape : getShapes()) {
+            hit = shape.intersect(ray);
+
+            if (hit == null) continue;
+
+            distance = hit.distance(ray.origin);
+            if (distance < closestHitDistance) {
+                closestHit = hit;
+                closestShape = shape;
+                closestHitDistance = distance;
+            }
+        }
+
+        if (closestShape == null) {
+            // Return null as no shape was hit
+            return null;
+        }
+
+        return new RayHit(closestHit, closestShape);
     }
 }

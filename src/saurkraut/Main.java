@@ -50,8 +50,8 @@ public class Main {
         createScenes();
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(6, 0.5, -10);
-        Vector3D cameraDirection = new Vector3D(-0.4, 0, 1);
+        Vector3D cameraOrigin = new Vector3D(0, 0, -10);
+        Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
         // Rendering scene to image and saving to disk
         final int resolutionX = 960;

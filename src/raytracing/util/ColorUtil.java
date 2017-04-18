@@ -3,7 +3,7 @@ package raytracing.util;
 import java.awt.*;
 
 /**
- * Created by Mads Grau Kristensen <madsgrau@gmail.com> on 18/04/2017.
+ * Class for Color "extension" methods.
  */
 public class ColorUtil {
     /**

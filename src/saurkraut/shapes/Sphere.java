@@ -56,8 +56,11 @@ public class Sphere extends Shape {
 
     @Override
     public Color getColor(Vector3D point) {
-        double sigma = Math.atan2(point.getZ(), point.getX());
-        double theta = Math.acos(getPosition().getY() / radius);
+        Vector3D relativeHit = point.subtract(getPosition());
+        relativeHit = relativeHit.normalize();
+
+        double sigma = (1 + Math.atan2(relativeHit.getZ(), relativeHit.getX()) / Math.PI) * 0.5d;
+        double theta = Math.acos(relativeHit.getY()) / Math.PI;
 
         return material.getColor(sigma, theta);
     }

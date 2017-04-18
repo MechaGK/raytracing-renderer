@@ -1,6 +1,7 @@
 package raytracing;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import raytracing.util.ColorUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -116,7 +117,7 @@ public class Main {
 
                 Color lightColor = getIllumination(scene, closestShape.material, closestHit, hitNormal);
 
-                Color finalColor = colorMultiply(shapeColor, lightColor);
+                Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
 
                 image.setRGB(cameraRay.x, cameraRay.y, finalColor.getRGB());
             }
@@ -154,62 +155,14 @@ public class Main {
                 float number = (float) (material.albedo / Math.PI * light.intensity
                         * Math.max(0f, normal.dotProduct(lightIncident)));
 
-                color = colorMultiply(light.color, number);
-                finalColor = colorAdd(color, finalColor);
+                color = ColorUtil.multiply(light.color, number);
+                finalColor = ColorUtil.add(color, finalColor);
             }
         }
 
         return finalColor;
     }
 
-    /**
-     * A method for adding two colors
-     *
-     * @param color1
-     * @param color2
-     * @return The addition of color1 and color2
-     */
-    private static Color colorAdd(Color color1, Color color2) {
-        return new Color(
-                color1.getRed() + color2.getRed(),
-                color1.getGreen() + color2.getGreen(),
-                color1.getBlue() + color2.getBlue());
-    }
-
-
-    /**
-     * A method to multiply a color with a float. Because Java doesn't support extension methods
-     *
-     * @param color A given color
-     * @param value A float
-     * @return A new color where every component is multiplied by f
-     */
-    public static Color colorMultiply(Color color, float value) {
-        float[] rgb = color.getRGBColorComponents(null);
-        float red = Math.min(rgb[0] * value, 1f);
-        float green = Math.min(rgb[1] * value, 1f);
-        float blue = Math.min(rgb[2] * value, 1f);
-
-        return new Color(red, green, blue);
-    }
-
-    /**
-     * A method to multiply a color with a float. Because Java doesn't support extension methods
-     *
-     * @param color1 A given color
-     * @param color2 A float
-     * @return A new color where every component is multiplied by f
-     */
-    public static Color colorMultiply(Color color1, Color color2) {
-        float[] rgb1 = color1.getRGBColorComponents(null);
-        float[] rgb2 = color2.getRGBColorComponents(null);
-
-        float red = Math.min(rgb1[0] * rgb2[0], 1f);
-        float green = Math.min(rgb1[1] * rgb2[1], 1f);
-        float blue = Math.min(rgb1[2] * rgb2[2], 1f);
-
-        return new Color(red, green, blue);
-    }
 
     public static void saveImage(BufferedImage image, String fileName) {
         try {

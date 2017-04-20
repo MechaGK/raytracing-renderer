@@ -124,7 +124,7 @@ public class Main {
             shadingStart = System.nanoTime();
             Color shapeColor = shape.getColor(hit);
 
-            Color lightColor = PhongShader.diffuse(scene, shape, hit);
+            Color lightColor = PhongShader.shade(scene, shape, hit, ray.direction);
 
             Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
             shadingEnd = System.nanoTime();

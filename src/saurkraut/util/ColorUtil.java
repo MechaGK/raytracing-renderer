@@ -14,10 +14,12 @@ public class ColorUtil {
      * @return The addition of color1 and color2
      */
     public static Color add(Color color1, Color color2) {
-        return new Color(
-                color1.getRed() + color2.getRed(),
-                color1.getGreen() + color2.getGreen(),
-                color1.getBlue() + color2.getBlue());
+        // Making sure that the results are not below zero or over 255
+        int red = Math.max(0, Math.min(color1.getRed() + color2.getRed(), 255));
+        int green = Math.max(0, Math.min(color1.getGreen() + color2.getGreen(), 255));
+        int blue = Math.max(0, Math.min(color1.getBlue() + color2.getBlue(), 255));
+
+        return new Color(red, green, blue);
     }
 
     /**

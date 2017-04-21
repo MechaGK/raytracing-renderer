@@ -71,7 +71,7 @@ public class PhongShader {
 
                 Vector3D R = normal.scalarMultiply(2 * (normal.dotProduct(lightIncident))).subtract(lightIncident);
                 double specular = Math.pow(R.dotProduct(viewDirection), 50); // Magic number for n
-                float fspecular = (float) specular;
+                float fspecular = Math.min((float) specular, 1f);
 
                 color = ColorUtil.add(color, new Color(fspecular, fspecular, fspecular));
             }
@@ -104,10 +104,14 @@ public class PhongShader {
 
                 Vector3D lightIncident = distantLight.direction.scalarMultiply(-1);
 
-                if (scene.castRay(new Ray(point, lightIncident)) != null) {
+                if (scene.castRay(new Ray(point.subtract(normal.scalarMultiply(0.0001d)), lightIncident)) != null) {
                     lights.add(light);
                 }
             }
+        }
+
+        if (lights.isEmpty()) {
+            return Color.black;
         }
 
         Color diffuse = diffuse(lights, shape.getMaterial().albedo, normal);

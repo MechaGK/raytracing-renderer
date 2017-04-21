@@ -1,6 +1,7 @@
 package saurkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.stat.regression.UpdatingMultipleLinearRegression;
 import saurkraut.lights.DistantLight;
 import saurkraut.lights.Light;
 import saurkraut.shapes.*;
@@ -41,12 +42,13 @@ public class Main {
         Scene scene = new Scene();
 
         scene.addShapes(
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 3)
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 1.5d, 0), 3),
+                new Plane(new ColoredMaterial(new Color(100, 255, 100), 0.18f), new Vector3D(0, -2, 0), new Vector3D(0, 1, -1))
         );
 
         scene.addLights(
-                new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
-                new DistantLight(new Vector3D(-2, 4, 3), 5, Color.white)
+                //new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
+                new DistantLight(new Vector3D(0, 0, 1), 15, Color.white)
         );
 
         return scene;
@@ -61,8 +63,8 @@ public class Main {
         Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 960;
-        final int resolutionY = 600;
+        final int resolutionX = 3840;
+        final int resolutionY = 2160;
 
         final double aspectRatio = (double) resolutionX / (double) resolutionY;
         final double scale = 10;
@@ -132,6 +134,9 @@ public class Main {
             Color shapeColor = shape.getColor(hit);
 
             Color lightColor = PhongShader.shade(scene, shape, hit, ray.direction);
+            //Color lightColor = UnlitShader.shade(shape, hit);
+
+            //System.out.format("x %d, y %d; %s, %s\n", cameraRay.x, cameraRay.y, shapeColor.toString(), lightColor.toString());
 
             Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
             shadingEnd = System.nanoTime();

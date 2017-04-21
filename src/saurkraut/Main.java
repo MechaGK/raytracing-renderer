@@ -15,12 +15,8 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class Main {
-
-    public static Scene inappropriateScene;
-    public static Scene simpleScene;
-
-    public static void createScenes() {
-        inappropriateScene = new Scene();
+    public static Scene createInappropriateScene() {
+        Scene inappropriateScene = new Scene();
 
         Shape sphere1 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(0.8, 2, 1.2), 2);
         Shape sphere2 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(1, 2, -1.2), 2);
@@ -38,16 +34,27 @@ public class Main {
         inappropriateScene.add(light);
         inappropriateScene.add(light2);
 
-        simpleScene = new Scene();
-        Shape sphere = new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 3);
-        light = new DistantLight(new Vector3D(2, -4, 3), 15, Color.white);
-        simpleScene.add(sphere);
-        simpleScene.add(light);
+        return inappropriateScene;
+    }
+
+    public static Scene createSimpleScene() {
+        Scene scene = new Scene();
+
+        scene.addShapes(
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 3)
+        );
+
+        scene.addLights(
+                new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
+                new DistantLight(new Vector3D(-2, 4, 3), 15, Color.white)
+        );
+
+        return scene;
     }
 
     public static void main(String[] args) {
         // Creating a scene
-        createScenes();
+        Scene scene = createSimpleScene();
 
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(0, 0, -10);
@@ -62,7 +69,7 @@ public class Main {
 
         Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, scale * aspectRatio, scale);
 
-        BufferedImage image = renderScene(simpleScene, camera, resolutionX, resolutionY);
+        BufferedImage image = renderScene(scene, camera, resolutionX, resolutionY);
         saveImage(image, "test.png");
     }
 

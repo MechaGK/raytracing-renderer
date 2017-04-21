@@ -23,6 +23,18 @@ public class Scene {
         shapes.remove(shape);
     }
 
+    public void addShapes(Shape... shapes) {
+        for (Shape shape : shapes) {
+            add(shape);
+        }
+    }
+
+    public void addLights(Light... lights) {
+        for (Light light : lights) {
+            add(Light);
+        }
+    }
+
     public void add(Light light) {
         lights.add(light);
     }

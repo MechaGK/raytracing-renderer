@@ -25,7 +25,7 @@ public class PhongShader {
      * @return The color of the total illumination
      */
     public static Color diffuse(ArrayList<Light> lights, float albedo, Vector3D normal) {
-        Color finalColor = new Color(0f, 0f, 0f);
+        Color finalColor = new Color(0f, 0f, 0f, 1f);
 
         DistantLight distantLight;
         Color color;
@@ -53,8 +53,8 @@ public class PhongShader {
      * Based on calculations from
      * https://www.scratchapixel.com/lessons/3d-basic-rendering/phong-shader-BRDF
      *
-     * @param lights List of lights which to shade based upon
-     * @param normal Normal of the given point
+     * @param lights        List of lights which to shade based upon
+     * @param normal        Normal of the given point
      * @param viewDirection The direction which the point is viewed from
      * @return Color of the specular at the point
      */
@@ -84,9 +84,10 @@ public class PhongShader {
      * Calculate shading at point based on phong model
      * Based on
      * https://www.scratchapixel.com/lessons/3d-basic-rendering/phong-shader-BRDF
-     * @param scene Scene the point is in
-     * @param shape Shape to be shaded
-     * @param point Point to be shaded
+     *
+     * @param scene         Scene the point is in
+     * @param shape         Shape to be shaded
+     * @param point         Point to be shaded
      * @param viewDirection Direction where the point is viewed from
      * @return Color of point based on phong model
      */

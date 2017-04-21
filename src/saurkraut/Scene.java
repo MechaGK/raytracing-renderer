@@ -31,7 +31,7 @@ public class Scene {
 
     public void addLights(Light... lights) {
         for (Light light : lights) {
-            add(Light);
+            add(light);
         }
     }
 

@@ -20,6 +20,7 @@ public abstract class SceneObject {
             WL20, WL21, WL22, WL23;
     //      0   , 0   , 0   , 1   <- (implicit)
     
+    private final double r00, r01, r02, r10, r11, r12, r20, r21, r22;
     public final Vector3D position;
 
     public SceneObject(Vector3D position, Vector3D scale, Vector3D eulerAngles) {    
@@ -40,7 +41,6 @@ public abstract class SceneObject {
         double cZ = Math.cos(angZ);
         double sZ = Math.sin(angZ);
         
-        double r00, r01, r02, r10, r11, r12, r20, r21, r22;
         r00 = cZ*cY;    r01 = cZ*sX*sY-cX*sZ;   r02 = cX*cZ*sY+sX*sZ;
         r10 = sZ*cY;    r11 = sX*sY*sZ+cX*cZ;   r12 = cX*sY*sZ-cZ*sX;
         r20 = -sY;      r21 = cY*sX;            r22 = cY*cX;
@@ -61,7 +61,7 @@ public abstract class SceneObject {
         WL20 = invScaleZ*r02; WL21 = invScaleZ*r12; WL22 = invScaleZ*r22; WL23 = -WL20*LW03 - WL21*LW13 - WL22*LW23;
     }
 
-    public Vector3D localToWorld(Vector3D localPoint) {
+    public Vector3D pointToWorld(Vector3D localPoint) {
         double lx = localPoint.getX();
         double ly = localPoint.getY();
         double lz = localPoint.getZ();
@@ -73,7 +73,7 @@ public abstract class SceneObject {
         );
     }
     
-    public Vector3D worldToLocal(Vector3D worldPoint) {
+    public Vector3D pointToLocal(Vector3D worldPoint) {
         double wx = worldPoint.getX();
         double wy = worldPoint.getY();
         double wz = worldPoint.getZ();
@@ -82,6 +82,30 @@ public abstract class SceneObject {
                 wx*WL00 + wy*WL01 + wz*WL02 + WL03,
                 wx*WL10 + wy*WL11 + wz*WL12 + WL13,
                 wx*WL20 + wy*WL21 + wz*WL22 + WL23
+        );
+    };
+    
+    public Vector3D directionToWorld(Vector3D localDirection) {
+        double lx = localDirection.getX();
+        double ly = localDirection.getY();
+        double lz = localDirection.getZ();
+        
+        return new Vector3D(
+                lx*r00 + ly*r01 + lz*r02,
+                lx*r10 + ly*r11 + lz*r12,
+                lx*r20 + ly*r21 + lz*r22
+        );
+    }
+    
+    public Vector3D directionToLocal(Vector3D worldPoint) {
+        double wx = worldPoint.getX();
+        double wy = worldPoint.getY();
+        double wz = worldPoint.getZ();
+        
+        return new Vector3D(
+                wx*r00 + wy*r10 + wz*r20,
+                wx*r01 + wy*r11 + wz*r21,
+                wx*r02 + wy*r12 + wz*r22
         );
     };
 }

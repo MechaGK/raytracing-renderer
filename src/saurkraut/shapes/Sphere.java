@@ -24,8 +24,8 @@ public class Sphere extends Shape {
     @Override
     public Vector3D intersect(Ray ray) {
         // 1. Transform ray to local space
-        Vector3D locRayDir = ray.direction;
-        Vector3D locRayOrigin = worldToLocal(ray.origin);
+        Vector3D locRayDir = directionToLocal(ray.direction);
+        Vector3D locRayOrigin = pointToLocal(ray.origin);
         
         Ray locRay = new Ray(locRayOrigin, locRayDir);
         
@@ -41,17 +41,17 @@ public class Sphere extends Shape {
             double t1 = (-b - Math.sqrt(discriminant)) / 2;
 
             if (t0 < 0) { // Point given by t0 is behind the ray
-                return localToWorld(locRay.getPoint(t1));
+                return pointToWorld(locRay.getPoint(t1));
             } else if (t1 < 0) { // Point given by t1 is behind the ray
-                return localToWorld(locRay.getPoint(t0));
+                return pointToWorld(locRay.getPoint(t0));
             } else {
                 double t = Math.min(t0, t1);
-                return localToWorld(locRay.getPoint(t));
+                return pointToWorld(locRay.getPoint(t));
             }
         } else if (discriminant == 0) {
             double t = -(b / 2);
 
-            return localToWorld(locRay.getPoint(t));
+            return pointToWorld(locRay.getPoint(t));
         }
 
         return null;

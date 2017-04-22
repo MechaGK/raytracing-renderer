@@ -41,7 +41,7 @@ public class Main {
         Scene scene = new Scene();
 
         scene.addShapes(
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, new Vector3D(3, 1.5, 3), new Vector3D(0, 0, 3.14))
+                new Cuboid(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, new Vector3D(2, 2, 2), new Vector3D(1, 2*Math.PI/8, 0))
 //                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(1, 1, 5), 1)
         );
 
@@ -52,10 +52,11 @@ public class Main {
 
         return scene;
     }
+    
 
     public static void main(String[] args) {
         // Creating a scene
-        Scene scene = createInappropriateScene();
+        Scene scene = createSimpleScene();
 
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(0, 0, -10);

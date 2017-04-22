@@ -20,7 +20,7 @@ public abstract class SceneObject {
             WL20, WL21, WL22, WL23;
     //      0   , 0   , 0   , 1   <- (implicit)
     
-    private final Vector3D position;
+    public final Vector3D position;
 
     public SceneObject(Vector3D position, Vector3D scale, Vector3D eulerAngles) {    
         this.position = position;
@@ -84,8 +84,4 @@ public abstract class SceneObject {
                 wx*WL20 + wy*WL21 + wz*WL22 + WL23
         );
     };
-    
-    public Vector3D getPosition() {
-        return position;
-    }
 }

@@ -16,16 +16,17 @@ public abstract class Shape extends SceneObject {
     protected Material material;
     
     public Shape(Material material, Vector3D position) {
-        this(material, position, UNIT_SCALE, Vector3D.ZERO);
+        super(position, UNIT_SCALE, Vector3D.ZERO);
+        this.material = material;
     }
     
     public Shape(Material material, Vector3D position, Vector3D scale) {
-        this(material, position, scale, Vector3D.ZERO);
+        super(position, scale, Vector3D.ZERO);
+        this.material = material;
     }
 
     public Shape(Material material, Vector3D position, Vector3D scale, Vector3D eulerAngles) {
         super(position, scale, eulerAngles);
-        
         this.material = material;
     }
 

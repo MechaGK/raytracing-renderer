@@ -41,7 +41,8 @@ public class Main {
         Scene scene = new Scene();
 
         scene.addShapes(
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, 3)
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, new Vector3D(3, 1.5, 3), new Vector3D(0, 0, 3.14))
+//                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(1, 1, 5), 1)
         );
 
         scene.addLights(
@@ -54,14 +55,14 @@ public class Main {
 
     public static void main(String[] args) {
         // Creating a scene
-        Scene scene = createSimpleScene();
+        Scene scene = createInappropriateScene();
 
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(0, 0, -10);
         Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 200;
+        final int resolutionX = 320;
         final int resolutionY = 200;
 
         final double aspectRatio = (double) resolutionX / (double) resolutionY;

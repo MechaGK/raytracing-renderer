@@ -17,14 +17,14 @@ public class Sphere extends Shape {
         super(material, position, new Vector3D(radius, radius, radius));
     }
     
-    public Sphere(Material material, Vector3D position, Vector3D scale) {
-        super(material, position, scale);
+    public Sphere(Material material, Vector3D position, Vector3D scale, Vector3D rotation) {
+        super(material, position, scale, rotation);
     }
 
     @Override
     public Vector3D intersect(Ray ray) {
         // 1. Transform ray to local space
-        Vector3D locRayDir = worldToLocal(ray.direction);
+        Vector3D locRayDir = ray.direction;
         Vector3D locRayOrigin = worldToLocal(ray.origin);
         
         Ray locRay = new Ray(locRayOrigin, locRayDir);

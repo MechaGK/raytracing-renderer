@@ -61,8 +61,8 @@ public class Main {
         Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 960;
-        final int resolutionY = 600;
+        final int resolutionX = 200;
+        final int resolutionY = 200;
 
         final double aspectRatio = (double) resolutionX / (double) resolutionY;
         final double scale = 10;
@@ -116,6 +116,7 @@ public class Main {
 
             if (rayHit == null) {
                 // No shape hit by ray. Continue to next ray.
+                image.setRGB(cameraRay.x, cameraRay.y, 0xFFc8daf7);
                 continue;
             }
 

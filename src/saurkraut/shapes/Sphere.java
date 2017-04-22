@@ -12,19 +12,26 @@ import java.awt.*;
  * https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
  */
 public class Sphere extends Shape {
-    protected float radius;
 
-    public Sphere(Material material, Vector3D position, float radius) {
-        super(material, position);
-        this.radius = radius;
+    public Sphere(Material material, Vector3D position, double radius) {
+        super(material, position, new Vector3D(radius, radius, radius));
+    }
+    
+    public Sphere(Material material, Vector3D position, Vector3D scale) {
+        super(material, position, scale);
     }
 
     @Override
     public Vector3D intersect(Ray ray) {
-        Vector3D position = getPosition();
-
-        double b = 2 * ray.direction.dotProduct(ray.origin.subtract(position));
-        double c = Math.pow(ray.origin.subtract(position).getNorm(), 2) - radius * radius;
+        // 1. Transform ray to local space
+        Vector3D locRayDir = worldToLocal(ray.direction);
+        Vector3D locRayOrigin = worldToLocal(ray.origin);
+        
+        Ray locRay = new Ray(locRayOrigin, locRayDir);
+        
+        // 2. Now test against unit sphere
+        double b = 2 * locRayDir.dotProduct(locRayOrigin);
+        double c = Math.pow(locRayOrigin.getNorm(), 2) - 1;
 
         double discriminant = b * b - 4 * c;
 
@@ -33,17 +40,17 @@ public class Sphere extends Shape {
             double t1 = (-b - Math.sqrt(discriminant)) / 2;
 
             if (t0 < 0) { // Point given by t0 is behind the ray
-                return ray.getPoint(t1);
+                return localToWorld(locRay.getPoint(t1));
             } else if (t1 < 0) { // Point given by t1 is behind the ray
-                return ray.getPoint(t0);
+                return localToWorld(locRay.getPoint(t0));
             } else {
                 double t = Math.min(t0, t1);
-                return ray.getPoint(t);
+                return localToWorld(locRay.getPoint(t));
             }
         } else if (discriminant == 0) {
             double t = -(b / 2);
 
-            return ray.getPoint(t);
+            return localToWorld(locRay.getPoint(t));
         }
 
         return null;
@@ -51,12 +58,12 @@ public class Sphere extends Shape {
 
     @Override
     public Vector3D getNormal(Vector3D point) {
-        return point.subtract(getPosition()).normalize();
+        return point.subtract(position).normalize();
     }
 
     @Override
     public Color getColor(Vector3D point) {
-        Vector3D relativeHit = point.subtract(getPosition());
+        Vector3D relativeHit = point.subtract(position);
         relativeHit = relativeHit.normalize();
 
         double sigma = (1 + Math.atan2(relativeHit.getZ(), relativeHit.getX()) / Math.PI) * 0.5d;

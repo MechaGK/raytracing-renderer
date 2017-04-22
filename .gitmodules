@@ -1,0 +1,6 @@
+[submodule "lib/commons-lang"]
+	path = lib/commons-lang
+	url = https://github.com/apache/commons-lang
+[submodule "lib/commons-math"]
+	path = lib/commons-math
+	url = https://github.com/apache/commons-math

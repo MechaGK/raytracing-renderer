@@ -31,7 +31,8 @@ public class Sphere extends Shape {
         
         // 2. Now test against unit sphere
         double b = 2 * locRayDir.dotProduct(locRayOrigin);
-        double c = Math.pow(locRayOrigin.getNorm(), 2) - 1;
+        double c = Math.pow(locRayOrigin.getNorm(), 2) - 1
+                ;
 
         double discriminant = b * b - 4 * c;
 

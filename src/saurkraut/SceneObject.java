@@ -46,16 +46,16 @@ public abstract class SceneObject {
         r20 = -sY;      r21 = cY*sX;            r22 = cY*cX;
 
         // LOCAL TO WORLD SPACE TRANSFORM
-        // [translation].[scale].[rotation]
-        // Applies rotation, then scale, then translation
-        LW00 = scaleX*r00; LW01 = scaleX*r01; LW02 = scaleX*r02; LW03 = position.getX();
-        LW10 = scaleY*r10; LW11 = scaleY*r11; LW12 = scaleY*r12; LW13 = position.getY();
-        LW20 = scaleZ*r20; LW21 = scaleZ*r21; LW22 = scaleZ*r22; LW23 = position.getZ();
+        // [translation].[rotation].[scale]
+        // Applies scale, then rotation, then translation
+        LW00 = scaleX*r00; LW01 = scaleY*r01; LW02 = scaleZ*r02; LW03 = position.getX();
+        LW10 = scaleX*r10; LW11 = scaleY*r11; LW12 = scaleZ*r12; LW13 = position.getY();
+        LW20 = scaleX*r20; LW21 = scaleY*r21; LW22 = scaleZ*r22; LW23 = position.getZ();
 
         // WORLD TO LOCAL SPACE TRANSFORM
         // The inverse
-        // [transpose rotation].[inverse scale].[inverse translation]
-        // Applies inverse translation, then inverse scale, then transposed rotation
+        // [inverse scale].[transpose rotation].[inverse translation]
+        // Applies inverse translation, then transposed rotation, then inverse scale
         WL00 = invScaleX*r00; WL01 = invScaleX*r10; WL02 = invScaleX*r20; WL03 = -WL00*LW03 - WL01*LW13 - WL02*LW23;
         WL10 = invScaleY*r01; WL11 = invScaleY*r11; WL12 = invScaleY*r21; WL13 = -WL10*LW03 - WL11*LW13 - WL12*LW23;
         WL20 = invScaleZ*r02; WL21 = invScaleZ*r12; WL22 = invScaleZ*r22; WL23 = -WL20*LW03 - WL21*LW13 - WL22*LW23;

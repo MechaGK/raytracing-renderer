@@ -59,17 +59,17 @@ public class Cuboid extends Shape {
         double ys = Math.copySign(1, l.getY());
         double zs = Math.copySign(1, l.getZ());
         
-        double x = l.getX() - xs;
-        double y = l.getY() - ys;
-        double z = l.getZ() - zs;
+        double x = Math.abs(l.getX() - xs);
+        double y = Math.abs(l.getY() - ys);
+        double z = Math.abs(l.getZ() - zs);
         
         Vector3D result;
         
-        if (x < y && y < z)
+        if (x < y && x < z)
             result = new Vector3D(xs, 0, 0);
-        else if (y < x && x < z)
+        else if (y < x && y < z)
             result = new Vector3D(0, ys, 0);
-        else if (z < x && x < y)
+        else if (z < x && z < y)
             result = new Vector3D(0, 0, zs);
         else
             result = Vector3D.ZERO;

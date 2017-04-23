@@ -49,8 +49,8 @@ public class Main {
         );
 
         scene.addLights(
-                new DistantLight(new Vector3D(2, -4, 3), 15, Color.white)
-                //new DistantLight(new Vector3D(-2, 4, 3), 5, Color.cyan)
+                new DistantLight(new Vector3D(2, -4, 3), 15, Color.yellow),
+                new DistantLight(new Vector3D(-2, 4, 3), 5, Color.cyan)
         );
 
         return scene;

@@ -68,7 +68,7 @@ public class PerspectiveCamera extends Camera {
 
     public Ray getRayFromScreenSpace(int x, int y, int viewportWidth, int viewportHeight, Vector3D bottomLeft) {
         float baseX = (float)x / (float)viewportWidth;
-        float baseY = (float)y / (float)viewportHeight;
+        float baseY = 1f - ((float)y / (float)viewportHeight);
 
         float aspectRatio = (float)viewportWidth / (float)viewportHeight;
 

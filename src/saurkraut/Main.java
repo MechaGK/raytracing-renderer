@@ -49,8 +49,8 @@ public class Main {
         );
 
         scene.addLights(
-                new DistantLight(new Vector3D(2, -4, 3), 15, Color.yellow),
-                new DistantLight(new Vector3D(-2, 4, 3), 5, Color.cyan)
+                new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
+                new DistantLight(new Vector3D(-2, 4, 0), 5, Color.white)
         );
 
         return scene;
@@ -63,16 +63,16 @@ public class Main {
 
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(0, 0, -10);
-        Vector3D cameraDirection = new Vector3D(0, 0, 1);
+        Vector3D cameraRotation = new Vector3D(Math.toRadians(0), Math.toRadians(0), 0);
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 200;
-        final int resolutionY = 200;
+        final int resolutionX = 100;
+        final int resolutionY = 100;
 
         final double aspectRatio = (double) resolutionX / (double) resolutionY;
         final double scale = 10;
 
-        Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, scale * aspectRatio, scale);
+        Camera camera = new OrthogonalCamera(cameraOrigin, cameraRotation, scale * aspectRatio, scale);
 
         BufferedImage image = renderScene(scene, camera, resolutionX, resolutionY);
         saveImage(image, "test.png");
@@ -121,7 +121,6 @@ public class Main {
 
             if (rayHit == null) {
                 // No shape hit by ray. Continue to next ray.
-                image.setRGB(cameraRay.x, cameraRay.y, 0xFFc8daf7);
                 continue;
             }
 

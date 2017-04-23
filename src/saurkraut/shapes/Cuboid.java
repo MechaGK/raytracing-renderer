@@ -65,11 +65,11 @@ public class Cuboid extends Shape {
         
         Vector3D result;
         
-        if (x < y && x < z)
+        if (x <= y && x <= z)
             result = new Vector3D(xs, 0, 0);
-        else if (y < x && y < z)
+        else if (y <= x && y <= z)
             result = new Vector3D(0, ys, 0);
-        else if (z < x && z < y)
+        else if (z <= x && z <= y)
             result = new Vector3D(0, 0, zs);
         else
             result = Vector3D.ZERO;

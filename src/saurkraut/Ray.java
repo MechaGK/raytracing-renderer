@@ -26,4 +26,8 @@ public class Ray {
         return origin.add(direction.scalarMultiply(t));
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s, dir: %s", origin, direction);
+    }
 }

@@ -1,5 +1,6 @@
-package saurkraut;
+package saurkraut.materials;
 
+import saurkraut.materials.Material;
 import saurkraut.util.ColorUtil;
 
 import java.awt.*;

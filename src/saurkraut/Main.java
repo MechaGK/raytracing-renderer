@@ -1,9 +1,9 @@
 package saurkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.math3.stat.regression.UpdatingMultipleLinearRegression;
 import saurkraut.lights.DistantLight;
 import saurkraut.lights.Light;
+import saurkraut.materials.ColoredMaterial;
 import saurkraut.shapes.*;
 import saurkraut.util.ColorUtil;
 import saurkraut.shapes.Shape;

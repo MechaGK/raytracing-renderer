@@ -1,8 +1,7 @@
 package saurkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
-import saurkraut.Material;
+import saurkraut.materials.Material;
 import saurkraut.Ray;
 
 import java.awt.*;

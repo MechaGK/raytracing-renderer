@@ -1,4 +1,4 @@
-package saurkraut;
+package saurkraut.materials;
 
 import java.awt.*;
 

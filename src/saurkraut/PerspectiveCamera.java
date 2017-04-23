@@ -83,9 +83,9 @@ public class PerspectiveCamera extends Camera {
     public PerspectiveCamera(Vector3D position, Vector3D direction, double fieldOfView, double clipDistance) {
         this.position = position;
         this.direction = direction.normalize();
-        this.right = new Vector3D(0,  1, 0).crossProduct(direction).normalize();
-        this.up = direction.crossProduct(right).normalize();
-        this.clipOrigin = position.add(direction.scalarMultiply(clipDistance));
+        this.right = new Vector3D(0,  1, 0).crossProduct(this.direction).normalize();
+        this.up = this.direction.crossProduct(right).normalize();
+        this.clipOrigin = position.add(this.direction.scalarMultiply(clipDistance));
 
 
         this.width = clipDistance * Math.tan(fieldOfView / 2) * 2;

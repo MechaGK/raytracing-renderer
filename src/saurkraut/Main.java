@@ -42,13 +42,15 @@ public class Main {
         Scene scene = new Scene();
 
         scene.addShapes(
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 1.5d, 0), 3),
-                new Plane(new ColoredMaterial(new Color(100, 255, 100), 0.18f), new Vector3D(0, -2, 0), new Vector3D(0, 1, -1))
+                new Plane(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(0, 1, 0)),
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 2d, -3), 2),
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(-7d, 2d, 0), 2),
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(4d, 2d, 2), 2)
         );
 
         scene.addLights(
                 //new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
-                new DistantLight(new Vector3D(0, 0, 1), 15, Color.white)
+                new DistantLight(new Vector3D(1, -1, 1), 15, Color.white)
         );
 
         return scene;
@@ -59,17 +61,17 @@ public class Main {
         Scene scene = createSimpleScene();
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(0, 0, -10);
-        Vector3D cameraDirection = new Vector3D(0, 0, 1);
+        Vector3D cameraOrigin = new Vector3D(0, 6, -10);
+
+        // Is only used for initialization. Real direction is set by lookAt just after creation
+        Vector3D cameraDirection = new Vector3D(0, -1, 5);
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 3840;
-        final int resolutionY = 2160;
+        final int resolutionX = 960;
+        final int resolutionY = 600;
 
-        final double aspectRatio = (double) resolutionX / (double) resolutionY;
-        final double scale = 10;
-
-        Camera camera = new OrthogonalCamera(cameraOrigin, cameraDirection, scale * aspectRatio, scale);
+        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 90, 0.1);
+        camera.lookAt(new Vector3D(0, 0, 0));
 
         BufferedImage image = renderScene(scene, camera, resolutionX, resolutionY);
         saveImage(image, "test.png");

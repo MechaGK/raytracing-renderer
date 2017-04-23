@@ -41,27 +41,34 @@ public class Main {
     public static Scene createSimpleScene() {
         Scene scene = new Scene();
 
+        //Shape sphere1 = new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(5, 1, 8), new Vector3D(1* Math.PI*2/4, 1* Math.PI*2/4, 1* Math.PI*2/16));
+        //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
+        
         scene.addShapes(
                 new Plane(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(0, 1, 0)),
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 2d, -3), 2),
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(-4, 2d, 5), 2),
                 new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(-7d, 2d, 0), 2),
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(4d, 2d, 2), 2)
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(8d, 2d, -2), 2),
+                new Cuboid(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 4, 0),
+                        new Vector3D(2, 2, 2), new Vector3D(1* Math.PI*2/8, 1* Math.PI*2/8, 1* Math.PI*2/8).scalarMultiply(1))
+
         );
 
         scene.addLights(
-                //new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
-                new DistantLight(new Vector3D(1, -1, 1), 15, Color.white)
+                new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
+                new DistantLight(new Vector3D(-2, 4, 0), 5, Color.white)
         );
 
         return scene;
     }
+    
 
     public static void main(String[] args) {
         // Creating a scene
         Scene scene = createSimpleScene();
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(0, 6, -10);
+        Vector3D cameraOrigin = new Vector3D(0, 8, -10);
 
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(0, -1, 5);

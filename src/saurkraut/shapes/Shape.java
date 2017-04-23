@@ -7,32 +7,29 @@ import saurkraut.materials.Material;
 import saurkraut.Ray;
 
 import java.awt.*;
-import java.util.Arrays;
+import saurkraut.SceneObject;
 
 /**
  * Abstract class for a shape
  */
-public abstract class Shape {
-    RealMatrix transform;
+public abstract class Shape extends SceneObject {
+    private static final Vector3D UNIT_SCALE = new Vector3D(1, 1, 1);
+    
     protected Material material;
-
+    
     public Shape(Material material, Vector3D position) {
-        double[][] transformData = {
-                {0, 0, 0, position.getX()},
-                {0, 0, 0, position.getY()},
-                {0, 0, 0, position.getZ()},
-                {0, 0, 0, 0}
-        };
-
-        transform = MatrixUtils.createRealMatrix(transformData);
-
+        super(position, UNIT_SCALE, Vector3D.ZERO);
+        this.material = material;
+    }
+    
+    public Shape(Material material, Vector3D position, Vector3D scale) {
+        super(position, scale, Vector3D.ZERO);
         this.material = material;
     }
 
-    public Vector3D getPosition() {
-        double[] coordinates = transform.getColumn(3);
-
-        return new Vector3D(Arrays.copyOfRange(coordinates, 0, 3));
+    public Shape(Material material, Vector3D position, Vector3D scale, Vector3D eulerAngles) {
+        super(position, scale, eulerAngles);
+        this.material = material;
     }
 
     /**

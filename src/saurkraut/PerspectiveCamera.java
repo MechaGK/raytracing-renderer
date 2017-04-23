@@ -92,6 +92,7 @@ public class PerspectiveCamera extends Camera {
     }
 
     public PerspectiveCamera(Vector3D position, Vector3D direction, double fieldOfView, double clipDistance) {
+        super(position, Vector3D.ZERO); // Euler angles hardcoded
         this.position = position;
         this.clipDistance = clipDistance;
         this.width = clipDistance * Math.tan(fieldOfView / 2) * 2;

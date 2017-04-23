@@ -23,7 +23,7 @@ public class Plane extends Shape {
             return null;
         }
 
-        double scalar = getPosition().subtract(ray.origin).dotProduct(normal);
+        double scalar = position.subtract(ray.origin).dotProduct(normal);
         scalar = scalar / test;
 
         if (scalar < 0) {

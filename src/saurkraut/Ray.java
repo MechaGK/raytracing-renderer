@@ -5,6 +5,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public class Ray {
     public final Vector3D origin;
     public final Vector3D direction;
+    public final Vector3D invDirection;
 
     /**
      * Creates a ray from a given origin and direction.
@@ -15,6 +16,7 @@ public class Ray {
     public Ray(Vector3D origin, Vector3D direction) {
         this.origin = origin;
         this.direction = direction.normalize();
+        this.invDirection = new Vector3D(1/this.direction.getX(), 1/this.direction.getY(), 1/this.direction.getZ());
     }
 
     /**

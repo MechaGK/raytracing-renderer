@@ -6,13 +6,14 @@ import java.util.Iterator;
 
 public class PerspectiveCamera extends Camera {
     private Vector3D position;
-    private Vector3D direction;
 
     private double width;
 
     private Vector3D up;
     private Vector3D right;
     private Vector3D clipOrigin;
+
+    private double clipDistance;
 
     class RaysIterator implements Iterator<CameraRay> {
         private final int resWidth;
@@ -80,14 +81,38 @@ public class PerspectiveCamera extends Camera {
         return new Ray(position, point.subtract(position));
     }
 
+    /**
+     * Sets direction so the camera is looking at the given point
+     * @param position Point to look at
+     */
+    public void lookAt(Vector3D position) {
+        Vector3D newDirection = position.subtract(this.position);
+
+        setDirection(newDirection);
+    }
+
     public PerspectiveCamera(Vector3D position, Vector3D direction, double fieldOfView, double clipDistance) {
         this.position = position;
-        this.direction = direction.normalize();
-        this.right = new Vector3D(0,  1, 0).crossProduct(this.direction).normalize();
-        this.up = this.direction.crossProduct(right).normalize();
-        this.clipOrigin = position.add(this.direction.scalarMultiply(clipDistance));
-
-
+        this.clipDistance = clipDistance;
         this.width = clipDistance * Math.tan(fieldOfView / 2) * 2;
+
+        setDirection(direction); // Clip distance must be set before
+    }
+
+    /**
+     * Set the direction of the camera
+     * @param newDirection The new direction of the camera
+     */
+    public void setDirection(Vector3D newDirection) {
+        // Calculating up and right vector from the given direction.
+        // We don't really use the direction itself anywhere
+        Vector3D direction = newDirection.normalize();
+        this.right = new Vector3D(0,  1, 0).crossProduct(direction).normalize();
+        this.up = direction.crossProduct(right).normalize();
+
+        // Origin of the clip plane
+        this.clipOrigin = position.add(direction.scalarMultiply(clipDistance));
+
+
     }
 }

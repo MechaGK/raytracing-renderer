@@ -31,8 +31,8 @@ public abstract class SceneObject {
         double scaleZ = scale.getZ(), invScaleZ = 1/scaleZ;
         
         double angX = eulerAngles.getX();
-        double angY = eulerAngles.getX();
-        double angZ = eulerAngles.getX();
+        double angY = eulerAngles.getY();
+        double angZ = eulerAngles.getZ();
         
         double cX = Math.cos(angX);
         double sX = Math.sin(angX);
@@ -96,7 +96,7 @@ public abstract class SceneObject {
                 lx*r20 + ly*r21 + lz*r22
         );
     }
-    
+
     public Vector3D directionToLocal(Vector3D worldPoint) {
         double wx = worldPoint.getX();
         double wy = worldPoint.getY();
@@ -108,4 +108,13 @@ public abstract class SceneObject {
                 wx*r02 + wy*r12 + wz*r22
         );
     };
+    
+    public Ray rayToLocal(Ray worldRay) {
+        return new Ray(pointToLocal(worldRay.origin), directionToLocal(worldRay.direction));
+    }
+    
+    public Ray rayToWorld(Ray localRay) {
+        return new Ray(pointToWorld(localRay.origin), directionToWorld(localRay.direction));
+    }
+    
 }

@@ -40,14 +40,17 @@ public class Main {
     public static Scene createSimpleScene() {
         Scene scene = new Scene();
 
+        //Shape sphere1 = new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(5, 1, 8), new Vector3D(1* Math.PI*2/4, 1* Math.PI*2/4, 1* Math.PI*2/16));
+        //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
+        
         scene.addShapes(
-                new Cuboid(new ColoredMaterial(Color.white, 0.18f), Vector3D.ZERO, new Vector3D(2, 2, 2), new Vector3D(1, 2*Math.PI/8, 0))
-//                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(1, 1, 5), 1)
+                new Cuboid(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(3, 3, 3), new Vector3D(1* Math.PI*2/8, 1* Math.PI*2/8, 1* Math.PI*2/8).scalarMultiply(1))
+                //sphere1
         );
 
         scene.addLights(
-                new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
-                new DistantLight(new Vector3D(-2, 4, 3), 5, Color.white)
+                new DistantLight(new Vector3D(2, -4, 3), 15, Color.white)
+                //new DistantLight(new Vector3D(-2, 4, 3), 5, Color.cyan)
         );
 
         return scene;
@@ -63,7 +66,7 @@ public class Main {
         Vector3D cameraDirection = new Vector3D(0, 0, 1);
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 320;
+        final int resolutionX = 200;
         final int resolutionY = 200;
 
         final double aspectRatio = (double) resolutionX / (double) resolutionY;

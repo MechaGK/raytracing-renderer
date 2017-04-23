@@ -16,51 +16,70 @@ public class Cuboid extends Shape {
 
     @Override
     public Vector3D intersect(Ray ray) {
-    	Vector3D rayOrigin = pointToLocal(ray.origin);
-    	Vector3D rayDir = directionToLocal(ray.direction);
+        Ray locRay = rayToLocal(ray);
     	
-    	double invDirX = 1/rayDir.getX();
-    	double invDirY = 1/rayDir.getY();
-    	double invDirZ = 1/rayDir.getZ();
-    	double xSign = invDirX < 0 ? -1 : 1;
-    	double ySign = invDirY < 0 ? -1 : 1;
+    	double invDirX = locRay.invDirection.getX();
+    	double invDirY = locRay.invDirection.getY();
+    	double xSign = locRay.direction.getX() < 0 ? -1 : 1;
+    	double ySign = locRay.direction.getY() < 0 ? -1 : 1;
 
-    	double t0x, t1x, t0y, t1y;
+    	double xNear, xFar, yNear, yFar;
     	
-	  	t0x = (-xSign - rayOrigin.getX()) * invDirX; 
-	  	t1x = (xSign - rayOrigin.getX()) * invDirX;
-	    t0y = (-ySign - rayOrigin.getY()) * invDirY; 
-	    t1y = (ySign - rayOrigin.getY()) * invDirY;
+	xNear = (-xSign - locRay.origin.getX()) * invDirX;
+	xFar = (xSign - locRay.origin.getX()) * invDirX;
+	yNear = (-ySign - locRay.origin.getY()) * invDirY; 
+	yFar = (ySign - locRay.origin.getY()) * invDirY;
     	
-    	if (t0x > t1y || t0y > t1x)
+    	if (xNear > yFar || yNear > xFar)
     		return null;
     	
-    	double t0 = Math.max(t0x, t0y);
-    	double t1 = Math.min(t1x, t1y);
+    	double tNear = Math.max(xNear, yNear);
+    	double tFar = Math.min(xFar, yFar);
     	
-    	double t0z, t1z;
-    	double zSign = invDirZ < 0 ? -1 : 1;
+    	double zNear, zFar;
+        double invDirZ = locRay.invDirection.getZ();
+    	double zSign = locRay.direction.getZ() < 0 ? -1 : 1;
     	
-    	t0z = (-zSign - rayOrigin.getY()) * invDirZ; 
-    	t1z = (zSign - rayOrigin.getY()) * invDirZ;
+    	zNear = (-zSign - locRay.origin.getZ()) * invDirZ;        
+    	zFar = (zSign - locRay.origin.getZ()) * invDirZ;
     	
-    	if (t0 > t1z || t1 < t0z)
+    	if (tNear > zFar || zNear >= tFar)
     		return null;
     	
-    	if (t0z > t0) t0 = t0z;
-    	if (t1z < t1) t1 = t1z;
+    	if (zNear > tNear) tNear = zNear;
+    	if (zFar < tFar) tFar = zFar;
     
-    	return pointToWorld(rayOrigin.add(rayDir.scalarMultiply(t0)));
+    	return pointToWorld(locRay.getPoint(tNear));
     }
 
     @Override
     public Vector3D getNormal(Vector3D point) {
-        return Vector3D.MINUS_K;
+        Vector3D l = pointToLocal(point);
+        double xs = Math.copySign(1, l.getX());
+        double ys = Math.copySign(1, l.getY());
+        double zs = Math.copySign(1, l.getZ());
+        
+        double x = l.getX() - xs;
+        double y = l.getY() - ys;
+        double z = l.getZ() - zs;
+        
+        Vector3D result;
+        
+        if (x < y && y < z)
+            result = new Vector3D(xs, 0, 0);
+        else if (y < x && x < z)
+            result = new Vector3D(0, ys, 0);
+        else if (z < x && x < y)
+            result = new Vector3D(0, 0, zs);
+        else
+            result = Vector3D.ZERO;
+        
+        return directionToWorld(result);
     }
 
     @Override
     public Color getColor(Vector3D point) {
-        return Color.CYAN;
+        return material.getColor(0.5, 0.5);
     }
     
 }

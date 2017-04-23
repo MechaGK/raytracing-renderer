@@ -24,15 +24,11 @@ public class Sphere extends Shape {
     @Override
     public Vector3D intersect(Ray ray) {
         // 1. Transform ray to local space
-        Vector3D locRayDir = directionToLocal(ray.direction);
-        Vector3D locRayOrigin = pointToLocal(ray.origin);
-        
-        Ray locRay = new Ray(locRayOrigin, locRayDir);
-        
+        Ray locRay = rayToLocal(ray);
+                
         // 2. Now test against unit sphere
-        double b = 2 * locRayDir.dotProduct(locRayOrigin);
-        double c = Math.pow(locRayOrigin.getNorm(), 2) - 1
-                ;
+        double b = 2 * locRay.direction.dotProduct(locRay.origin);
+        double c = Math.pow(locRay.origin.getNorm(), 2) - 1;
 
         double discriminant = b * b - 4 * c;
 
@@ -59,7 +55,9 @@ public class Sphere extends Shape {
 
     @Override
     public Vector3D getNormal(Vector3D point) {
-        return point.subtract(position).normalize();
+        Vector3D loc = pointToLocal(point);
+        return loc.normalize();
+        //return point.subtract(position).normalize();
     }
 
     @Override

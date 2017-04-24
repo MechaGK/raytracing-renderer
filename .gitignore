@@ -1,6 +1,9 @@
 .DS_Store
 test.png
 
+# Local testing file
+LocalTest.java
+
 # Created by https://www.gitignore.io/api/java,eclipse,netbeans,intellij+iml
 
 ### Eclipse ###

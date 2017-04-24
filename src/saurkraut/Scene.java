@@ -67,6 +67,9 @@ public class Scene {
      * @return RayHit with first shape and where it was hit. Null if nothing was hit
      */
     public RayHit castRay(Ray ray) {
+        return castRay(ray, null);
+    }
+    public RayHit castRay(Ray ray, Shape self) {
         Vector3D closestHit = null;
         Shape closestShape = null;
         double closestHitDistance = Double.MAX_VALUE;
@@ -75,6 +78,8 @@ public class Scene {
         double distance;
 
         for (Shape shape : getShapes()) {
+            if (shape == self) continue;
+            
             hit = shape.intersect(ray);
 
             if (hit == null) continue;

@@ -10,4 +10,9 @@ public class CameraRay {
         this.x = x;
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%d, %d): %s", x, y, ray);
+    }
 }

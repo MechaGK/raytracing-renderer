@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import saurkraut.Material;
+import saurkraut.materials.Material;
 import saurkraut.Ray;
 
 

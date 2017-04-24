@@ -3,6 +3,7 @@ package saurkraut;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import saurkraut.lights.DistantLight;
 import saurkraut.lights.Light;
+import saurkraut.materials.ColoredMaterial;
 import saurkraut.shapes.*;
 import saurkraut.util.ColorUtil;
 import saurkraut.shapes.Shape;
@@ -44,10 +45,12 @@ public class Main {
         //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
         
         scene.addShapes(
-                new Sphere(new ColoredMaterial(
-                        Color.white, 0.18f),
-                        new Vector3D(0, 0, 0),
-                        2)
+                new Plane(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(0, 1, 0)),
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(-4, 2d, 5), 2),
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(-7d, 2d, 0), 2),
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(8d, 2d, -2), 2),
+                new Cuboid(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 4, 0),
+                        new Vector3D(2, 2, 2), new Vector3D(1* Math.PI*2/8, 1* Math.PI*2/8, 1* Math.PI*2/8).scalarMultiply(1))
         );
 
         scene.addLights(
@@ -128,21 +131,29 @@ public class Main {
 
     public static void main(String[] args) {
         // Creating a scene
-        Scene scene = createCuboidTestScene();
+        Scene scene = createInappropriateScene();
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(0, 0, -10);
-        Vector3D cameraRotation = new Vector3D(Math.toRadians(0), Math.toRadians(0), 0);
+        Vector3D cameraOrigin = new Vector3D(3, 2, -10);
+
+        // Is only used for initialization. Real direction is set by lookAt just after creation
+        Vector3D cameraDirection = new Vector3D(0, -1, 5);
+        Vector3D cameraOrientation = new Vector3D(
+                Math.toRadians(0),
+                Math.toRadians(0),
+                Math.toRadians(0));
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 400;
-        final int resolutionY = 400;
+        final int resolutionX = 960;
+        final int resolutionY = 600;
+        
+        double aspectRatio = (double) resolutionX / (double) resolutionY;
+        double scale = 8;
 
-        final double aspectRatio = (double) resolutionX / (double) resolutionY;
-        final double scale = 5;
-
-        Camera camera = new OrthogonalCamera(cameraOrigin, cameraRotation, scale * aspectRatio, scale);
-
+        //PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 90, 0.1);
+        //camera.lookAt(new Vector3D(0, 0, 0));
+        Camera camera = new OrthogonalCamera(cameraOrigin, cameraOrientation, aspectRatio * scale, scale);
+        
         BufferedImage image = renderScene(scene, camera, resolutionX, resolutionY);
         saveImage(image, "test.png");
     }
@@ -207,6 +218,9 @@ public class Main {
             Color shapeColor = shape.getColor(hit);
 
             Color lightColor = PhongShader.shade(scene, shape, hit, ray.direction);
+            //Color lightColor = UnlitShader.shade(shape, hit);
+
+            //System.out.format("x %d, y %d; %s, %s\n", cameraRay.x, cameraRay.y, shapeColor.toString(), lightColor.toString());
 
             Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
             shadingEnd = System.nanoTime();

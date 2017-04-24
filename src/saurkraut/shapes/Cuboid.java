@@ -20,8 +20,8 @@ public class Cuboid extends Shape {
     	
     	double invDirX = locRay.invDirection.getX();
     	double invDirY = locRay.invDirection.getY();
-    	double xSign = locRay.direction.getX() < 0 ? -1 : 1;
-    	double ySign = locRay.direction.getY() < 0 ? -1 : 1;
+    	double xSign = Math.copySign(1, locRay.direction.getX());
+    	double ySign = Math.copySign(1, locRay.direction.getY());
 
     	double xNear, xFar, yNear, yFar;
     	
@@ -30,7 +30,7 @@ public class Cuboid extends Shape {
 	yNear = (-ySign - locRay.origin.getY()) * invDirY; 
 	yFar = (ySign - locRay.origin.getY()) * invDirY;
     	
-    	if (xNear > yFar || yNear > xFar)
+    	if (xNear > yFar || yNear > xFar || Double.isNaN(xNear) || Double.isNaN(xFar) || Double.isNaN(yNear) || Double.isNaN(yFar))
     		return null;
     	
     	double tNear = Math.max(xNear, yNear);
@@ -38,7 +38,7 @@ public class Cuboid extends Shape {
     	
     	double zNear, zFar;
         double invDirZ = locRay.invDirection.getZ();
-    	double zSign = locRay.direction.getZ() < 0 ? -1 : 1;
+    	double zSign = Math.copySign(1, locRay.direction.getZ());
     	
     	zNear = (-zSign - locRay.origin.getZ()) * invDirZ;        
     	zFar = (zSign - locRay.origin.getZ()) * invDirZ;
@@ -47,11 +47,11 @@ public class Cuboid extends Shape {
     		return null;
     	
     	if (zNear > tNear) tNear = zNear;
-    	if (zFar < tFar) tFar = zFar;
+    	//if (zFar < tFar) tFar = zFar;
     
     	return pointToWorld(locRay.getPoint(tNear));
     }
-
+    
     @Override
     public Vector3D getNormal(Vector3D point) {
         Vector3D l = pointToLocal(point);

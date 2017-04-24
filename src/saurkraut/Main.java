@@ -44,13 +44,82 @@ public class Main {
         //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
         
         scene.addShapes(
-                new Cuboid(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(3, 3, 3), new Vector3D(1* Math.PI*2/8, 1* Math.PI*2/8, 1* Math.PI*2/8).scalarMultiply(1))
-                //sphere1
+                new Sphere(new ColoredMaterial(
+                        Color.white, 0.18f),
+                        new Vector3D(0, 0, 0),
+                        2)
         );
 
         scene.addLights(
-                new DistantLight(new Vector3D(2, -4, 3), 15, Color.white),
-                new DistantLight(new Vector3D(-2, 4, 0), 5, Color.white)
+                new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
+                new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
+        );
+
+        return scene;
+    }
+    
+    public static Scene createCuboidTestScene() {
+        Scene scene = new Scene();
+
+        //Shape sphere1 = new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(5, 1, 8), new Vector3D(1* Math.PI*2/4, 1* Math.PI*2/4, 1* Math.PI*2/16));
+        //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
+        Vector3D[] corners = new Vector3D[] {
+            new Vector3D(-1, -1, -1),
+            new Vector3D(-1, -1, 1),
+            new Vector3D(-1, 1, -1),
+            new Vector3D(-1, 1, 1),
+            new Vector3D(1, -1, -1),
+            new Vector3D(1, -1, 1),
+            new Vector3D(1, 1, -1),
+            new Vector3D(1, 1, 1),
+            new Vector3D(-1, 0, -1),
+            new Vector3D(-1, 0, 1),
+            new Vector3D(1, 0, -1),
+            new Vector3D(1, 0, 1),
+            new Vector3D(0, -1, -1),
+            new Vector3D(0, -1, 1),
+            new Vector3D(0, 1, -1),
+            new Vector3D(0, 1, 1),
+            new Vector3D(-1, -1, 0),
+            new Vector3D(-1, 1, 0),
+            new Vector3D(1, -1, 0),
+            new Vector3D(1, 1, 0)
+            
+            
+        };
+        
+        Color[] colors = new Color[] {
+            Color.RED,
+            Color.GREEN,
+            Color.BLUE,
+            Color.MAGENTA,
+            Color.YELLOW,
+            Color.CYAN,
+            Color.ORANGE
+        };
+        
+        Shape s;
+        scene.addShapes(
+                (s = new Sphere(new ColoredMaterial(
+                        Color.white, 0.18f),
+                        new Vector3D(0, 0, 0), // Position
+                        new Vector3D(0.8, 1, 1), // Scale
+                        new Vector3D(
+                                Math.toRadians(15),
+                                Math.toRadians(15),
+                                Math.toRadians(15)))) // rotation
+        );
+        
+        for (int i = 0; i < corners.length; ++i) {
+            scene.add(new Sphere(new ColoredMaterial(
+                        colors[i%colors.length], 0.18f),
+                        s.pointToWorld(corners[i]), // Position
+                        0.05));
+        }
+
+        scene.addLights(
+                new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
+                new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
         );
 
         return scene;
@@ -59,18 +128,18 @@ public class Main {
 
     public static void main(String[] args) {
         // Creating a scene
-        Scene scene = createSimpleScene();
+        Scene scene = createCuboidTestScene();
 
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(0, 0, -10);
         Vector3D cameraRotation = new Vector3D(Math.toRadians(0), Math.toRadians(0), 0);
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 100;
-        final int resolutionY = 100;
+        final int resolutionX = 400;
+        final int resolutionY = 400;
 
         final double aspectRatio = (double) resolutionX / (double) resolutionY;
-        final double scale = 10;
+        final double scale = 5;
 
         Camera camera = new OrthogonalCamera(cameraOrigin, cameraRotation, scale * aspectRatio, scale);
 
@@ -121,6 +190,7 @@ public class Main {
 
             if (rayHit == null) {
                 // No shape hit by ray. Continue to next ray.
+                image.setRGB(cameraRay.x, cameraRay.y, Color.MAGENTA.getRGB());
                 continue;
             }
 

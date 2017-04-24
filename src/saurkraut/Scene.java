@@ -14,7 +14,15 @@ import java.util.List;
 public class Scene {
     private ArrayList<Shape> shapes = new ArrayList<>();
     private ArrayList<Light> lights = new ArrayList<>();
+    
+    /* TODO: Uncomment (^:
+    private Camera camera;
 
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+    */
+    
     public void add(Shape shape) {
         shapes.add(shape);
     }

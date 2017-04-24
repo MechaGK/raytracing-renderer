@@ -9,20 +9,24 @@ import java.util.Iterator;
  * Origin of raysIterator are not rotated as they should
  */
 public class OrthogonalCamera extends Camera {
-    private double width;
-    private double height;
+    private double scale;
 
     class RaysIterator implements Iterator<CameraRay> {
         private final int resWidth;
         private final int resHeight;
-
+        private final double width;
+        private final double height;
+        
         private int x;
         private int y;
 
-        public RaysIterator(int width, int height) {
-            this.resWidth = width;
-            this.resHeight = height;
-
+        public RaysIterator(int resWidth, int resHeight) {
+            this.resWidth = resWidth;
+            this.resHeight = resHeight;
+            double aspectRatio = (double) resWidth / (double) resHeight;
+            this.width = scale*aspectRatio;
+            this.height = scale;
+            
             this.x = 0;
             this.y = 0;
         }
@@ -53,10 +57,9 @@ public class OrthogonalCamera extends Camera {
         }
     }
 
-    public OrthogonalCamera(Vector3D position, Vector3D eulerRotation, double width, double height) {
+    public OrthogonalCamera(Vector3D position, Vector3D eulerRotation, double scale) {
         super(position, eulerRotation);
-        this.width = width;
-        this.height = height;
+        this.scale = scale;
     }
 
     @Override

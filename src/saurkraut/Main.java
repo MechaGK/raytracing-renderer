@@ -36,12 +36,12 @@ public class Main {
         scene.add(light2);
         
                 // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(0, 0, -7);
+        Vector3D cameraOrigin = new Vector3D(15, 2, -20);
         
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(0, -1, 5);
-        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 125, 0.1);
-        camera.lookAt(new Vector3D(0, 0, 0));
+        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 120, 0.1);
+        camera.lookAt(new Vector3D(3, 2, 0));
         scene.setCamera(camera);
 
         return scene;
@@ -67,13 +67,13 @@ public class Main {
                 new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
         );
 
-                // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(0, 0, -7);
+        // Setting up camera
+        Vector3D cameraOrigin = new Vector3D(-5, 4, -10);
         
         // Is only used for initialization. Real direction is set by lookAt just after creation
-        Vector3D cameraDirection = new Vector3D(0, -1, 5);
-        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 125, 0.1);
-        camera.lookAt(new Vector3D(0, 0, 0));
+        Vector3D cameraDirection = new Vector3D(5, -7, 5);
+        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 90, 0.1);
+        camera.lookAt(new Vector3D(2, 2, 2));
         scene.setCamera(camera);
         
         return scene;
@@ -156,7 +156,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Creating a scene
-        Scene scene = createCuboidTestScene();
+        Scene scene = createSimpleScene();
 
         // Rendering scene to image and saving to disk
         final int resolutionX = 600;

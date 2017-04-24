@@ -19,16 +19,16 @@ public class Main {
     public static Scene createInappropriateScene() {
         Scene scene = new Scene();
 
-        Shape sphere1 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(0.8, 2, 1.2), 2);
-        Shape sphere2 = new Sphere(new ColoredMaterial(Color.cyan, 0.18f), new Vector3D(1, 2, -1.2), 2);
+        Shape sphere1 = new Sphere(new ColoredMaterial(Color.PINK, 0.18f), new Vector3D(0.8, 0, 1.2), 2);
+        Shape sphere2 = new Sphere(new ColoredMaterial(Color.PINK, 0.18f), new Vector3D(1, 0, -1.2), 2);
 
         int i;
-        for (i = 0; i < 7; ++i)
-            scene.add(new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(1 + i, 1 + i * i * 0.04, 0), 1));
-        scene.add(new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(1 + i, 1 + i * i * 0.04, 0), 1.1f));
+        for (i = 0; i < 8; ++i)
+            scene.add(new Sphere(new ColoredMaterial(Color.PINK, 0.18f), new Vector3D(1 + i, 1 + i * i * -0.02, 0), 1));
+        scene.add(new Sphere(new ColoredMaterial(Color.PINK, 0.18f), new Vector3D(1 + i, 1 + i * i * -0.02, 0), 1.1f));
 
-        Light light = new DistantLight(new Vector3D(3, 2, 1), 10, Color.pink);
-        Light light2 = new DistantLight(new Vector3D(-3, 2, -1), 10, Color.orange);
+        Light light = new DistantLight(new Vector3D(3, -2, 1), 15, Color.yellow);
+        Light light2 = new DistantLight(new Vector3D(-3, 2, 1), 15, Color.cyan);
 
         scene.add(sphere1);
         scene.add(sphere2);
@@ -41,7 +41,7 @@ public class Main {
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(0, -1, 5);
         PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 120, 0.1);
-        camera.lookAt(new Vector3D(3, 2, 0));
+        camera.lookAt(new Vector3D(4, 0, 0));
         scene.setCamera(camera);
 
         return scene;
@@ -92,7 +92,7 @@ public class Main {
             new Vector3D(1, -1, -1),
             new Vector3D(1, -1, 1),
             new Vector3D(1, 1, -1),
-            new Vector3D(1, 1, 1),
+            new Vector3D(1, 1, 1),/*/
             new Vector3D(-1, 0, -1),
             new Vector3D(-1, 0, 1),
             new Vector3D(1, 0, -1),
@@ -104,7 +104,7 @@ public class Main {
             new Vector3D(-1, -1, 0),
             new Vector3D(-1, 1, 0),
             new Vector3D(1, -1, 0),
-            new Vector3D(1, 1, 0)
+            new Vector3D(1, 1, 0)//*/
             
             
         };
@@ -121,32 +121,33 @@ public class Main {
         
         Shape s;
         scene.addShapes(
-                (s = new Sphere(new ColoredMaterial(
+                s = new Sphere(new ColoredMaterial(
                         Color.white, 0.18f),
                         new Vector3D(0, 0, 0), // Position
-                        new Vector3D(0.8, 1, 1), // Scale
+                        new Vector3D(2, 2, 2), // Scale
                         new Vector3D(
-                                Math.toRadians(15),
-                                Math.toRadians(15),
-                                Math.toRadians(15)))) // rotation
+                                Math.toRadians(30),
+                                Math.toRadians(0),
+                                Math.toRadians(0))) // rotation
         );
         
         for (int i = 0; i < corners.length; ++i) {
-            scene.add(new Sphere(new ColoredMaterial(
+            scene.add(new Cuboid(new ColoredMaterial(
                         colors[i%colors.length], 0.18f),
                         s.pointToWorld(corners[i]), // Position
-                        0.05));
+                        new Vector3D(0.1, 0.1, 0.1),
+                        s.eulerRotation));
         }
 
         scene.addLights(
-                new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
-                new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
+                new DistantLight(new Vector3D(0, 0, -1), 20, new Color(0xff_ff8000)),
+                new DistantLight(new Vector3D(1, 0, 0), 20, new Color(0xff_0080ff))
         );
     
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(0,0,0);
         Vector3D cameraAngles = new Vector3D(Math.toRadians(0),Math.toRadians(0),Math.toRadians(0));
-        double scale = 3.5;
+        double scale = 5;
         Camera camera = new OrthogonalCamera(cameraOrigin, cameraAngles, scale);
         scene.setCamera(camera);
         
@@ -156,11 +157,11 @@ public class Main {
 
     public static void main(String[] args) {
         // Creating a scene
-        Scene scene = createSimpleScene();
+        Scene scene = createCuboidTestScene();
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 600;
-        final int resolutionY = 600;
+        final int resolutionX = 300;
+        final int resolutionY = 300;
  
         BufferedImage image = scene.renderScene(resolutionX, resolutionY);
         saveImage(image, "test.png");

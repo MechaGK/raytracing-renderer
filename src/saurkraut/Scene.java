@@ -66,10 +66,17 @@ public class Scene {
      * @param ray Ray to test with
      * @return RayHit with first shape and where it was hit. Null if nothing was hit
      */
-    public RayHit castRay(Ray ray) {
-        return castRay(ray, null);
-    }
+    
     public RayHit castRay(Ray ray, Shape self) {
+        return castRay(ray, self, Double.NEGATIVE_INFINITY);
+    }
+    public RayHit castRay(Ray ray, double distEpsilon) {
+        return castRay(ray, null, distEpsilon);
+    }
+    public RayHit castRay(Ray ray) {
+        return castRay(ray, null, Double.NEGATIVE_INFINITY);
+    }
+    public RayHit castRay(Ray ray, Shape self, double distEpsilon) {
         Vector3D closestHit = null;
         Shape closestShape = null;
         double closestHitDistance = Double.MAX_VALUE;
@@ -83,8 +90,8 @@ public class Scene {
             hit = shape.intersect(ray);
 
             if (hit == null) continue;
-
-            distance = hit.distance(ray.origin);
+            if ((distance = hit.distance(ray.origin)) < distEpsilon) continue;
+            
             if (distance < closestHitDistance) {
                 closestHit = hit;
                 closestShape = shape;

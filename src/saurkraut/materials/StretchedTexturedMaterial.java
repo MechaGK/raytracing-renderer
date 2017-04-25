@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.awt.*;
 
 /**
- * Material used to draw textures in a tiling fashion.
+ * Material used to draw textures in a stretching fashion.
  */
 public class StretchedTexturedMaterial extends TexturedMaterial {
   

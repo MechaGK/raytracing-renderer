@@ -1,5 +1,6 @@
 package saurkraut.materials;
 
+import saurkraut.coordinates.Coordinate;
 import saurkraut.materials.Material;
 
 import java.awt.*;
@@ -13,7 +14,8 @@ public class ColoredMaterial extends Material {
     }
 
     @Override
-    public Color getColor(double sigma, double theta) {
+    //public Color getColor(double sigma, double theta) {
+    public Color getColor(Coordinate coord) {
         return color;
     }
 }

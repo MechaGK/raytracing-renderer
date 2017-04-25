@@ -1,6 +1,8 @@
 package saurkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import saurkraut.coordinates.Coordinate;
+import saurkraut.coordinates.SphericalCoordinate;
 import saurkraut.materials.Material;
 import saurkraut.Ray;
 
@@ -70,6 +72,8 @@ public class Sphere extends Shape {
         double sigma = (1 + Math.atan2(relativeHit.getZ(), relativeHit.getX()) / Math.PI) * 0.5d;
         double theta = Math.acos(relativeHit.getY()) / Math.PI;
 
-        return material.getColor(sigma, theta);
+        SphericalCoordinate coord = new SphericalCoordinate(sigma, theta);
+        return material.getColor(coord);
+        //return material.getColor(sigma, theta);
     }
 }

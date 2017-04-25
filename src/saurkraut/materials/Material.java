@@ -1,5 +1,6 @@
 package saurkraut.materials;
 
+import saurkraut.coordinates.Coordinate;
 import java.awt.*;
 
 /**
@@ -22,5 +23,5 @@ public abstract class Material {
      * @param theta Theta
      * @return color at spherical coordinates
      */
-    public abstract Color getColor(double sigma, double theta);
+    public abstract Color getColor(Coordinate coord);
 }

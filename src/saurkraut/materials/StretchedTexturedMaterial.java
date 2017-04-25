@@ -1,5 +1,6 @@
 package saurkraut.materials;
 
+import saurkraut.coordinates.Coordinate;
 import saurkraut.materials.Texture;
 import saurkraut.materials.TexturedMaterial;
 import saurkraut.util.ColorUtil;
@@ -16,8 +17,10 @@ public class StretchedTexturedMaterial extends TexturedMaterial {
     super(albedo, image);
   }
   
-  public Color getColor(double sigma, double theta) {
-    return texture.getColor(((int)((theta) * texture.height)) % texture.height, texture.width -1 - (((int)(sigma * texture.width)) % texture.width)); //Proper!
+  public Color getColor(Coordinate coord) {
+    return texture.getColor(((int)(coord.getScalarTheta() * texture.height)) % texture.height, ((int)(coord.getScalarSigma() * texture.width)) % texture.width);
+    
+    //return texture.getColor(((int)((theta) * texture.height)) % texture.height, texture.width -1 - (((int)(sigma * texture.width)) % texture.width)); //Proper!
   }
   
   

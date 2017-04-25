@@ -22,17 +22,19 @@ public abstract class SceneObject {
     
     private final double r00, r01, r02, r10, r11, r12, r20, r21, r22;
     public final Vector3D position;
+    public final Vector3D eulerRotation;
 
-    public SceneObject(Vector3D position, Vector3D scale, Vector3D eulerAngles) {    
+    public SceneObject(Vector3D position, Vector3D scale, Vector3D eulerRotation) {    
         this.position = position;
+        this.eulerRotation = eulerRotation;
         
         double scaleX = scale.getX(), invScaleX = 1/scaleX;
         double scaleY = scale.getY(), invScaleY = 1/scaleY;
         double scaleZ = scale.getZ(), invScaleZ = 1/scaleZ;
         
-        double angX = eulerAngles.getX();
-        double angY = eulerAngles.getY();
-        double angZ = eulerAngles.getZ();
+        double angX = eulerRotation.getX();
+        double angY = eulerRotation.getY();
+        double angZ = eulerRotation.getZ();
         
         double cX = Math.cos(angX);
         double sX = Math.sin(angX);

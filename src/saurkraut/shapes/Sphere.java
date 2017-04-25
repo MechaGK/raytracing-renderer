@@ -36,7 +36,9 @@ public class Sphere extends Shape {
             double t0 = (-b + Math.sqrt(discriminant)) / 2;
             double t1 = (-b - Math.sqrt(discriminant)) / 2;
 
-            if (t0 < 0) { // Point given by t0 is behind the ray
+            if (t0 < 0 && t1 < 0) { // Both points are behind the ray
+                return null;
+            } else if (t0 < 0) { // Point given by t0 is behind the ray
                 return pointToWorld(locRay.getPoint(t1));
             } else if (t1 < 0) { // Point given by t1 is behind the ray
                 return pointToWorld(locRay.getPoint(t0));

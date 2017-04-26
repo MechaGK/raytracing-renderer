@@ -1,4 +1,4 @@
-package saurkraut.coordinates;
+package sauerkraut.coordinates;
 
 public abstract class Coordinate {
   

@@ -1,12 +1,11 @@
-package saurkraut.shapes;
+package sauerkraut.shapes;
 
 import java.awt.Color;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import saurkraut.coordinates.SphericalCoordinate;
-import saurkraut.materials.Material;
-import saurkraut.Ray;
+import sauerkraut.coordinates.SphericalCoordinate;
+import sauerkraut.materials.Material;
+import sauerkraut.Ray;
 
 
 public class Cuboid extends Shape {

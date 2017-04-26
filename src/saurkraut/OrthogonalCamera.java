@@ -1,4 +1,4 @@
-package saurkraut;
+package sauerkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -18,7 +18,7 @@ public class OrthogonalCamera extends Camera {
         private final double halfHeight;
         private final int resWidth;
         private final int resHeight;
-        
+
         private int x;
         private int y;
 
@@ -26,11 +26,11 @@ public class OrthogonalCamera extends Camera {
             this.resWidth = resWidth;
             this.resHeight = resHeight;
             double aspectRatio = (double) resWidth / (double) resHeight;
-            this.halfWidth = 0.5*(scale*aspectRatio);
-            this.halfHeight = 0.5*scale;
-            this.xStep = 2*halfWidth / resWidth;
-            this.yStep = 2*halfHeight / resHeight;
-            
+            this.halfWidth = 0.5 * (scale * aspectRatio);
+            this.halfHeight = 0.5 * scale;
+            this.xStep = 2 * halfWidth / resWidth;
+            this.yStep = 2 * halfHeight / resHeight;
+
             this.x = 0;
             this.y = 0;
         }
@@ -43,8 +43,8 @@ public class OrthogonalCamera extends Camera {
         @Override
         public CameraRay next() {
             Vector3D rayOrigin = new Vector3D(
-                    -halfWidth + x*xStep,
-                    halfHeight - y*yStep, // flipped y axis
+                    -halfWidth + x * xStep,
+                    halfHeight - y * yStep, // flipped y axis
                     0);
 
             Ray ray = rayToWorld(new Ray(rayOrigin, Vector3D.PLUS_K));

@@ -1,4 +1,4 @@
-package saurkraut;
+package sauerkraut;
 
 public class CameraRay {
     public final Ray ray;

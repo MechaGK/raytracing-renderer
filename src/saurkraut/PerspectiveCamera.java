@@ -57,7 +57,7 @@ public class PerspectiveCamera extends Camera {
 
     @Override
     public Iterator<CameraRay> raysIterator(int resolutionX, int resolutionY) {
-        float aspectRatio = (float)resolutionY / (float)resolutionX;
+        float aspectRatio = (float) resolutionY / (float) resolutionX;
         double height = aspectRatio * (width / 2);
 
         Vector3D bottomLeft = clipOrigin.subtract(right.scalarMultiply(width / 2));
@@ -68,21 +68,22 @@ public class PerspectiveCamera extends Camera {
     }
 
     public Ray getRayFromScreenSpace(int x, int y, int viewportWidth, int viewportHeight, Vector3D bottomLeft) {
-        float baseX = (float)x / (float)viewportWidth;
-        float baseY = 1f - ((float)y / (float)viewportHeight);
+        float baseX = (float) x / (float) viewportWidth;
+        float baseY = 1f - ((float) y / (float) viewportHeight);
 
-        float aspectRatio = (float)viewportWidth / (float)viewportHeight;
+        float aspectRatio = (float) viewportWidth / (float) viewportHeight;
 
-        double height = (float)width / aspectRatio;
+        double height = (float) width / aspectRatio;
 
         Vector3D point = bottomLeft.add(up.scalarMultiply(height).scalarMultiply(baseY))
                 .add(right.scalarMultiply(width).scalarMultiply(baseX));
 
-        return new Ray(position, point.subtract(position));
+        return new Ray(point, point.subtract(position));
     }
 
     /**
      * Sets direction so the camera is looking at the given point
+     *
      * @param position Point to look at
      */
     public void lookAt(Vector3D position) {
@@ -102,13 +103,14 @@ public class PerspectiveCamera extends Camera {
 
     /**
      * Set the direction of the camera
+     *
      * @param newDirection The new direction of the camera
      */
     public void setDirection(Vector3D newDirection) {
         // Calculating up and right vector from the given direction.
         // We don't really use the direction itself anywhere
         Vector3D direction = newDirection.normalize();
-        this.right = new Vector3D(0,  1, 0).crossProduct(direction).normalize();
+        this.right = new Vector3D(0, 1, 0).crossProduct(direction).normalize();
         this.up = direction.crossProduct(right).normalize();
 
         // Origin of the clip plane

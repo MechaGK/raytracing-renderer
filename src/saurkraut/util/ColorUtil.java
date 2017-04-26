@@ -1,4 +1,4 @@
-package saurkraut.util;
+package sauerkraut.util;
 
 import java.awt.*;
 

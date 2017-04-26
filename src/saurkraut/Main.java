@@ -1,19 +1,17 @@
-package saurkraut;
+package sauerkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import saurkraut.lights.DistantLight;
-import saurkraut.lights.Light;
-import saurkraut.materials.ColoredMaterial;
-import saurkraut.shapes.*;
-import saurkraut.util.ColorUtil;
-import saurkraut.shapes.Shape;
+import sauerkraut.lights.DistantLight;
+import sauerkraut.lights.Light;
+import sauerkraut.materials.ColoredMaterial;
+import sauerkraut.shapes.*;
+import sauerkraut.shapes.Shape;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 public class Main {
     public static Scene createInappropriateScene() {
@@ -72,7 +70,7 @@ public class Main {
         
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(5, -7, 5);
-        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 90, 0.1);
+        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 120, 0.1);
         camera.lookAt(new Vector3D(2, 2, 2));
         scene.setCamera(camera);
         

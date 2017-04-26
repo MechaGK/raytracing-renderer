@@ -1,4 +1,4 @@
-package saurkraut;
+package sauerkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -16,11 +16,12 @@ public class Ray {
     public Ray(Vector3D origin, Vector3D direction) {
         this.origin = origin;
         this.direction = direction.normalize();
-        this.invDirection = new Vector3D(1/this.direction.getX(), 1/this.direction.getY(), 1/this.direction.getZ());
+        this.invDirection = new Vector3D(1 / this.direction.getX(), 1 / this.direction.getY(), 1 / this.direction.getZ());
     }
 
     /**
      * Returns a point on the ray given a constant
+     *
      * @param t the constant
      * @return point on the ray
      */

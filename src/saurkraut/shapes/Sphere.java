@@ -1,10 +1,9 @@
-package saurkraut.shapes;
+package sauerkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import saurkraut.coordinates.Coordinate;
-import saurkraut.coordinates.SphericalCoordinate;
-import saurkraut.materials.Material;
-import saurkraut.Ray;
+import sauerkraut.coordinates.SphericalCoordinate;
+import sauerkraut.materials.Material;
+import sauerkraut.Ray;
 
 import java.awt.*;
 
@@ -18,7 +17,7 @@ public class Sphere extends Shape {
     public Sphere(Material material, Vector3D position, double radius) {
         super(material, position, new Vector3D(radius, radius, radius));
     }
-    
+
     public Sphere(Material material, Vector3D position, Vector3D scale, Vector3D rotation) {
         super(material, position, scale, rotation);
     }
@@ -27,7 +26,7 @@ public class Sphere extends Shape {
     public Vector3D intersect(Ray ray) {
         // 1. Transform ray to local space
         Ray locRay = rayToLocal(ray);
-                
+
         // 2. Now test against unit sphere
         double b = 2 * locRay.direction.dotProduct(locRay.origin);
         double c = Math.pow(locRay.origin.getNorm(), 2) - 1;

@@ -1,6 +1,7 @@
-package saurkraut.materials;
+package sauerkraut.materials;
 
-import saurkraut.coordinates.Coordinate;
+import sauerkraut.coordinates.Coordinate;
+
 import java.awt.*;
 
 /**
@@ -19,6 +20,7 @@ public abstract class Material {
 
     /**
      * Returns color based on spherical coordinates
+     *
      * @param sigma Sigma
      * @param theta Theta
      * @return color at spherical coordinates

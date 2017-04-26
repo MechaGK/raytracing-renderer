@@ -1,15 +1,17 @@
-package saurkraut;
+package sauerkraut;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import saurkraut.lights.Light;
-import saurkraut.shapes.Shape;
+import sauerkraut.lights.Light;
+import sauerkraut.shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import saurkraut.util.ColorUtil;
+
+import sauerkraut.util.ColorUtil;
 
 /**
  * Class for holding shapes and lights.
@@ -18,13 +20,13 @@ import saurkraut.util.ColorUtil;
 public class Scene {
     private ArrayList<Shape> shapes = new ArrayList<>();
     private ArrayList<Light> lights = new ArrayList<>();
-    
+
     private Camera camera;
 
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
-    
+
     public void add(Shape shape) {
         shapes.add(shape);
     }
@@ -63,19 +65,23 @@ public class Scene {
 
     /**
      * Find first shape hit by ray (by distance to ray origin). Returns null if no hit
+     *
      * @param ray Ray to test with
      * @return RayHit with first shape and where it was hit. Null if nothing was hit
      */
-    
+
     public RayHit castRay(Ray ray, Shape self) {
         return castRay(ray, self, Double.NEGATIVE_INFINITY);
     }
+
     public RayHit castRay(Ray ray, double distEpsilon) {
         return castRay(ray, null, distEpsilon);
     }
+
     public RayHit castRay(Ray ray) {
         return castRay(ray, null, Double.NEGATIVE_INFINITY);
     }
+
     public RayHit castRay(Ray ray, Shape self, double distEpsilon) {
         Vector3D closestHit = null;
         Shape closestShape = null;
@@ -86,12 +92,12 @@ public class Scene {
 
         for (Shape shape : getShapes()) {
             if (shape == self) continue;
-            
+
             hit = shape.intersect(ray);
 
             if (hit == null) continue;
             if ((distance = hit.distance(ray.origin)) < distEpsilon) continue;
-            
+
             if (distance < closestHitDistance) {
                 closestHit = hit;
                 closestShape = shape;
@@ -106,7 +112,7 @@ public class Scene {
 
         return new RayHit(closestHit, closestShape);
     }
-    
+
     /**
      * Renders a scene to a image, using given camera and image resolution. This is a very simple
      * renderer only determining pixel color from the color of the first hit shape. The process of
@@ -165,9 +171,6 @@ public class Scene {
             Color shapeColor = shape.getColor(hit);
 
             Color lightColor = PhongShader.shade(this, shape, hit, ray.direction);
-            //Color lightColor = UnlitShader.shade(shape, hit);
-
-            //System.out.format("x %d, y %d; %s, %s\n", cameraRay.x, cameraRay.y, shapeColor.toString(), lightColor.toString());
 
             Color finalColor = ColorUtil.multiply(shapeColor, lightColor);
             shadingEnd = System.nanoTime();

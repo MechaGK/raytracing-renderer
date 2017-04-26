@@ -1,8 +1,7 @@
-package saurkraut.materials;
+package sauerkraut.materials;
 
-import saurkraut.coordinates.Coordinate;
-import saurkraut.materials.Material;
-import saurkraut.util.ColorUtil;
+import sauerkraut.coordinates.Coordinate;
+import sauerkraut.util.ColorUtil;
 
 import java.awt.*;
 
@@ -28,19 +27,19 @@ public class TestMaterial extends Material {
 
         return color;
     }*/
-    
+
     @Override
     public Color getColor(Coordinate coord) {
-      Color color = Color.green;
-      
-      if(coord.getScalarSigma() < 0.5d && coord.getScalarSigma() >= 0.0d) {
-        color = ColorUtil.add(color, Color.red);
-      }
-      
-      if(coord.getScalarTheta() < 0.5d && coord.getScalarTheta() >= 0.0d) {
-        color = ColorUtil.add(color, Color.blue);
-      }
-      
-      return color;
+        Color color = Color.green;
+
+        if (coord.getScalarSigma() < 0.5d && coord.getScalarSigma() >= 0.0d) {
+            color = ColorUtil.add(color, Color.red);
+        }
+
+        if (coord.getScalarTheta() < 0.5d && coord.getScalarTheta() >= 0.0d) {
+            color = ColorUtil.add(color, Color.blue);
+        }
+
+        return color;
     }
 }

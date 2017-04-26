@@ -1,27 +1,26 @@
-package saurkraut.shapes;
+package sauerkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
-import saurkraut.materials.Material;
-import saurkraut.Ray;
+import sauerkraut.materials.Material;
+import sauerkraut.Ray;
 
 import java.awt.*;
-import saurkraut.Transform;
+
+import sauerkraut.Transform;
 
 /**
  * Abstract class for a shape
  */
 public abstract class Shape extends Transform {
     private static final Vector3D UNIT_SCALE = new Vector3D(1, 1, 1);
-    
+
     protected Material material;
-    
+
     public Shape(Material material, Vector3D position) {
         super(position, UNIT_SCALE, Vector3D.ZERO);
         this.material = material;
     }
-    
+
     public Shape(Material material, Vector3D position, Vector3D scale) {
         super(position, scale, Vector3D.ZERO);
         this.material = material;

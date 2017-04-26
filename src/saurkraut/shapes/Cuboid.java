@@ -34,7 +34,7 @@ public class Cuboid extends Shape {
         if (xNear > yFar || yNear > xFar || Double.isNaN(xNear) || Double.isNaN(xFar) || Double.isNaN(yNear) || Double.isNaN(yFar))
             return null;
 
-        double tNear = Math.max(xNear, yNear);
+        double t = Math.max(xNear, yNear);
         double tFar = Math.min(xFar, yFar);
 
         double zNear, zFar;
@@ -44,13 +44,17 @@ public class Cuboid extends Shape {
         zNear = (-zSign - locRay.origin.getZ()) * invDirZ;
         zFar = (zSign - locRay.origin.getZ()) * invDirZ;
 
-        if (tNear > zFar || zNear >= tFar)
+        if (t > zFar || zNear >= tFar)
             return null;
 
-        if (zNear > tNear) tNear = zNear;
+        if (zNear > t) t = zNear;
+        
+        if (t < 0) {
+            return null;
+        }
         //if (zFar < tFar) tFar = zFar;
 
-        return pointToWorld(locRay.getPoint(tNear));
+        return pointToWorld(locRay.getPoint(t));
     }
 
     @Override
@@ -75,7 +79,7 @@ public class Cuboid extends Shape {
         else
             result = Vector3D.ZERO;
 
-        return vectorToWorld(result);
+        return directionToWorld(result);
     }
 
     @Override

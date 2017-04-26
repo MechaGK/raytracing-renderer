@@ -4,34 +4,46 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class Transform {
     // Local to world transformation matrix
-    private final double
+    private double
             twA1, twB1, twC1, //PosX,
             twA2, twB2, twC2, //PosY,
             twA3, twB3, twC3; //PosZ;
     //      0   , 0   , 0   , 1   <- (implicit)
     
     // World to local transformation matrix
-    private final double        
+    private double        
             tlA1, tlB1, tlC1, //invPosX,
             tlA2, tlB2, tlC2, //invPosY,
             tlA3, tlB3, tlC3; //invPosZ;
     //      0   , 0   , 0   , 1   <- (implicit)
     
-    public final Vector3D position;
-    private final Vector3D invTranslation;
-    public final Vector3D eulerAngles;
-
-    public Transform(Vector3D position, Vector3D scale, Vector3D eulerAngles) {    
-        this.position = position;
-        this.eulerAngles = eulerAngles;
+    private double
+            rA1, rA2, rA3,
+            rB1, rB2, rB3,
+            rC1, rC2, rC3;
+    
+    private Vector3D invTranslation;
+    
+    public Vector3D position;
+    public Vector3D eulerAngles;
+    public Vector3D scale;
+    
+    public Transform(Vector3D position, Vector3D scale, Vector3D eulerAngles) {
+        set(position, scale, eulerAngles);
+    }
+    
+    public void set(Vector3D newPosition, Vector3D newScale, Vector3D newEulerAngles) {
+        this.position = newPosition;
+        this.scale = newScale;
+        this.eulerAngles = newEulerAngles;
         
-        double scaleX = scale.getX(), invScaleX = 1/scaleX;
-        double scaleY = scale.getY(), invScaleY = 1/scaleY;
-        double scaleZ = scale.getZ(), invScaleZ = 1/scaleZ;
+        double scaleX = newScale.getX(), invScaleX = 1/scaleX;
+        double scaleY = newScale.getY(), invScaleY = 1/scaleY;
+        double scaleZ = newScale.getZ(), invScaleZ = 1/scaleZ;
         
-        double roll = eulerAngles.getX();
-        double pitch = eulerAngles.getY();
-        double yaw = eulerAngles.getZ();
+        double roll = newEulerAngles.getX();
+        double pitch = newEulerAngles.getY();
+        double yaw = newEulerAngles.getZ();
         
         double cosRoll = Math.cos(roll);
         double sinRoll = Math.sin(roll);
@@ -40,17 +52,17 @@ public class Transform {
         double cosYaw = Math.cos(yaw);
         double sinYaw = Math.sin(yaw);
         
-        double rA1 = cosYaw * cosPitch;
-        double rA2 = sinYaw * cosPitch;
-        double rA3 = -sinPitch;
+        rA1 = cosYaw * cosPitch;
+        rA2 = sinYaw * cosPitch;
+        rA3 = -sinPitch;
         
-        double rB1 = -sinYaw * cosRoll + cosYaw * sinPitch * sinRoll;
-        double rB2 = cosYaw * cosRoll + sinYaw * sinPitch * sinRoll;
-        double rB3 = cosPitch * sinRoll;
+        rB1 = -sinYaw * cosRoll + cosYaw * sinPitch * sinRoll;
+        rB2 = cosYaw * cosRoll + sinYaw * sinPitch * sinRoll;
+        rB3 = cosPitch * sinRoll;
         
-        double rC1 = sinYaw * sinRoll + cosYaw * sinPitch * cosRoll;
-        double rC2 = -cosYaw * sinRoll + sinYaw * sinPitch * cosRoll;
-        double rC3 = cosPitch * cosRoll;
+        rC1 = sinYaw * sinRoll + cosYaw * sinPitch * cosRoll;
+        rC2 = -cosYaw * sinRoll + sinYaw * sinPitch * cosRoll;
+        rC3 = cosPitch * cosRoll;
         
         // LOCAL TO WORLD SPACE TRANSFORM
         // [translation].[rotation].[scale]
@@ -86,57 +98,91 @@ public class Transform {
         tlC2 = invScaleY*rB3;
         tlC3 = invScaleZ*rC3;
         
-        invTranslation = new Vector3D(
-            -tlA1*position.getX() - tlB1*position.getY() - tlC1*position.getZ(),
-            -tlA2*position.getX() - tlB2*position.getY() - tlC2*position.getZ(),
-            -tlA3*position.getX() - tlB3*position.getY() - tlC3*position.getZ());
+        setPosition(newPosition);
+    }
+    
+    public void setPosition(Vector3D newPosition) {
+        this.position = newPosition;
+        this.invTranslation = vectorToLocal(position.negate());
+    }
+    
+    public void setScale(Vector3D newScale) {
+        set(position, newScale, eulerAngles);
+    }
+    
+    public void setRotation(Vector3D newEuelerAngles) {
+        set(position, scale, newEuelerAngles);
     }
 
     public Vector3D pointToWorld(Vector3D localPoint) {
-        double lx = localPoint.getX();
-        double ly = localPoint.getY();
-        double lz = localPoint.getZ();
+        double px = localPoint.getX();
+        double py = localPoint.getY();
+        double pz = localPoint.getZ();
         
         return new Vector3D(
-                lx*twA1 + ly*twB1 + lz*twC1 + position.getX(),
-                lx*twA2 + ly*twB2 + lz*twC2 + position.getY(),
-                lx*twA3 + ly*twB3 + lz*twC3 + position.getZ()
+                px*twA1 + py*twB1 + pz*twC1 + position.getX(),
+                px*twA2 + py*twB2 + pz*twC2 + position.getY(),
+                px*twA3 + py*twB3 + pz*twC3 + position.getZ()
         );
     }
     
     public Vector3D pointToLocal(Vector3D worldPoint) {
-        double wx = worldPoint.getX();
-        double wy = worldPoint.getY();
-        double wz = worldPoint.getZ();
+        double px = worldPoint.getX();
+        double py = worldPoint.getY();
+        double pz = worldPoint.getZ();
         
         return new Vector3D(
-                wx*tlA1 + wy*tlB1 + wz*tlC1 + invTranslation.getX(),
-                wx*tlA2 + wy*tlB2 + wz*tlC2 + invTranslation.getY(),
-                wx*tlA3 + wy*tlB3 + wz*tlC3 + invTranslation.getZ()
+                px*tlA1 + py*tlB1 + pz*tlC1 + invTranslation.getX(),
+                px*tlA2 + py*tlB2 + pz*tlC2 + invTranslation.getY(),
+                px*tlA3 + py*tlB3 + pz*tlC3 + invTranslation.getZ()
         );
     };
     
-    public Vector3D vectorToWorld(Vector3D localDirection) {
-        double lx = localDirection.getX();
-        double ly = localDirection.getY();
-        double lz = localDirection.getZ();
+    public Vector3D vectorToWorld(Vector3D localVector) {
+        double vx = localVector.getX();
+        double vy = localVector.getY();
+        double vz = localVector.getZ();
         
         return new Vector3D(
-                lx*twA1 + ly*twB1 + lz*twC1,
-                lx*twA2 + ly*twB2 + lz*twC2,
-                lx*twA3 + ly*twB3 + lz*twC3
+                vx*twA1 + vy*twB1 + vz*twC1,
+                vx*twA2 + vy*twB2 + vz*twC2,
+                vx*twA3 + vy*twB3 + vz*twC3
         );
     }
 
-    public Vector3D vectorToLocal(Vector3D worldPoint) {
-        double wx = worldPoint.getX();
-        double wy = worldPoint.getY();
-        double wz = worldPoint.getZ();
+    public Vector3D vectorToLocal(Vector3D worldVector) {
+        double vx = worldVector.getX();
+        double vy = worldVector.getY();
+        double vz = worldVector.getZ();
         
         return new Vector3D(
-                wx*tlA1 + wy*tlB1 + wz*tlC1,
-                wx*tlA2 + wy*tlB2 + wz*tlC2,
-                wx*tlA3 + wy*tlB3 + wz*tlC3
+                vx*tlA1 + vy*tlB1 + vz*tlC1,
+                vx*tlA2 + vy*tlB2 + vz*tlC2,
+                vx*tlA3 + vy*tlB3 + vz*tlC3
+        );
+    };
+    
+    public Vector3D directionToWorld(Vector3D localDirection) {
+        double dx = localDirection.getX();
+        double dy = localDirection.getY();
+        double dz = localDirection.getZ();
+        
+        return new Vector3D(
+                dx*rA1 + dy*rB1 + dz*rC1,
+                dx*rA2 + dy*rB2 + dz*rC2,
+                dx*rA3 + dy*rB3 + dz*rC3
+        );
+    }
+    
+    public Vector3D directionToLocal(Vector3D worldDirection) {
+        double dx = worldDirection.getX();
+        double dy = worldDirection.getY();
+        double dz = worldDirection.getZ();
+        
+        return new Vector3D(
+                dx*rA1 + dy*rA2 + dz*rA3,
+                dx*rB1 + dy*rB2 + dz*rB3,
+                dx*rC1 + dy*rC2 + dz*rC3
         );
     };
     

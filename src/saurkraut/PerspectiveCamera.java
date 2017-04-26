@@ -78,7 +78,7 @@ public class PerspectiveCamera extends Camera {
         Vector3D point = bottomLeft.add(up.scalarMultiply(height).scalarMultiply(baseY))
                 .add(right.scalarMultiply(width).scalarMultiply(baseX));
 
-        return new Ray(position, point.subtract(position));
+        return new Ray(point, point.subtract(position));
     }
 
     /**

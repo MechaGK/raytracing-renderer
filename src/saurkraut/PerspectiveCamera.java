@@ -85,6 +85,7 @@ public class PerspectiveCamera extends Camera {
      * Sets direction so the camera is looking at the given point
      * @param position Point to look at
      */
+    @Override
     public void lookAt(Vector3D position) {
         Vector3D newDirection = position.subtract(this.position);
 

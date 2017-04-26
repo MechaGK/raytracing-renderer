@@ -104,8 +104,8 @@ public class PhongShader {
 
                 Vector3D lightIncident = distantLight.direction.scalarMultiply(-1);
                 
-                Ray shadowRay = new Ray(point.add(normal), lightIncident);
-                RayHit hit = scene.castRay(shadowRay, shape);
+                Ray shadowRay = new Ray(point.add(normal.scalarMultiply(0.00001d)), lightIncident);
+                RayHit hit = scene.castRay(shadowRay);
                 if (hit == null) {
                     lights.add(light);
                 }

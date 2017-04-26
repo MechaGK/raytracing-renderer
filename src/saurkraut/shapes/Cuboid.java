@@ -74,7 +74,7 @@ public class Cuboid extends Shape {
         else
             result = Vector3D.ZERO;
         
-        return directionToWorld(result);
+        return vectorToWorld(result);
     }
 
     @Override

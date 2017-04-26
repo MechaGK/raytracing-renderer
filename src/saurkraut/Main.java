@@ -121,34 +121,51 @@ public class Main {
         
         Shape s;
         scene.addShapes(
-                s = new Sphere(new ColoredMaterial(
+                s = new Cuboid(new ColoredMaterial(
                         Color.white, 0.18f),
                         new Vector3D(0, 0, 0), // Position
-                        new Vector3D(2, 2, 2), // Scale
+                        new Vector3D(1, 1, 1), // Scale
                         new Vector3D(
-                                Math.toRadians(30),
                                 Math.toRadians(0),
+                                Math.toRadians(40),
                                 Math.toRadians(0))) // rotation
+                ,new Cuboid(new ColoredMaterial(
+                        Color.red, 0.18f),
+                        new Vector3D(2, 0, 0), // Position
+                        new Vector3D(1, 1, 1), // Scale
+                        s.eulerRotation)
         );
+        System.out.println(s.pointToWorld(new Vector3D(100, 200, 300)));
+        System.out.println(s.pointToLocal(s.pointToWorld(new Vector3D(100, 200, 300))));
         
         for (int i = 0; i < corners.length; ++i) {
             scene.add(new Cuboid(new ColoredMaterial(
                         colors[i%colors.length], 0.18f),
                         s.pointToWorld(corners[i]), // Position
-                        new Vector3D(0.1, 0.1, 0.1),
+                        new Vector3D(0.2, 0.2, 0.2),
                         s.eulerRotation));
         }
 
         scene.addLights(
-                new DistantLight(new Vector3D(0, 0, -1), 20, new Color(0xff_ff8000)),
-                new DistantLight(new Vector3D(1, 0, 0), 20, new Color(0xff_0080ff))
+                new DistantLight(new Vector3D(0.707, 0.707, 0.707), 20, new Color(0xff_ffff80)),
+                new DistantLight(new Vector3D(-0.707, -0.707, -0.707), 50, new Color(0xff_80ffff))
         );
     
-        // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(0,0,0);
-        Vector3D cameraAngles = new Vector3D(Math.toRadians(0),Math.toRadians(0),Math.toRadians(0));
-        double scale = 5;
-        Camera camera = new OrthogonalCamera(cameraOrigin, cameraAngles, scale);
+//        // Setting up camera
+//        Vector3D cameraOrigin = new Vector3D(0,0,-10);
+//        Vector3D cameraAngles = new Vector3D(Math.toRadians(0),Math.toRadians(0),Math.toRadians(0));
+//        double scale = 10;
+//        Camera camera = new OrthogonalCamera(cameraOrigin, cameraAngles, scale);
+//        scene.setCamera(camera);
+        
+        
+        // Setting up camera        
+        PerspectiveCamera camera = new PerspectiveCamera(
+                new Vector3D(0, 0, -10),
+                Vector3D.PLUS_I,
+                60,
+                0.01);
+        camera.lookAt(new Vector3D(0, 0, 0));
         scene.setCamera(camera);
         
         return scene;
@@ -160,8 +177,8 @@ public class Main {
         Scene scene = createCuboidTestScene();
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 300;
-        final int resolutionY = 300;
+        final int resolutionX = 600;
+        final int resolutionY = 400;
  
         BufferedImage image = scene.renderScene(resolutionX, resolutionY);
         saveImage(image, "test.png");

@@ -7,12 +7,12 @@ import saurkraut.materials.Material;
 import saurkraut.Ray;
 
 import java.awt.*;
-import saurkraut.SceneObject;
+import saurkraut.Transform;
 
 /**
  * Abstract class for a shape
  */
-public abstract class Shape extends SceneObject {
+public abstract class Shape extends Transform {
     private static final Vector3D UNIT_SCALE = new Vector3D(1, 1, 1);
     
     protected Material material;

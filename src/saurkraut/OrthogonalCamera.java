@@ -12,10 +12,12 @@ public class OrthogonalCamera extends Camera {
     private double scale;
 
     class RaysIterator implements Iterator<CameraRay> {
+        private final double xStep;
+        private final double yStep;
+        private final double halfWidth;
+        private final double halfHeight;
         private final int resWidth;
         private final int resHeight;
-        private final double width;
-        private final double height;
         
         private int x;
         private int y;
@@ -24,8 +26,10 @@ public class OrthogonalCamera extends Camera {
             this.resWidth = resWidth;
             this.resHeight = resHeight;
             double aspectRatio = (double) resWidth / (double) resHeight;
-            this.width = scale*aspectRatio;
-            this.height = scale;
+            this.halfWidth = 0.5*(scale*aspectRatio);
+            this.halfHeight = 0.5*scale;
+            this.xStep = 2*halfWidth / resWidth;
+            this.yStep = 2*halfHeight / resHeight;
             
             this.x = 0;
             this.y = 0;
@@ -39,11 +43,12 @@ public class OrthogonalCamera extends Camera {
         @Override
         public CameraRay next() {
             Vector3D rayOrigin = new Vector3D(
-                    -(width / 2) + ((width / resWidth) * x),
-                    (height / 2) - ((height / resHeight) * y),
+                    -halfWidth + x*xStep,
+                    halfHeight - y*yStep, // flipped y axis
                     0);
 
             Ray ray = rayToWorld(new Ray(rayOrigin, Vector3D.PLUS_K));
+            //System.out.println("origin: " + ray.origin + ", direction: " + ray.direction);
             CameraRay cameraRay = new CameraRay(ray, x, y);
 
             if (x + 1 == resWidth && y + 1 < resHeight) {

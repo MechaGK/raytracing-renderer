@@ -1,4 +1,6 @@
-package sauerkraut.coordinates;
+package saurkraut.coordinates;
+
+import saurkraut.coordinates.Coordinate;
 
 public class SphericalCoordinate extends Coordinate {
   

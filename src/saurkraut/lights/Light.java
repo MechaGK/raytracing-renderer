@@ -1,4 +1,4 @@
-package sauerkraut.lights;
+package saurkraut.lights;
 
 import java.awt.*;
 

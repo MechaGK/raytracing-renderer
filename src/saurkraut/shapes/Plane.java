@@ -1,10 +1,10 @@
-package sauerkraut.shapes;
+package saurkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import sauerkraut.coordinates.Coordinate;
-import sauerkraut.coordinates.GridCoordinate;
-import sauerkraut.materials.Material;
-import sauerkraut.Ray;
+import saurkraut.coordinates.Coordinate;
+import saurkraut.coordinates.GridCoordinate;
+import saurkraut.materials.Material;
+import saurkraut.Ray;
 
 import java.awt.*;
 
@@ -17,7 +17,7 @@ public class Plane extends Shape {
         super(material, position);
 
         this.normal = normal.normalize();
-
+        
         this.YAxis = new Vector3D(this.normal.getY(), this.normal.getZ(), -this.normal.getX()).normalize();
         this.XAxis = Vector3D.crossProduct(this.normal, this.YAxis).normalize();
     }
@@ -39,7 +39,7 @@ public class Plane extends Shape {
 
         return ray.getPoint(scalar);
     }
-
+  
     @Override
     public Vector3D getNormal(Vector3D point) {
         return normal;
@@ -47,14 +47,14 @@ public class Plane extends Shape {
 
     @Override
     public Color getColor(Vector3D point) {
-
+        
         //THE ABS PART IS A GROSS HACK THAT CAUSES MIRRORED TILING. PLEASE HELP FIX. :(
-        int x = Math.abs((int) (Vector3D.dotProduct(point, XAxis)));
-        int y = Math.abs((int) (Vector3D.dotProduct(point, YAxis)));
-
+        int x = Math.abs((int)(Vector3D.dotProduct(point, XAxis)));
+        int y = Math.abs((int)(Vector3D.dotProduct(point, YAxis)));
+        
         Coordinate coord = new GridCoordinate(x, y); //Infinitely large, no width or height.
         return material.getColor(coord);
-
+        
         //DEPRECATED! >:D
         //return material.getColor(0, 0); //TODO: implement spherical coordinates for plane
     }

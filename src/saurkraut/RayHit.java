@@ -1,7 +1,7 @@
-package sauerkraut;
+package saurkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import sauerkraut.shapes.Shape;
+import saurkraut.shapes.Shape;
 
 /**
  * Class for containing information about a hit by ray.

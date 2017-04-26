@@ -1,10 +1,10 @@
-package sauerkraut;
+package saurkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import sauerkraut.lights.DistantLight;
-import sauerkraut.lights.Light;
-import sauerkraut.util.ColorUtil;
-import sauerkraut.shapes.Shape;
+import saurkraut.lights.DistantLight;
+import saurkraut.lights.Light;
+import saurkraut.util.ColorUtil;
+import saurkraut.shapes.Shape;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -103,7 +103,7 @@ public class PhongShader {
                 distantLight = (DistantLight) light;
 
                 Vector3D lightIncident = distantLight.direction.scalarMultiply(-1);
-
+                
                 Ray shadowRay = new Ray(point.add(normal.scalarMultiply(0.00001d)), lightIncident);
                 RayHit hit = scene.castRay(shadowRay);
                 if (hit == null) {

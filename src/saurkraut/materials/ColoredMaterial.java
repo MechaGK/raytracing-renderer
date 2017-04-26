@@ -1,6 +1,7 @@
-package sauerkraut.materials;
+package saurkraut.materials;
 
-import sauerkraut.coordinates.Coordinate;
+import saurkraut.coordinates.Coordinate;
+import saurkraut.materials.Material;
 
 import java.awt.*;
 

@@ -12,26 +12,26 @@ public class Transform {
     
     // World to local transformation matrix
     private final double        
-            tlA1, tlB1, tlC1, //PosX,
-            tlA2, tlB2, tlC2, //PosY,
-            tlA3, tlB3, tlC3; //PosZ;
+            tlA1, tlB1, tlC1, //invPosX,
+            tlA2, tlB2, tlC2, //invPosY,
+            tlA3, tlB3, tlC3; //invPosZ;
     //      0   , 0   , 0   , 1   <- (implicit)
     
     public final Vector3D position;
     private final Vector3D invTranslation;
-    public final Vector3D eulerRotation;
+    public final Vector3D eulerAngles;
 
-    public Transform(Vector3D position, Vector3D scale, Vector3D eulerRotation) {    
+    public Transform(Vector3D position, Vector3D scale, Vector3D eulerAngles) {    
         this.position = position;
-        this.eulerRotation = eulerRotation;
+        this.eulerAngles = eulerAngles;
         
         double scaleX = scale.getX(), invScaleX = 1/scaleX;
         double scaleY = scale.getY(), invScaleY = 1/scaleY;
         double scaleZ = scale.getZ(), invScaleZ = 1/scaleZ;
         
-        double roll = eulerRotation.getX();
-        double pitch = eulerRotation.getY();
-        double yaw = eulerRotation.getZ();
+        double roll = eulerAngles.getX();
+        double pitch = eulerAngles.getY();
+        double yaw = eulerAngles.getZ();
         
         double cosRoll = Math.cos(roll);
         double sinRoll = Math.sin(roll);
@@ -60,7 +60,6 @@ public class Transform {
         twA1 = scaleX*rA1;
         twA2 = scaleX*rA2;
         twA3 = scaleX*rA3;
-        
         // Column B
         twB1 = scaleY*rB1;
         twB2 = scaleY*rB2;

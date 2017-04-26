@@ -11,8 +11,8 @@ import saurkraut.Ray;
 
 public class Cuboid extends Shape {
 
-    public Cuboid(Material material, Vector3D position, Vector3D scale, Vector3D eulerAngles) {
-        super(material, position, scale, eulerAngles);
+    public Cuboid(Material material, Vector3D position, Vector3D halfDimensions, Vector3D eulerAngles) {
+        super(material, position, halfDimensions, eulerAngles);
     }
 
     @Override

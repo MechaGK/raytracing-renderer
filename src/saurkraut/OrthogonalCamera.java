@@ -62,8 +62,8 @@ public class OrthogonalCamera extends Camera {
         }
     }
 
-    public OrthogonalCamera(Vector3D position, Vector3D eulerRotation, double scale) {
-        super(position, eulerRotation);
+    public OrthogonalCamera(Vector3D position, Vector3D eulerAngles, double scale) {
+        super(position, eulerAngles);
         this.scale = scale;
     }
 

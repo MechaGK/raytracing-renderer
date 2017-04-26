@@ -1,6 +1,8 @@
 package saurkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import saurkraut.coordinates.Coordinate;
+import saurkraut.coordinates.SphericalCoordinate;
 import saurkraut.materials.Material;
 import saurkraut.Ray;
 
@@ -36,7 +38,9 @@ public class Sphere extends Shape {
             double t0 = (-b + Math.sqrt(discriminant)) / 2;
             double t1 = (-b - Math.sqrt(discriminant)) / 2;
 
-            if (t0 < 0) { // Point given by t0 is behind the ray
+            if (t0 < 0 && t1 < 0) { // Both points are behind the ray
+                return null;
+            } else if (t0 < 0) { // Point given by t0 is behind the ray
                 return pointToWorld(locRay.getPoint(t1));
             } else if (t1 < 0) { // Point given by t1 is behind the ray
                 return pointToWorld(locRay.getPoint(t0));
@@ -68,6 +72,8 @@ public class Sphere extends Shape {
         double sigma = (1 + Math.atan2(relativeHit.getZ(), relativeHit.getX()) / Math.PI) * 0.5d;
         double theta = Math.acos(relativeHit.getY()) / Math.PI;
 
-        return material.getColor(sigma, theta);
+        SphericalCoordinate coord = new SphericalCoordinate(sigma, theta);
+        return material.getColor(coord);
+        //return material.getColor(sigma, theta);
     }
 }

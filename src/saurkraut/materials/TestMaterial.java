@@ -1,5 +1,6 @@
 package saurkraut.materials;
 
+import saurkraut.coordinates.Coordinate;
 import saurkraut.materials.Material;
 import saurkraut.util.ColorUtil;
 
@@ -13,7 +14,7 @@ public class TestMaterial extends Material {
         super(albedo);
     }
 
-    @Override
+    /*@Override
     public Color getColor(double sigma, double theta) {
         Color color = Color.green;
 
@@ -26,5 +27,20 @@ public class TestMaterial extends Material {
         }
 
         return color;
+    }*/
+    
+    @Override
+    public Color getColor(Coordinate coord) {
+      Color color = Color.green;
+      
+      if(coord.getScalarSigma() < 0.5d && coord.getScalarSigma() >= 0.0d) {
+        color = ColorUtil.add(color, Color.red);
+      }
+      
+      if(coord.getScalarTheta() < 0.5d && coord.getScalarTheta() >= 0.0d) {
+        color = ColorUtil.add(color, Color.blue);
+      }
+      
+      return color;
     }
 }

@@ -78,13 +78,14 @@ public class PerspectiveCamera extends Camera {
         Vector3D point = bottomLeft.add(up.scalarMultiply(height).scalarMultiply(baseY))
                 .add(right.scalarMultiply(width).scalarMultiply(baseX));
 
-        return new Ray(position, point.subtract(position));
+        return new Ray(point, point.subtract(position));
     }
 
     /**
      * Sets direction so the camera is looking at the given point
      * @param position Point to look at
      */
+    @Override
     public void lookAt(Vector3D position) {
         Vector3D newDirection = position.subtract(this.position);
 

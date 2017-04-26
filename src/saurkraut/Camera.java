@@ -15,4 +15,10 @@ public abstract class Camera extends Transform {
      * @return iterator over rays
      */
     public abstract Iterator<CameraRay> raysIterator(int resolutionX, int resolutionY);
+
+    /**
+     * Set camera to look at point
+     * @param point point to look at
+     */
+    public abstract void lookAt(Vector3D point);
 }

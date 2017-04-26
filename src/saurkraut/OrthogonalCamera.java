@@ -1,5 +1,6 @@
 package saurkraut;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.util.Iterator;
@@ -70,5 +71,10 @@ public class OrthogonalCamera extends Camera {
     @Override
     public Iterator<CameraRay> raysIterator(int resolutionX, int resolutionY) {
         return new RaysIterator(resolutionX, resolutionY);
+    }
+
+    @Override
+    public void lookAt(Vector3D point) {
+        throw new NotImplementedException("lookAt not supported by orthogonal camera");
     }
 }

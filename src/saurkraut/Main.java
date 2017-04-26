@@ -131,7 +131,7 @@ public class Main {
                                 Math.toRadians(0))) // rotation
                 ,new Cuboid(new ColoredMaterial(
                         Color.red, 0.18f),
-                        new Vector3D(2, 0, 0), // Position
+                        s.pointToWorld(Vector3D.PLUS_I.scalarMultiply(2)), // Position
                         new Vector3D(1, 1, 1), // Scale
                         s.eulerRotation)
         );
@@ -151,22 +151,19 @@ public class Main {
                 new DistantLight(new Vector3D(-0.707, -0.707, -0.707), 50, new Color(0xff_80ffff))
         );
     
-//        // Setting up camera
-//        Vector3D cameraOrigin = new Vector3D(0,0,-10);
-//        Vector3D cameraAngles = new Vector3D(Math.toRadians(0),Math.toRadians(0),Math.toRadians(0));
-//        double scale = 10;
-//        Camera camera = new OrthogonalCamera(cameraOrigin, cameraAngles, scale);
-//        scene.setCamera(camera);
+        Camera orthogonalCamera = new OrthogonalCamera(
+                new Vector3D(0,0,-10),
+                new Vector3D(Math.toRadians(0),Math.toRadians(0),Math.toRadians(0)),
+                10);
         
-        
-        // Setting up camera        
-        PerspectiveCamera camera = new PerspectiveCamera(
+        PerspectiveCamera perspectiveCamera = new PerspectiveCamera(
                 new Vector3D(0, 0, -10),
                 Vector3D.PLUS_I,
                 60,
                 0.01);
-        camera.lookAt(new Vector3D(0, 0, 0));
-        scene.setCamera(camera);
+        perspectiveCamera.lookAt(new Vector3D(0, 0, 0));
+        
+        scene.setCamera(true ? perspectiveCamera : orthogonalCamera);
         
         return scene;
     }
@@ -174,11 +171,11 @@ public class Main {
 
     public static void main(String[] args) {
         // Creating a scene
-        Scene scene = createCuboidTestScene();
+        Scene scene = createSimpleScene();
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 600;
-        final int resolutionY = 400;
+        final int resolutionX = 960;
+        final int resolutionY = 600;
  
         BufferedImage image = scene.renderScene(resolutionX, resolutionY);
         saveImage(image, "test.png");

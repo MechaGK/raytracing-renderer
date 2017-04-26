@@ -106,7 +106,7 @@ public class PhongShader {
                 
                 Ray shadowRay = new Ray(point.add(normal), lightIncident);
                 RayHit hit = scene.castRay(shadowRay, shape);
-                if (true || hit == null) {
+                if (hit == null) {
                     lights.add(light);
                 }
             }

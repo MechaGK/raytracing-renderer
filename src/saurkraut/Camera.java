@@ -5,8 +5,8 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public abstract class Camera extends Transform {
 
-    public Camera(Vector3D position, Vector3D eulerRotation) {
-        super(position, new Vector3D(1, 1, 1), eulerRotation);
+    public Camera(Vector3D position, Vector3D eulerAngles) {
+        super(position, new Vector3D(1, 1, 1), eulerAngles);
     }
     /**
      * Iterator over rays from camera. Rays are generated based on the given resolution

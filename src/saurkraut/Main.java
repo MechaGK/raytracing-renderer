@@ -133,7 +133,7 @@ public class Main {
                         Color.red, 0.18f),
                         s.pointToWorld(Vector3D.PLUS_I.scalarMultiply(2)), // Position
                         new Vector3D(1, 1, 1), // Scale
-                        s.eulerRotation)
+                        s.eulerAngles)
         );
         System.out.println(s.pointToWorld(new Vector3D(100, 200, 300)));
         System.out.println(s.pointToLocal(s.pointToWorld(new Vector3D(100, 200, 300))));
@@ -143,7 +143,7 @@ public class Main {
                         colors[i%colors.length], 0.18f),
                         s.pointToWorld(corners[i]), // Position
                         new Vector3D(0.2, 0.2, 0.2),
-                        s.eulerRotation));
+                        s.eulerAngles));
         }
 
         scene.addLights(

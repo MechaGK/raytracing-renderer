@@ -5,7 +5,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import java.util.Iterator;
 
 public class PerspectiveCamera extends Camera {
-    private Vector3D position;
+    //private Vector3D position;
 
     private double width;
 

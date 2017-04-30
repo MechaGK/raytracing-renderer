@@ -151,3 +151,4 @@ nbdist/
 .nb-gradle/
 
 # End of https://www.gitignore.io/api/java,eclipse,netbeans,intellij+iml
+lib/commens-math3-3.6.1-src

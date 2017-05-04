@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main {
     public static Scene createInappropriateScene() {
@@ -177,6 +178,7 @@ public class Main {
         Options options = new Options();
         options.addOption("o", "output-file",false, "output file name");
         options.addOption("r", "resolution", false, "resolution of image. 'width'x'height' for example 960x600");
+        options.addOption("s", "shader", false, "shader to render scene with. 'phong' or 'unlit'");
 
         try {
             CommandLineParser parser = new DefaultParser();
@@ -190,6 +192,20 @@ public class Main {
                 String[] valueStrings = cmd.getOptionValue("r").toLowerCase().split("x");
                 resolutionX = Integer.parseInt(valueStrings[0]);
                 resolutionY = Integer.parseInt(valueStrings[1]);
+            }
+
+            if (cmd.hasOption("s")) {
+                String value = cmd.getOptionValue("s").toLowerCase();
+
+                if (Objects.equals(value, "phong")) {
+                    shader = new PhongShader();
+                }
+                else if (Objects.equals(value, "unlit")) {
+                    shader = new UnlitShader();
+                }
+                else {
+                    System.out.format("Unknown option for shader '%s'. Accepted values are 'phong' and 'unlit'. Shading using Phong.", value);
+                }
             }
         } catch (ParseException e) {
             e.printStackTrace();

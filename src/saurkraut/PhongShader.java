@@ -13,7 +13,7 @@ import saurkraut.lights.PointLight;
 /**
  * Class for shading based on Phong
  */
-public class PhongShader {
+public class PhongShader implements Shader {
     /**
      * Calculates the diffuse for a specific point
      * Only supports distant lights at the moment.
@@ -102,7 +102,8 @@ public class PhongShader {
      * @param viewDirection Direction where the point is viewed from
      * @return Color of point based on phong model
      */
-    public static Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {
+    @Override
+    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {
         Vector3D normal = shape.getNormal(point);
         ArrayList<Light> lights = new ArrayList<>();
 

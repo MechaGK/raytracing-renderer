@@ -20,4 +20,9 @@ public class DistantLight extends Light {
         super(color, intensity);
         this.direction = direction.normalize();
     }
+
+    @Override
+    public Vector3D getIncident(Vector3D worldPoint) {
+        return direction.scalarMultiply(-1);
+    }
 }

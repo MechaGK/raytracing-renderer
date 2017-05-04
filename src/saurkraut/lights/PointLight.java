@@ -27,10 +27,11 @@ public class PointLight extends Light {
     
     @Override
     public float getIntensity(Scene scene, Vector3D point) {
-        RayHit hit = Raytracer.castRay(scene, new Ray(point, position));
-        if (hit == null) {
-            return intensity / (float) position.distanceSq(point);
-        }
-        return 0;
+        return intensity / (float) position.distanceSq(point);
+    }
+
+    @Override
+    public Vector3D getIncident(Vector3D worldPoint) {
+        return worldPoint.subtract(position).normalize();
     }
 }

@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import saurkraut.lights.PointLight;
+import saurkraut.materials.Material;
 
 public class Main {
     public static Scene createInappropriateScene() {
@@ -55,16 +57,20 @@ public class Main {
         //Shape sphere1 = new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(5, 1, 8), new Vector3D(1* Math.PI*2/4, 1* Math.PI*2/4, 1* Math.PI*2/16));
         //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
         
+        Shape cub;
+        Material mat = new ColoredMaterial(Color.white, 0.18f);
         scene.addShapes(
-                new Plane(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(0, 1, 0)),
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(-4, 2d, 5), 2),
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(-7d, 2d, 0), 2),
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(8d, 2d, -2), 2),
-                new Cuboid(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 4, 0),
+                new Plane(mat, new Vector3D(0, 0, 0), new Vector3D(0, 1, 0)),
+                new Sphere(mat, new Vector3D(-4, 2d, 5), 2),
+                new Sphere(mat, new Vector3D(-7d, 2d, 0), 2),
+                new Sphere(mat, new Vector3D(8d, 2d, -2), 2),
+                cub = new Cuboid(mat, new Vector3D(0, 4, 0),
                         new Vector3D(2, 2, 2), new Vector3D(1* Math.PI*2/8, 1* Math.PI*2/8, 1* Math.PI*2/8).scalarMultiply(1))
+                //new Sphere(mat, cub.pointToWorld(new Vector3D(0, -1.2, 0)), 0.4)
         );
 
         scene.addLights(
+                new PointLight(cub.pointToWorld(new Vector3D(0, -1.2, 0)), 50, Color.yellow),
                 new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
                 new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
         );
@@ -107,8 +113,6 @@ public class Main {
             new Vector3D(-1, 1, 0),
             new Vector3D(1, -1, 0),
             new Vector3D(1, 1, 0)//*/
-            
-            
         };
         
         Color[] colors = new Color[] {

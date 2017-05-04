@@ -1,11 +1,11 @@
 package saurkraut;
 
+import org.apache.commons.cli.*;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import saurkraut.lights.DistantLight;
 import saurkraut.lights.Light;
 import saurkraut.materials.ColoredMaterial;
 import saurkraut.shapes.*;
-import saurkraut.util.ColorUtil;
 import saurkraut.shapes.Shape;
 
 import javax.imageio.ImageIO;
@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 public class Main {
     public static Scene createInappropriateScene() {
@@ -68,12 +67,12 @@ public class Main {
         );
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(-5, 4, -10);
+        Vector3D cameraOrigin = new Vector3D(-5, 4, -12);
         
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(5, -7, 5);
-        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 90, 0.1);
-        camera.lookAt(new Vector3D(2, 2, 2));
+        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 120, 0.1);
+        camera.lookAt(new Vector3D(0, 0, 10));
         scene.setCamera(camera);
         
         return scene;
@@ -170,15 +169,41 @@ public class Main {
     
 
     public static void main(String[] args) {
+        String outputFile = "test.png";
+        int resolutionX = 960;
+        int resolutionY = 600;
+
+        Options options = new Options();
+        options.addOption("o", "output-file",false, "output file name");
+        options.addOption("r", "resolution", false, "resolution of image. 'width'x'height' for example 960x600");
+
+        try {
+            CommandLineParser parser = new DefaultParser();
+            CommandLine cmd = parser.parse(options, args);
+
+            if (cmd.hasOption("o")) {
+                outputFile = cmd.getOptionValue("o");
+            }
+
+            if (cmd.hasOption("r")) {
+                String[] valueStrings = cmd.getOptionValue("r").toLowerCase().split("x");
+                resolutionX = Integer.parseInt(valueStrings[0]);
+                resolutionY = Integer.parseInt(valueStrings[1]);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            outputFile = "test.png";
+        }
+
+
+
         // Creating a scene
         Scene scene = createSimpleScene();
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 960;
-        final int resolutionY = 600;
- 
+
         BufferedImage image = scene.renderScene(resolutionX, resolutionY);
-        saveImage(image, "test.png");
+        saveImage(image, outputFile);
     }
 
     public static void saveImage(BufferedImage image, String fileName) {

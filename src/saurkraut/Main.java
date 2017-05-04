@@ -64,12 +64,12 @@ public class Main {
                 new Sphere(mat, new Vector3D(8d, 2d, -2), 2),
                 cub = new Cuboid(mat, new Vector3D(0, 4, 0),
                         new Vector3D(2, 2, 2), new Vector3D(1* Math.PI*2/8, 1* Math.PI*2/8, 1* Math.PI*2/8).scalarMultiply(1))
-                //new Sphere(mat, cub.pointToWorld(new Vector3D(0, -1.2, 0)), 0.4)
+                //new Sphere(mat, cub.pointToWorld(new Vector3D(1.2, 0, 0)), 0.4)
         );
 
         scene.addLights(
-                new PointLight(cub.pointToWorld(new Vector3D(0, -1.2, 0)), 50, Color.yellow),
-                new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
+                new PointLight(cub.pointToWorld(new Vector3D(1.2, 0, 0)), 1000, Color.yellow),
+                //new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
                 new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
         );
 

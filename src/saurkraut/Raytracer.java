@@ -7,6 +7,7 @@ import saurkraut.util.ColorUtil;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Array;
+import java.nio.Buffer;
 import java.util.*;
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class Raytracer {
      * <p>
      * Only distant lights are supported
      *
+     * @param scene Scene to render.
+     * @param shader Shader used for shading
      * @param resolutionX Horizontal resolution of the final image
      * @param resolutionY Vertical resolution of the final image
      * @return BufferedImage colored after scene contents
@@ -68,7 +71,7 @@ public class Raytracer {
         shadingEnd = System.nanoTime();
 
         imageStart = System.nanoTime();
-        BufferedImage image = createImage(resolutionX, resolutionY, shadingPoints);
+        BufferedImage image = createImage(resolutionX, resolutionY, null, shadingPoints);
         imageEnd = System.nanoTime();
 
         System.out.format("Total render time %d ms\n", ((shadingEnd - testingStart) / 1000000));
@@ -82,6 +85,43 @@ public class Raytracer {
         System.out.format("Creating image took %d ms\n", (imageEnd - imageStart) / 1000000);
 
         return image;
+    }
+
+    public static List<BufferedImage> renderSceneStepByStep(Scene scene, int resolutionX, int resolutionY) {
+        ArrayList<ImageRayHit> points = getPoints(scene, resolutionX, resolutionY);
+
+        double distance;
+        double maxDistance = Double.MIN_VALUE;
+        Vector3D cameraPosition = scene.getCamera().position;
+        for (ImageRayHit point : points) {
+            distance = cameraPosition.distance(point.point);
+            if (distance > maxDistance) {
+                maxDistance = distance;
+            }
+        }
+
+        maxDistance = Math.min(maxDistance, 50);
+
+        Shader booleanShader = new BooleanShader(Color.white);
+        ArrayList<ShadingPoint> hitShaded = shadePoints(scene, booleanShader, points);
+
+        Shader depthShader = new DepthShader(maxDistance, false);
+        ArrayList<ShadingPoint> depthShaded = shadePoints(scene, depthShader, points);
+
+        Shader depthShaderColor = new DepthShader(maxDistance, true);
+        ArrayList<ShadingPoint> depthShadedColored = shadePoints(scene, depthShaderColor, points);
+
+        Shader phongShader = new PhongShader();
+        ArrayList<ShadingPoint> phongShaded = shadePoints(scene, phongShader, points);
+
+        List<BufferedImage> images = new ArrayList<>();
+
+        images.add(createImage(resolutionX, resolutionY, Color.MAGENTA, hitShaded));
+        images.add(createImage(resolutionX, resolutionY, Color.MAGENTA, depthShaded));
+        images.add(createImage(resolutionX, resolutionY, Color.MAGENTA, depthShadedColored));
+        images.add(createImage(resolutionX, resolutionY, Color.MAGENTA, phongShaded));
+
+        return images;
     }
 
     public static ArrayList<ImageRayHit> getPoints(Scene scene, int resolutionX, int resolutionY) {
@@ -124,8 +164,15 @@ public class Raytracer {
         return shadingPoints;
     }
 
-    public static BufferedImage createImage(int resolutionX, int resolutionY, List<ShadingPoint> shadingPoints) {
+    public static BufferedImage createImage(int resolutionX, int resolutionY, Color clearColor, List<ShadingPoint> shadingPoints) {
         BufferedImage image = new BufferedImage(resolutionX, resolutionY, BufferedImage.TYPE_INT_ARGB);
+
+        if (clearColor != null) {
+            Graphics2D    graphics = image.createGraphics();
+
+            graphics.setPaint ( clearColor );
+            graphics.fillRect ( 0, 0, image.getWidth(), image.getHeight() );
+        }
 
         for (ShadingPoint shadingPoint : shadingPoints) {
             image.setRGB(shadingPoint.imageX, shadingPoint.imageY, shadingPoint.color.getRGB());

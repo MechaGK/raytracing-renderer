@@ -202,7 +202,7 @@ public class Main {
 
         // Rendering scene to image and saving to disk
 
-        BufferedImage image = scene.renderScene(resolutionX, resolutionY);
+        BufferedImage image = Raytracer.renderScene(scene, resolutionX, resolutionY);
         saveImage(image, outputFile);
     }
 

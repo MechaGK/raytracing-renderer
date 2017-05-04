@@ -195,13 +195,10 @@ public class Main {
             outputFile = "test.png";
         }
 
-
-
         // Creating a scene
         Scene scene = createSimpleScene();
 
         // Rendering scene to image and saving to disk
-
         BufferedImage image = Raytracer.renderScene(scene, resolutionX, resolutionY);
         saveImage(image, outputFile);
     }

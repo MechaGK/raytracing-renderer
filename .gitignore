@@ -143,8 +143,12 @@ modules.xml
 hs_err_pid*
 
 ### NetBeans ###
-nbproject/private/
+nbproject/
 build/
+build.xml
+manifest.mf
+reference/
+report/
 nbbuild/
 dist/
 nbdist/

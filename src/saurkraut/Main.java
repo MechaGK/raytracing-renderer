@@ -174,8 +174,8 @@ public class Main {
         Scene scene = createSimpleScene();
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 960;
-        final int resolutionY = 600;
+        final int resolutionX = 400;
+        final int resolutionY = 400;
  
         BufferedImage image = scene.renderScene(resolutionX, resolutionY);
         saveImage(image, "test.png");

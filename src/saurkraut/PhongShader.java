@@ -8,6 +8,7 @@ import saurkraut.shapes.Shape;
 
 import java.awt.*;
 import java.util.ArrayList;
+import saurkraut.lights.PointLight;
 
 /**
  * Class for shading based on Phong
@@ -25,6 +26,11 @@ public class PhongShader {
      * @return The color of the total illumination
      */
     public static Color diffuse(ArrayList<Light> lights, float albedo, Vector3D normal) {
+        
+
+        // TODO: make this handle only one light
+        
+        
         Color finalColor = new Color(0f, 0f, 0f, 1f);
 
         DistantLight distantLight;
@@ -36,7 +42,7 @@ public class PhongShader {
 
                 Vector3D lightIncident = distantLight.direction.scalarMultiply(-1);
 
-                float number = (float) (albedo / Math.PI * light.getIntensity()
+                float number = (float) (albedo / Math.PI * light.getIntensity(null, null)
                         * Math.max(0f, normal.dotProduct(lightIncident)));
 
                 color = ColorUtil.multiply(light.getColor(), number);
@@ -59,6 +65,11 @@ public class PhongShader {
      * @return Color of the specular at the point
      */
     public static Color specular(ArrayList<Light> lights, Vector3D normal, Vector3D viewDirection) {
+        
+
+        // TODO: make this handle only one light
+        
+        
         Color color = new Color(0f, 0f, 0f);
 
         DistantLight distantLight;

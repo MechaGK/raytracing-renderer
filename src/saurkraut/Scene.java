@@ -64,5 +64,4 @@ public class Scene {
     public List<Light> getLights() {
         return lights;
     }
-
 }

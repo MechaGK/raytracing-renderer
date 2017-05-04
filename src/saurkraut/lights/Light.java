@@ -24,7 +24,7 @@ public abstract class Light {
         this.color = color;
     }
     
-    public abstract Vector3D getIncident(Vector3D worldPoint);
+    public abstract Vector3D getDirectionFromPoint(Vector3D worldPoint);
     
     public float getIntensity(Scene scene, Vector3D worldPoint) {
         return intensity;

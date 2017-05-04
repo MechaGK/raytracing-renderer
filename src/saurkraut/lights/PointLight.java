@@ -31,7 +31,8 @@ public class PointLight extends Light {
     }
 
     @Override
-    public Vector3D getIncident(Vector3D worldPoint) {
-        return worldPoint.subtract(position).normalize();
+    public Vector3D getDirectionFromPoint(Vector3D worldPoint) {
+        // Destination - Source
+        return position.subtract(worldPoint).normalize();
     }
 }

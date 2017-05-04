@@ -184,7 +184,7 @@ public class Raytracer {
     public static RayHit castRay(Scene scene, Ray ray) {
         Vector3D closestHit = null;
         Shape closestShape = null;
-        double closestHitDistance = Double.MAX_VALUE;
+        double closestSquareHitDistance = Double.MAX_VALUE;
 
         Vector3D hit;
         double distance;
@@ -193,12 +193,12 @@ public class Raytracer {
             hit = shape.intersect(ray);
 
             if (hit == null) continue;
-            distance = hit.distance(ray.origin);
+            distance = hit.distanceSq(ray.origin);
 
-            if (distance < closestHitDistance) {
+            if (distance < closestSquareHitDistance) {
                 closestHit = hit;
                 closestShape = shape;
-                closestHitDistance = distance;
+                closestSquareHitDistance = distance;
             }
         }
 

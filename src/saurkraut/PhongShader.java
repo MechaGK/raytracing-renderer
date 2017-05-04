@@ -28,6 +28,9 @@ public class PhongShader implements Shader {
     @Override
     public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {
         Vector3D normal = shape.getNormal(point);
+        
+        // Move us away from the shape's surface by 0.00001d
+        point = point.add(normal.scalarMultiply(0.00001d));
 
         Color diffuseColor = Color.BLACK;
         Color specularColor = Color.BLACK;
@@ -35,19 +38,19 @@ public class PhongShader implements Shader {
         // Finding all lights which is not blocked at point.
         for (Light light : scene.getLights()) {
             
-            Vector3D lightIncident = light.getIncident(point);
+            Vector3D dirToLight = light.getDirectionFromPoint(point);
 
-            Ray shadowRay = new Ray(point.add(normal.scalarMultiply(0.00001d)), lightIncident);
+            Ray shadowRay = new Ray(point, dirToLight);
             RayHit hit = Raytracer.castRay(scene, shadowRay);
             if (hit == null) {
                  // Calculate diffuse color
                 float number = (float) (shape.getMaterial().albedo / Math.PI * light.getIntensity(scene, point)
-                        * Math.max(0f, normal.dotProduct(lightIncident)));
+                        * Math.max(0f, normal.dotProduct(dirToLight)));
                 Color perLightColor = ColorUtil.multiply(light.getColor(), number);
                 diffuseColor = ColorUtil.add(diffuseColor, perLightColor);
 
                 // Calculate specular color                
-                Vector3D R = normal.scalarMultiply(2 * (normal.dotProduct(lightIncident))).subtract(lightIncident);
+                Vector3D R = normal.scalarMultiply(2 * (normal.dotProduct(dirToLight))).subtract(dirToLight);
                 double specularValue = Math.pow(R.dotProduct(viewDirection), 50); // Magic number for n
                 float fspecular = Math.min((float) specularValue, 1f);
 

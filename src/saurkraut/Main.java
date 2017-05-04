@@ -172,6 +172,7 @@ public class Main {
         String outputFile = "test.png";
         int resolutionX = 960;
         int resolutionY = 600;
+        Shader shader = new PhongShader();
 
         Options options = new Options();
         options.addOption("o", "output-file",false, "output file name");
@@ -199,7 +200,7 @@ public class Main {
         Scene scene = createSimpleScene();
 
         // Rendering scene to image and saving to disk
-        BufferedImage image = Raytracer.renderScene(scene, resolutionX, resolutionY);
+        BufferedImage image = Raytracer.renderScene(scene, shader, resolutionX, resolutionY);
         saveImage(image, outputFile);
     }
 

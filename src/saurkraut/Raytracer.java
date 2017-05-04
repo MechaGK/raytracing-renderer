@@ -54,7 +54,7 @@ public class Raytracer {
      * @param resolutionY Vertical resolution of the final image
      * @return BufferedImage colored after scene contents
      */
-    public static BufferedImage renderScene(Scene scene, int resolutionX, int resolutionY) {
+    public static BufferedImage renderScene(Scene scene, Shader shader, int resolutionX, int resolutionY) {
         long testingStart, testingEnd;
         long shadingStart, shadingEnd;
         long imageStart, imageEnd;
@@ -64,7 +64,7 @@ public class Raytracer {
         testingEnd = System.nanoTime();
 
         shadingStart = System.nanoTime();
-        ArrayList<ShadingPoint> shadingPoints = shadePoints(scene, points);
+        ArrayList<ShadingPoint> shadingPoints = shadePoints(scene, shader, points);
         shadingEnd = System.nanoTime();
 
         imageStart = System.nanoTime();
@@ -107,7 +107,7 @@ public class Raytracer {
         return hits;
     }
 
-    public static ArrayList<ShadingPoint> shadePoints(Scene scene, List<ImageRayHit> hits) {
+    public static ArrayList<ShadingPoint> shadePoints(Scene scene, Shader shader, List<ImageRayHit> hits) {
         ArrayList<ShadingPoint> shadingPoints = new ArrayList<>();
 
         Color shapeColor;
@@ -115,7 +115,7 @@ public class Raytracer {
         Color finalColor;
         for (ImageRayHit hit : hits) {
             shapeColor = hit.shape.getColor(hit.point);
-            lightColor = PhongShader.shade(scene, hit.shape, hit.point, hit.ray.direction);
+            lightColor = shader.shade(scene, hit.shape, hit.point, hit.ray.direction);
             finalColor = ColorUtil.multiply(shapeColor, lightColor);
 
             shadingPoints.add(new ShadingPoint(hit.imageX, hit.imageY, finalColor));

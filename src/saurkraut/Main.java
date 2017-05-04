@@ -13,7 +13,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class Main {
     public static Scene createInappropriateScene() {
@@ -174,11 +176,13 @@ public class Main {
         int resolutionX = 960;
         int resolutionY = 600;
         Shader shader = new PhongShader();
+        boolean stepByStep = false;
 
         Options options = new Options();
         options.addOption("o", "output-file",false, "output file name");
         options.addOption("r", "resolution", false, "resolution of image. 'width'x'height' for example 960x600");
         options.addOption("s", "shader", false, "shader to render scene with. 'phong' or 'unlit'");
+        options.addOption("t", "step", false, "Make multiple images with step by step");
 
         try {
             CommandLineParser parser = new DefaultParser();
@@ -207,6 +211,8 @@ public class Main {
                     System.out.format("Unknown option for shader '%s'. Accepted values are 'phong' and 'unlit'. Shading using Phong.", value);
                 }
             }
+
+            stepByStep = cmd.hasOption("t");
         } catch (ParseException e) {
             e.printStackTrace();
             outputFile = "test.png";
@@ -215,9 +221,25 @@ public class Main {
         // Creating a scene
         Scene scene = createSimpleScene();
 
-        // Rendering scene to image and saving to disk
-        BufferedImage image = Raytracer.renderScene(scene, shader, resolutionX, resolutionY);
-        saveImage(image, outputFile);
+        if (!stepByStep)
+        {
+            // Rendering scene to image and saving to disk
+            BufferedImage image = Raytracer.renderScene(scene, shader, resolutionX, resolutionY);
+            saveImage(image, outputFile);
+        }
+        else {
+            java.util.List<BufferedImage> images = Raytracer.renderSceneStepByStep(scene, resolutionX, resolutionY);
+
+            Path file = Paths.get(outputFile);
+            if (file.toString().endsWith(".png")) {
+                outputFile = outputFile.substring(0, outputFile.length() - 4);
+            }
+
+            for (int i = 0; i < images.size(); i++) {
+                saveImage(images.get(i), String.format("%s_%03d.png", outputFile, i));
+            }
+        }
+
     }
 
     public static void saveImage(BufferedImage image, String fileName) {

@@ -9,9 +9,11 @@ import saurkraut.shapes.Shape;
 public class RayHit {
     public final Vector3D point;
     public final Shape shape;
+    public final Vector3D normal;
 
-    public RayHit(Vector3D point, Shape shape) {
+    public RayHit(Vector3D point, Shape shape, Vector3D normal) {
         this.point = point;
         this.shape = shape;
+        this.normal = normal;
     }
 }

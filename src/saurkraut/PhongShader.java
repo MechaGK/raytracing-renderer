@@ -1,14 +1,11 @@
 package saurkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import saurkraut.lights.DistantLight;
 import saurkraut.lights.Light;
 import saurkraut.util.ColorUtil;
 import saurkraut.shapes.Shape;
 
 import java.awt.*;
-import java.util.ArrayList;
-import saurkraut.lights.PointLight;
 
 /**
  * Class for shading based on Phong
@@ -22,13 +19,11 @@ public class PhongShader implements Shader {
      * @param scene         Scene the point is in
      * @param shape         Shape to be shaded
      * @param point         Point to be shaded
-     * @param viewDirection Direction where the point is viewed from
-     * @return Color of point based on phong model
+     * @param normal
+     *@param viewDirection Direction where the point is viewed from  @return Color of point based on phong model
      */
     @Override
-    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {
-        Vector3D normal = shape.getNormal(point);
-        
+    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D normal, Vector3D viewDirection) {
         // Move us away from the shape's surface by 0.00001d
         point = point.add(normal.scalarMultiply(0.00001d));
 

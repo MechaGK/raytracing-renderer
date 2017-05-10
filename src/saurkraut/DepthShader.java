@@ -15,7 +15,7 @@ public class DepthShader implements Shader {
     }
 
     @Override
-    public Color shade(Scene scene, saurkraut.shapes.Shape shape, Vector3D point, Vector3D viewDirection) {
+    public Color shade(Scene scene, saurkraut.shapes.Shape shape, Vector3D point, Vector3D normal, Vector3D viewDirection) {
         Vector3D cameraPosition = scene.getCamera().position;
 
         float depth = (float) Math.min(Math.max((cameraPosition.distance(point) / maxDistance), 0), 1);

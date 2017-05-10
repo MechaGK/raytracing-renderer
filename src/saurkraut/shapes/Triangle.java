@@ -2,6 +2,7 @@ package saurkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import saurkraut.Ray;
+import saurkraut.RayHit;
 import saurkraut.materials.Material;
 
 import java.awt.*;
@@ -24,15 +25,16 @@ public class Triangle extends Plane {
     }
 
     @Override
-    public Vector3D intersect(Ray ray) {
-        Vector3D point = super.intersect(ray);
+    public RayHit intersect(Ray ray) {
+        RayHit hit = super.intersect(ray);
+        Vector3D point = hit.point;
 
         double alpha = area(point, b, c) / area;
         double beta = area(point, c, a) / area;
         double gamma = 1d - alpha - beta;
 
         if (inRange(alpha) && inRange(beta) && inRange(gamma)) {
-            return point;
+            return hit;
         }
 
         return null;
@@ -44,11 +46,6 @@ public class Triangle extends Plane {
 
     public static double area(Vector3D a, Vector3D b, Vector3D c) {
         return b.subtract(a).crossProduct(c.subtract(a)).getNorm() / 2d;
-    }
-
-    @Override
-    public Vector3D getNormal(Vector3D point) {
-        return super.getNormal(point);
     }
 
     @Override

@@ -3,6 +3,7 @@ package saurkraut.shapes;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import saurkraut.RayHit;
 import saurkraut.materials.Material;
 import saurkraut.Ray;
 
@@ -39,15 +40,7 @@ public abstract class Shape extends Transform {
      * @param ray The ray which to test against
      * @return Closest intersection point in front of the ray. Null if none.
      */
-    public abstract Vector3D intersect(Ray ray);
-
-    /**
-     * Returns the normal at the given point
-     *
-     * @param point the at where to calculate normal
-     * @return normal calculated from point
-     */
-    public abstract Vector3D getNormal(Vector3D point);
+    public abstract RayHit intersect(Ray ray);
 
     /**
      * Returns the color at the point based on material only

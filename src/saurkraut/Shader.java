@@ -6,5 +6,5 @@ import saurkraut.shapes.Shape;
 import java.awt.*;
 
 public interface Shader {
-    Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection);
+    Color shade(Scene scene, Shape shape, Vector3D point, Vector3D normal, Vector3D viewDirection);
 }

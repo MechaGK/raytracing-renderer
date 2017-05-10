@@ -6,8 +6,6 @@ import saurkraut.util.ColorUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
-import java.nio.Buffer;
 import java.util.*;
 import java.util.List;
 
@@ -18,13 +16,15 @@ public class Raytracer {
         public final Ray ray;
         public final Vector3D point;
         public final Shape shape;
+        public final Vector3D normal;
 
-        private ImageRayHit(int imageX, int imageY, Ray ray, Vector3D point, Shape shape) {
+        private ImageRayHit(int imageX, int imageY, Ray ray, RayHit hit) {
             this.imageX = imageX;
             this.imageY = imageY;
             this.ray = ray;
-            this.point = point;
-            this.shape = shape;
+            this.point = hit.point;
+            this.shape = hit.shape;
+            this.normal = hit.normal;
         }
     }
 
@@ -138,10 +138,7 @@ public class Raytracer {
 
             if (rayHit == null) continue; // Nothing hit continue to next ray
 
-            Shape shape = rayHit.shape;
-            Vector3D hit = rayHit.point;
-
-            hits.add(new ImageRayHit(cameraRay.x, cameraRay.y, ray, rayHit.point, shape));
+            hits.add(new ImageRayHit(cameraRay.x, cameraRay.y, ray, rayHit));
         }
 
         return hits;
@@ -155,7 +152,7 @@ public class Raytracer {
         Color finalColor;
         for (ImageRayHit hit : hits) {
             shapeColor = hit.shape.getColor(hit.point);
-            lightColor = shader.shade(scene, hit.shape, hit.point, hit.ray.direction);
+            lightColor = shader.shade(scene, hit.shape, hit.point, hit.normal, hit.ray.direction);
             finalColor = ColorUtil.multiply(shapeColor, lightColor);
 
             shadingPoints.add(new ShadingPoint(hit.imageX, hit.imageY, finalColor));
@@ -182,18 +179,18 @@ public class Raytracer {
     }
 
     public static RayHit castRay(Scene scene, Ray ray) {
-        Vector3D closestHit = null;
+        RayHit closestHit = null;
         Shape closestShape = null;
         double closestSquareHitDistance = Double.MAX_VALUE;
 
-        Vector3D hit;
+        RayHit hit;
         double distance;
 
         for (Shape shape : scene.getShapes()) {
             hit = shape.intersect(ray);
 
             if (hit == null) continue;
-            distance = hit.distanceSq(ray.origin);
+            distance = hit.point.distanceSq(ray.origin);
 
             if (distance < closestSquareHitDistance) {
                 closestHit = hit;
@@ -207,7 +204,7 @@ public class Raytracer {
             return null;
         }
 
-        return new RayHit(closestHit, closestShape);
+        return closestHit;
     }
     
     public static boolean rayFree(Scene scene, Ray ray) {
@@ -217,10 +214,10 @@ public class Raytracer {
     }
     
     public static boolean rayFree(Scene scene, Ray ray, double maxDistanceSquared) {
-        Vector3D hit;
+        RayHit hit;
         for (Shape shape : scene.getShapes()) {
             hit = shape.intersect(ray);
-            if (hit != null && hit.distanceSq(ray.origin) < maxDistanceSquared) return false;
+            if (hit != null && hit.point.distanceSq(ray.origin) < maxDistanceSquared) return false;
         }
         return true;
     }

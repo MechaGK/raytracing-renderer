@@ -4,6 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import saurkraut.OBJLoader;
 import saurkraut.Ray;
+import saurkraut.RayHit;
 import saurkraut.materials.ColoredMaterial;
 import saurkraut.materials.Material;
 
@@ -26,46 +27,41 @@ public class Mesh extends Shape {
     }
 
     @Override
-    public Vector3D intersect(Ray ray) {
+    public RayHit intersect(Ray ray) {
         // TODO: bounding box test
-        ArrayList<Vector3D> points = new ArrayList<>();
-        Vector3D intersection;
+        ArrayList<RayHit> hits = new ArrayList<>();
+        RayHit intersection;
 
         for(Triangle triangle : triangles) {
             intersection = triangle.intersect(ray);
 
             if (intersection != null) {
-                points.add(intersection);
+                hits.add(intersection);
             }
         }
 
-        if (points.isEmpty()) {
+        if (hits.isEmpty()) {
             return null;
         }
 
-        if (points.size() == 1) {
-            return points.get(0);
+        if (hits.size() == 1) {
+            return hits.get(0);
         }
 
-        Vector3D finalPoint = null;
+        RayHit finalHit = null;
         double minDistance = Double.MAX_VALUE;
         double distance;
 
-        for (Vector3D point : points) {
-            distance = Vector3D.distance(ray.origin, point);
+        for (RayHit hit : hits) {
+            distance = Vector3D.distance(ray.origin, hit.point);
 
             if (distance < minDistance) {
-                finalPoint = point;
+                finalHit = hit;
                 minDistance = distance;
             }
         }
 
-        return finalPoint;
-    }
-
-    @Override
-    public Vector3D getNormal(Vector3D point) {
-        return Vector3D.ZERO; //TODO: Implement method
+        return finalHit;
     }
 
     @Override

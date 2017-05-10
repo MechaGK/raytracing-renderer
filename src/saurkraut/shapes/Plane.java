@@ -1,6 +1,7 @@
 package saurkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import saurkraut.RayHit;
 import saurkraut.coordinates.Coordinate;
 import saurkraut.coordinates.GridCoordinate;
 import saurkraut.materials.Material;
@@ -23,7 +24,7 @@ public class Plane extends Shape {
     }
 
     @Override
-    public Vector3D intersect(Ray ray) {
+    public RayHit intersect(Ray ray) {
         double test = ray.direction.dotProduct(normal);
 
         if (test == 0) {
@@ -37,14 +38,9 @@ public class Plane extends Shape {
             return null;
         }
 
-        return ray.getPoint(scalar);
+        return new RayHit(ray.getPoint(scalar), this, this.normal);
     }
   
-    @Override
-    public Vector3D getNormal(Vector3D point) {
-        return normal;
-    }
-
     @Override
     public Color getColor(Vector3D point) {
         

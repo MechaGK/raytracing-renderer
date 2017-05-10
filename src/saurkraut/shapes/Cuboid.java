@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import saurkraut.RayHit;
 import saurkraut.coordinates.SphericalCoordinate;
 import saurkraut.materials.Material;
 import saurkraut.Ray;
@@ -16,7 +17,7 @@ public class Cuboid extends Shape {
     }
 
     @Override
-    public Vector3D intersect(Ray ray) {
+    public RayHit intersect(Ray ray) {
         Ray locRay = rayToLocal(ray);
 
         double invDirX = locRay.invDirection.getX();
@@ -54,10 +55,10 @@ public class Cuboid extends Shape {
         }
         //if (zFar < tFar) tFar = zFar;
 
-        return pointToWorld(locRay.getPoint(t));
+        //TODO: Normal calculation can probably be moved to here
+        return new RayHit(pointToWorld(locRay.getPoint(t)), this, getNormal(pointToWorld(locRay.getPoint(t))));
     }
 
-    @Override
     public Vector3D getNormal(Vector3D point) {
         Vector3D l = pointToLocal(point);
         double xs = Math.copySign(1, l.getX());

@@ -1,6 +1,7 @@
 package saurkraut.shapes;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import saurkraut.RayHit;
 import saurkraut.coordinates.Coordinate;
 import saurkraut.coordinates.SphericalCoordinate;
 import saurkraut.materials.Material;
@@ -24,7 +25,7 @@ public class Sphere extends Shape {
     }
 
     @Override
-    public Vector3D intersect(Ray ray) {
+    public RayHit intersect(Ray ray) {
         // 1. Transform ray to local space
         Ray locRay = rayToLocal(ray);
                 
@@ -41,27 +42,24 @@ public class Sphere extends Shape {
             if (t0 < 0 && t1 < 0) { // Both points are behind the ray
                 return null;
             } else if (t0 < 0) { // Point given by t0 is behind the ray
-                return pointToWorld(locRay.getPoint(t1));
+                Vector3D point = pointToWorld(locRay.getPoint(t1));
+                return new RayHit(point, this, locRay.getPoint(t1).normalize());
             } else if (t1 < 0) { // Point given by t1 is behind the ray
-                return pointToWorld(locRay.getPoint(t0));
+                Vector3D point = pointToWorld(locRay.getPoint(t0));
+                return new RayHit(point, this, locRay.getPoint(t0).normalize());
             } else {
                 double t = Math.min(t0, t1);
-                return pointToWorld(locRay.getPoint(t));
+                Vector3D point = pointToWorld(locRay.getPoint(t));
+                return new RayHit(point, this, locRay.getPoint(t).normalize());
             }
         } else if (discriminant == 0) {
             double t = -(b / 2);
 
-            return pointToWorld(locRay.getPoint(t));
+            Vector3D point = pointToWorld(locRay.getPoint(t));
+            return new RayHit(point, this, locRay.getPoint(t).normalize());
         }
 
         return null;
-    }
-
-    @Override
-    public Vector3D getNormal(Vector3D point) {
-        Vector3D loc = pointToLocal(point);
-        return loc.normalize();
-        //return point.subtract(position).normalize();
     }
 
     @Override

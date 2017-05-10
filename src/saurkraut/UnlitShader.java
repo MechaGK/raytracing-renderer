@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class UnlitShader implements Shader {
     @Override
-    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {
+    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D normal, Vector3D viewDirection) {
         return shape.getColor(point);
     }
 }

@@ -22,11 +22,10 @@ public class PhongShader implements Shader {
      * @param scene         Scene the point is in
      * @param shape         Shape to be shaded
      * @param point         Point to be shaded
-     * @param viewDirection Direction where the point is viewed from
-     * @return Color of point based on phong model
+     * @param normal
+     *@param viewDirection Direction where the point is viewed from  @return Color of point based on phong model
      */
-    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {     
-        final Vector3D normal = shape.getNormal(point);
+    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D normal, Vector3D viewDirection) {
         final Material material = shape.getMaterial();
         
         // Move us away from the shape's surface by 0.00001d

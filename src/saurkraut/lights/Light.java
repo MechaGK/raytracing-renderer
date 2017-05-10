@@ -2,11 +2,7 @@ package saurkraut.lights;
 
 import java.awt.*;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import saurkraut.Scene;
 
-/**
- * A class for a spherical light.
- */
 public abstract class Light {
     protected Color color;
     protected float intensity;
@@ -24,9 +20,9 @@ public abstract class Light {
         this.color = color;
     }
     
-    public abstract Vector3D getDirectionFromPoint(Vector3D worldPoint);
+    public abstract Vector3D directionFromPoint(Vector3D worldPoint);
     
-    public float getIntensity(Scene scene, Vector3D worldPoint) {
+    public float getIntensity(Vector3D worldPoint) {
         return intensity;
     }
 

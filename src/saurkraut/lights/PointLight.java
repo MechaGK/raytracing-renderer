@@ -25,12 +25,12 @@ public class PointLight extends Light {
     }
     
     @Override
-    public float getIntensity(Scene scene, Vector3D point) {
-        return intensity / (float) position.distanceSq(point);
+    public float getIntensity(Vector3D point) {
+        return intensity ;/// (float) position.distanceSq(point);
     }
 
     @Override
-    public Vector3D getDirectionFromPoint(Vector3D worldPoint) {
+    public Vector3D directionFromPoint(Vector3D worldPoint) {
         // Destination - Source
         return position.subtract(worldPoint).normalize();
     }

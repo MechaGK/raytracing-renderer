@@ -22,7 +22,7 @@ public class DistantLight extends Light {
     }
 
     @Override
-    public Vector3D getDirectionFromPoint(Vector3D worldPoint) {
+    public Vector3D directionFromPoint(Vector3D worldPoint) {
         return direction.negate();
     }
 }

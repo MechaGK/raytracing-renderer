@@ -15,7 +15,10 @@ public abstract class TexturedMaterial extends Material {
   Texture texture;
   
   public TexturedMaterial(float albedo, BufferedImage image) {
-    super(albedo);
+      this(albedo, image, 50);
+  }
+  public TexturedMaterial(float albedo, BufferedImage image, float specularExponent) {
+    super(albedo, specularExponent);
     texture = new Texture(image);
   }
   

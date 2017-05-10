@@ -59,18 +59,23 @@ public class Main {
         Material mat = new ColoredMaterial(Color.white, 0.18f);
         scene.addShapes(
                 new Plane(mat, new Vector3D(0, 0, 0), new Vector3D(0, 1, 0)),
-                new Sphere(mat, new Vector3D(-4, 2d, 5), 2),
-                new Sphere(mat, new Vector3D(-7d, 2d, 0), 2),
-                new Sphere(mat, new Vector3D(8d, 2d, -2), 2),
-                cub = new Cuboid(mat, new Vector3D(0, 4, 0),
-                        new Vector3D(2, 2, 2), new Vector3D(1* Math.PI*2/8, 1* Math.PI*2/8, 1* Math.PI*2/8).scalarMultiply(1))
+                //new Sphere(mat, new Vector3D(-4, 2d, 5), 2),
+                //new Sphere(mat, new Vector3D(-7d, 2d, 0), 2),
+                //new Sphere(mat, new Vector3D(8d, 2d, -2), 2),
+                cub = new Cuboid(mat, new Vector3D(10, 5, 0),
+                        new Vector3D(2, 2, 2),
+                        new Vector3D(
+                                Math.toRadians(0),
+                                Math.toRadians(0),
+                                Math.toRadians(0)))
                 //new Sphere(mat, cub.pointToWorld(new Vector3D(1.2, 0, 0)), 0.4)
         );
 
         scene.addLights(
-                new PointLight(cub.pointToWorld(new Vector3D(1.2, 0, 0)), 1000, Color.yellow),
+                new PointLight(new Vector3D(1, 1, 1), 1000, Color.red)
+                //new PointLight(new Vector3D(-1, 1, -1), 1000, Color.green)
                 //new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
-                new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
+                //new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
         );
 
         // Setting up camera
@@ -178,8 +183,8 @@ public class Main {
         Scene scene = createSimpleScene();
 
         // Rendering scene to image and saving to disk
-        final int resolutionX = 400;
-        final int resolutionY = 400;
+        final int resolutionX = 300;
+        final int resolutionY = 300;
  
         BufferedImage image = scene.renderScene(resolutionX, resolutionY);
         saveImage(image, "test.png");

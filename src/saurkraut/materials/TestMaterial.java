@@ -10,10 +10,17 @@ import java.awt.*;
  * Testing making patterns with material
  */
 public class TestMaterial extends Material {
+    public TestMaterial(float albedo, float specularExponent, float specularStrength) {
+        super(albedo, specularExponent, specularStrength);
+    }
+    public TestMaterial(float albedo, float specularExponent) {
+        super(albedo, specularExponent);
+    }
     public TestMaterial(float albedo) {
         super(albedo);
     }
 
+    
     /*@Override
     public Color getColor(double sigma, double theta) {
         Color color = Color.green;

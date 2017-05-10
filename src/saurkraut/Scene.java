@@ -136,7 +136,7 @@ public class Scene {
 
             if (rayHit == null) {
                 // No shape hit by ray. Continue to next ray.
-                image.setRGB(cameraRay.x, cameraRay.y, Color.MAGENTA.getRGB());
+                //image.setRGB(cameraRay.x, cameraRay.y, Color.MAGENTA.getRGB());
                 continue;
             }
 
@@ -152,6 +152,8 @@ public class Scene {
             shadingStart = System.nanoTime();
             Color shapeColor = shape.getColor(hit);
 
+            if (cameraRay.x == 100 && cameraRay.y == 180)
+                System.out.println("jjj");
             Color lightColor = PhongShader.shade(this, shape, hit, ray.direction);
             //Color lightColor = UnlitShader.shade(shape, hit);
 

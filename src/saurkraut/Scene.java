@@ -4,6 +4,7 @@ import saurkraut.lights.Light;
 import saurkraut.shapes.Shape;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
  * Class for holding shapes and lights.
@@ -57,5 +58,53 @@ public class Scene {
 
     public List<Light> getLights() {
         return lights;
+    }
+    
+    public RayHit castRay(Ray ray) {
+        RayHit closestHit = null;
+        Shape closestShape = null;
+        double closestSquareHitDistance = Double.MAX_VALUE;
+
+        RayHit hit;
+        double distance;
+
+        for (Shape shape : getShapes()) {
+            hit = shape.intersect(ray);
+
+            if (hit == null) continue;
+            distance = hit.point.distanceSq(ray.origin);
+
+            if (distance < closestSquareHitDistance) {
+                closestHit = hit;
+                closestShape = shape;
+                closestSquareHitDistance = distance;
+            }
+        }
+
+        if (closestShape == null) {
+            // Return null as no shape was hit
+            return null;
+        }
+
+        return closestHit;
+    }
+    
+    public boolean rayFree(Ray ray) {
+        for (Shape shape : getShapes())
+            if (shape.intersect(ray) != null) return false;
+        return true;
+    }
+    
+    public boolean rayFree(Ray ray, double maxDistanceSquared) {
+        RayHit hit;
+        for (Shape shape : getShapes()) {
+            hit = shape.intersect(ray);
+            if (hit != null && hit.point.distanceSq(ray.origin) < maxDistanceSquared) return false;
+        }
+        return true;
+    }
+    
+    public boolean lineFree(Vector3D a, Vector3D b) {
+        return rayFree(new Ray(a, b.subtract(a)), a.distanceSq(b));
     }
 }

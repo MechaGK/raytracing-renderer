@@ -134,7 +134,7 @@ public class Raytracer {
             cameraRay = cameraRays.next();
             ray = cameraRay.ray;
 
-            RayHit rayHit = castRay(scene, ray);
+            RayHit rayHit = scene.castRay(ray);
 
             if (rayHit == null) continue; // Nothing hit continue to next ray
 
@@ -176,53 +176,5 @@ public class Raytracer {
         }
 
         return image;
-    }
-
-    public static RayHit castRay(Scene scene, Ray ray) {
-        RayHit closestHit = null;
-        Shape closestShape = null;
-        double closestSquareHitDistance = Double.MAX_VALUE;
-
-        RayHit hit;
-        double distance;
-
-        for (Shape shape : scene.getShapes()) {
-            hit = shape.intersect(ray);
-
-            if (hit == null) continue;
-            distance = hit.point.distanceSq(ray.origin);
-
-            if (distance < closestSquareHitDistance) {
-                closestHit = hit;
-                closestShape = shape;
-                closestSquareHitDistance = distance;
-            }
-        }
-
-        if (closestShape == null) {
-            // Return null as no shape was hit
-            return null;
-        }
-
-        return closestHit;
-    }
-    
-    public static boolean rayFree(Scene scene, Ray ray) {
-        for (Shape shape : scene.getShapes())
-            if (shape.intersect(ray) != null) return false;
-        return true;
-    }
-    
-    public static boolean rayFree(Scene scene, Ray ray, double maxDistanceSquared) {
-        RayHit hit;
-        for (Shape shape : scene.getShapes()) {
-            hit = shape.intersect(ray);
-            if (hit != null && hit.point.distanceSq(ray.origin) < maxDistanceSquared) return false;
-        }
-        return true;
-    }
-    
-    public static boolean lineFree(Scene scene, Vector3D a, Vector3D b) {
-        return rayFree(scene, new Ray(a, b.subtract(a)), a.distanceSq(b));
     }
 }

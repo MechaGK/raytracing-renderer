@@ -3,6 +3,8 @@ package saurkraut.lights;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.awt.*;
+import saurkraut.Ray;
+import saurkraut.Scene;
 
 /**
  * Light which lights the whole scene evenly from a specific direction
@@ -19,6 +21,14 @@ public class DistantLight extends Light {
     public DistantLight(Vector3D direction, float intensity, Color color) {
         super(color, intensity);
         this.direction = direction.normalize();
+    }
+    
+    @Override
+    public float getContribution(Scene scene, Vector3D worldPoint) {
+        if (scene.rayFree(new Ray(worldPoint, directionFromPoint(worldPoint)))) {
+            return getIntensity(worldPoint);
+        }
+        return 0;
     }
 
     @Override

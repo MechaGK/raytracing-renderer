@@ -28,32 +28,23 @@ public class PhongShader implements Shader {
     public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D normal, Vector3D viewDirection) {
         final Material material = shape.getMaterial();
         
-        // Move us away from the shape's surface by 0.00001d
-        point = point.add(normal.scalarMultiply(0.00001d));
-
+        float contribution;
+        Vector3D dirToLight;
         Color cumulativeDiffuse = Color.BLACK;
         Color cumulativeSpecular = Color.BLACK;
         
+        // Move us away from the shape's surface by 0.00001d
+        point = point.add(normal.scalarMultiply(0.00001d));
+        
         for (Light light : scene.getLights()) {
-            boolean noIntersections = true;
+            contribution = light.getContribution(scene, point);
             
-            Vector3D dirToLight = light.directionFromPoint(point);
-            
-            // TODO: Refactor, maybe move shadow ray check to Light subclasses?
-            if (light instanceof DistantLight) {
-                Ray shadowRay = new Ray(point, dirToLight);
-                RayHit hit = Raytracer.castRay(scene, shadowRay);
-                noIntersections = Raytracer.rayFree(scene, shadowRay);
-            }
-            else if (light instanceof PointLight) {
-                noIntersections = Raytracer.lineFree(scene, point, ((PointLight) light).position);
-            }
-            
-            // We didn't hit anything
-            if (noIntersections) {
+            if (contribution > 0) {
                 
+                dirToLight = light.directionFromPoint(point);
+
                  // Diffuse color
-                float number = (float) (shape.getMaterial().albedo / Math.PI * light.getIntensity(point)
+                float number = (float) (shape.getMaterial().albedo / Math.PI * contribution
                         * Math.max(0f, normal.dotProduct(dirToLight)));
                 Color perLightDiffuse = ColorUtil.multiply(light.getColor(), number);
                 cumulativeDiffuse = ColorUtil.add(cumulativeDiffuse, perLightDiffuse);

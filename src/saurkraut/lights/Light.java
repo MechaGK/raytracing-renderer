@@ -2,6 +2,7 @@ package saurkraut.lights;
 
 import java.awt.*;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import saurkraut.Scene;
 
 public abstract class Light {
     protected Color color;
@@ -22,6 +23,8 @@ public abstract class Light {
     
     public abstract Vector3D directionFromPoint(Vector3D worldPoint);
     
+    public abstract float getContribution(Scene scene, Vector3D worldPoint);
+    
     public float getIntensity(Vector3D worldPoint) {
         return intensity;
     }
@@ -29,4 +32,5 @@ public abstract class Light {
     public void setIntensity(float intensity) {
         this.intensity = intensity;
     }
+    
 }

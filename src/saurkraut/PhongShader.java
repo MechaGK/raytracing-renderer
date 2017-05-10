@@ -6,6 +6,8 @@ import saurkraut.util.ColorUtil;
 import saurkraut.shapes.Shape;
 
 import java.awt.*;
+import saurkraut.lights.DistantLight;
+import saurkraut.lights.PointLight;
 import saurkraut.materials.Material;
 
 /**
@@ -34,14 +36,22 @@ public class PhongShader {
         Color cumulativeSpecular = Color.BLACK;
         
         for (Light light : scene.getLights()) {
+            boolean noIntersections = true;
             
             Vector3D dirToLight = light.directionFromPoint(point);
-
-            Ray shadowRay = new Ray(point, dirToLight);
-            RayHit hit = scene.castRay(shadowRay);
+            
+            // TODO: Refactor, maybe move shadow ray check to Light subclasses?
+            if (light instanceof DistantLight) {
+                Ray shadowRay = new Ray(point, dirToLight);
+                RayHit hit = scene.castRay(shadowRay);
+                noIntersections = hit == null;
+            }
+            else if (light instanceof PointLight) {
+                noIntersections = scene.lineFree(point, ((PointLight) light).position);
+            }
             
             // We didn't hit anything
-            if (hit == null) {
+            if (noIntersections) {
                 
                  // Diffuse color
                 float number = (float) (shape.getMaterial().albedo / Math.PI * light.getIntensity(point)

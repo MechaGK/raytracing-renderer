@@ -95,6 +95,22 @@ public class Scene {
         return new RayHit(closestHit, closestShape);
     }
     
+    // TODO: this was hastily implemented, not thought through. Think this through.
+    public boolean lineFree(Vector3D a, Vector3D b) {
+        Ray rayFromA = new Ray(a, b.subtract(a));
+        double squareDistanceAB = a.distanceSq(b);
+
+        Vector3D hit;
+
+        for (Shape shape : getShapes()) {            
+            hit = shape.intersect(rayFromA);
+            if (hit == null) continue;
+            if (hit.distanceSq(a) < squareDistanceAB) return false;
+        }
+        
+        return true;
+    }
+    
     /**
      * Renders a scene to a image, using given camera and image resolution. This is a very simple
      * renderer only determining pixel color from the color of the first hit shape. The process of

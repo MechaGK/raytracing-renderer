@@ -11,7 +11,7 @@ import saurkraut.Scene;
  *
  */
 public class PointLight extends Light {
-    private Vector3D position;
+    public Vector3D position;
 
     /**
      * Creates a PointLight
@@ -26,7 +26,7 @@ public class PointLight extends Light {
     
     @Override
     public float getIntensity(Vector3D point) {
-        return intensity ;/// (float) position.distanceSq(point);
+        return intensity / (float) position.distanceSq(point);
     }
 
     @Override

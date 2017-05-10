@@ -13,7 +13,7 @@ import saurkraut.materials.Material;
 /**
  * Class for shading based on Phong
  */
-public class PhongShader {
+public class PhongShader implements Shader {
     /**
      * Calculate shading at point based on phong model
      * Based on
@@ -25,7 +25,7 @@ public class PhongShader {
      * @param viewDirection Direction where the point is viewed from
      * @return Color of point based on phong model
      */
-    public static Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {     
+    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {     
         final Vector3D normal = shape.getNormal(point);
         final Material material = shape.getMaterial();
         
@@ -43,11 +43,11 @@ public class PhongShader {
             // TODO: Refactor, maybe move shadow ray check to Light subclasses?
             if (light instanceof DistantLight) {
                 Ray shadowRay = new Ray(point, dirToLight);
-                RayHit hit = scene.castRay(shadowRay);
-                noIntersections = hit == null;
+                RayHit hit = Raytracer.castRay(scene, shadowRay);
+                noIntersections = Raytracer.rayFree(scene, shadowRay);
             }
             else if (light instanceof PointLight) {
-                noIntersections = scene.lineFree(point, ((PointLight) light).position);
+                noIntersections = Raytracer.lineFree(scene, point, ((PointLight) light).position);
             }
             
             // We didn't hit anything

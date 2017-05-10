@@ -5,6 +5,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import java.awt.*;
 import saurkraut.Ray;
 import saurkraut.RayHit;
+import saurkraut.Raytracer;
 import saurkraut.Scene;
 
 /**

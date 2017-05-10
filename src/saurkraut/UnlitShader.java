@@ -5,8 +5,9 @@ import saurkraut.shapes.Shape;
 
 import java.awt.*;
 
-public class UnlitShader {
-    public static Color shade(Shape shape, Vector3D point) {
+public class UnlitShader implements Shader {
+    @Override
+    public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D viewDirection) {
         return shape.getColor(point);
     }
 }

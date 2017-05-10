@@ -1,11 +1,11 @@
 package saurkraut;
 
+import org.apache.commons.cli.*;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import saurkraut.lights.DistantLight;
 import saurkraut.lights.Light;
 import saurkraut.materials.ColoredMaterial;
 import saurkraut.shapes.*;
-import saurkraut.util.ColorUtil;
 import saurkraut.shapes.Shape;
 
 import javax.imageio.ImageIO;
@@ -13,7 +13,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import saurkraut.lights.PointLight;
 import saurkraut.materials.Material;
 
@@ -79,12 +81,12 @@ public class Main {
         );
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(-5, 4, -10);
+        Vector3D cameraOrigin = new Vector3D(-5, 4, -12);
         
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(5, -7, 5);
-        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 90, 0.1);
-        camera.lookAt(new Vector3D(2, 2, 2));
+        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 120, 0.1);
+        camera.lookAt(new Vector3D(0, 0, 10));
         scene.setCamera(camera);
         
         return scene;
@@ -179,15 +181,73 @@ public class Main {
     
 
     public static void main(String[] args) {
+        String outputFile = "test.png";
+        int resolutionX = 960;
+        int resolutionY = 600;
+        Shader shader = new PhongShader();
+        boolean stepByStep = false;
+
+        Options options = new Options();
+        options.addOption("o", "output-file", false, "output file name");
+        options.addOption("r", "resolution", false, "resolution of image. 'width'x'height' for example 960x600");
+        options.addOption("s", "shader", false, "shader to render scene with. 'phong' or 'unlit'");
+        options.addOption("t", "step", false, "Make multiple images with step by step");
+
+        try {
+            CommandLineParser parser = new DefaultParser();
+            CommandLine cmd = parser.parse(options, args);
+
+            if (cmd.hasOption("o")) {
+                outputFile = cmd.getOptionValue("o");
+            }
+
+            if (cmd.hasOption("r")) {
+                String[] valueStrings = cmd.getOptionValue("r").toLowerCase().split("x");
+                resolutionX = Integer.parseInt(valueStrings[0]);
+                resolutionY = Integer.parseInt(valueStrings[1]);
+            }
+
+            if (cmd.hasOption("s")) {
+                String value = cmd.getOptionValue("s").toLowerCase();
+
+                if (Objects.equals(value, "phong")) {
+                    shader = new PhongShader();
+                }
+                else if (Objects.equals(value, "unlit")) {
+                    shader = new UnlitShader();
+                }
+                else {
+                    System.out.format("Unknown option for shader '%s'. Accepted values are 'phong' and 'unlit'. Shading using Phong.", value);
+                }
+            }
+
+            stepByStep = cmd.hasOption("t");
+        } catch (ParseException e) {
+            e.printStackTrace();
+            outputFile = "test.png";
+        }
+
         // Creating a scene
         Scene scene = createSimpleScene();
 
-        // Rendering scene to image and saving to disk
-        final int resolutionX = 300;
-        final int resolutionY = 300;
- 
-        BufferedImage image = scene.renderScene(resolutionX, resolutionY);
-        saveImage(image, "test.png");
+        if (!stepByStep)
+        {
+            // Rendering scene to image and saving to disk
+            BufferedImage image = Raytracer.renderScene(scene, shader, resolutionX, resolutionY);
+            saveImage(image, outputFile);
+        }
+        else {
+            java.util.List<BufferedImage> images = Raytracer.renderSceneStepByStep(scene, resolutionX, resolutionY);
+
+            Path file = Paths.get(outputFile);
+            if (file.toString().endsWith(".png")) {
+                outputFile = outputFile.substring(0, outputFile.length() - 4);
+            }
+
+            for (int i = 0; i < images.size(); i++) {
+                saveImage(images.get(i), String.format("%s_%03d.png", outputFile, i));
+            }
+        }
     }
 
     public static void saveImage(BufferedImage image, String fileName) {

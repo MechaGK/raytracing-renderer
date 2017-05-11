@@ -17,7 +17,11 @@ public class Plane extends Shape {
     public Plane(Material material, Vector3D position, Vector3D normal) {
         super(material, position);
 
-        this.normal = normal.normalize();
+        if (normal.getNorm() > 0) {
+            this.normal = normal.normalize();
+        } else {
+            this.normal = new Vector3D(0, 1, 0);
+        }
         
         this.YAxis = new Vector3D(this.normal.getY(), this.normal.getZ(), -this.normal.getX()).normalize();
         this.XAxis = Vector3D.crossProduct(this.normal, this.YAxis).normalize();

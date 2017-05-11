@@ -12,12 +12,12 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Mesh extends Shape {
-    private ArrayList<Triangle> triangles;
+    private ArrayList<Triangle> triangles = new ArrayList<>();
 
     public Mesh(Material material, Vector3D position, OBJLoader objLoader) {
         super(material, position);
 
-        for (int i = 0; i < objLoader.face().size() - 3; i++) {
+        for (int i = 0; i < objLoader.face().size() - 2; i += 3) {
             triangles.add(new Triangle(
                     material,
                     objLoader.vertex().get(objLoader.face().get(i)),

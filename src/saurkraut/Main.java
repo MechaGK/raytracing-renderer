@@ -12,10 +12,12 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
 import saurkraut.lights.PointLight;
 import saurkraut.materials.Material;
 
@@ -44,6 +46,30 @@ public class Main {
         return scene;
     }
 
+    public static Scene teapot() {
+        Scene scene = new Scene();
+
+        scene.setCamera(
+                new PerspectiveCamera(new Vector3D(0, 0, -7), new Vector3D(0, 0, 1), 90, 1)
+        );
+
+        scene.addLights(
+                new DistantLight(new Vector3D(0, 0, 1), 30, Color.white)
+        );
+
+        try {
+            OBJLoader objLoader = new OBJLoader(new File("teapot.obj"));
+
+            scene.addShapes(
+                    new Mesh(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), objLoader)
+            );
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return scene;
+    }
+
     public static Scene createInappropriateScene() {
         Scene scene = new Scene();
 
@@ -62,10 +88,10 @@ public class Main {
         scene.add(sphere2);
         scene.add(light);
         scene.add(light2);
-        
-                // Setting up camera
+
+        // Setting up camera
         Vector3D cameraOrigin = new Vector3D(15, 2, -20);
-        
+
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(0, -1, 5);
         PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 120, 0.1);
@@ -80,7 +106,7 @@ public class Main {
 
         //Shape sphere1 = new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(5, 1, 8), new Vector3D(1* Math.PI*2/4, 1* Math.PI*2/4, 1* Math.PI*2/16));
         //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
-        
+
         Shape cub;
         Material mat = new ColoredMaterial(Color.white, 0.18f);
         scene.addShapes(
@@ -106,30 +132,30 @@ public class Main {
 
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(-5, 4, -12);
-        
+
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(5, -7, 5);
         PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 120, 0.1);
         camera.lookAt(new Vector3D(0, 0, 10));
         scene.setCamera(camera);
-        
+
         return scene;
     }
-    
+
     public static Scene createCuboidTestScene() {
         Scene scene = new Scene();
 
         //Shape sphere1 = new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(5, 1, 8), new Vector3D(1* Math.PI*2/4, 1* Math.PI*2/4, 1* Math.PI*2/16));
         //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
-        Vector3D[] corners = new Vector3D[] {
-            new Vector3D(-1, -1, -1),
-            new Vector3D(-1, -1, 1),
-            new Vector3D(-1, 1, -1),
-            new Vector3D(-1, 1, 1),
-            new Vector3D(1, -1, -1),
-            new Vector3D(1, -1, 1),
-            new Vector3D(1, 1, -1),
-            new Vector3D(1, 1, 1),/*/
+        Vector3D[] corners = new Vector3D[]{
+                new Vector3D(-1, -1, -1),
+                new Vector3D(-1, -1, 1),
+                new Vector3D(-1, 1, -1),
+                new Vector3D(-1, 1, 1),
+                new Vector3D(1, -1, -1),
+                new Vector3D(1, -1, 1),
+                new Vector3D(1, 1, -1),
+                new Vector3D(1, 1, 1),/*/
             new Vector3D(-1, 0, -1),
             new Vector3D(-1, 0, 1),
             new Vector3D(1, 0, -1),
@@ -143,17 +169,17 @@ public class Main {
             new Vector3D(1, -1, 0),
             new Vector3D(1, 1, 0)//*/
         };
-        
-        Color[] colors = new Color[] {
-            Color.RED,
-            Color.GREEN,
-            Color.BLUE,
-            Color.MAGENTA,
-            Color.YELLOW,
-            Color.CYAN,
-            Color.ORANGE
+
+        Color[] colors = new Color[]{
+                Color.RED,
+                Color.GREEN,
+                Color.BLUE,
+                Color.MAGENTA,
+                Color.YELLOW,
+                Color.CYAN,
+                Color.ORANGE
         };
-        
+
         Shape s;
         scene.addShapes(
                 s = new Cuboid(new ColoredMaterial(
@@ -164,7 +190,7 @@ public class Main {
                                 Math.toRadians(0),
                                 Math.toRadians(40),
                                 Math.toRadians(0))) // rotation
-                ,new Cuboid(new ColoredMaterial(
+                , new Cuboid(new ColoredMaterial(
                         Color.red, 0.18f),
                         s.pointToWorld(Vector3D.PLUS_I.scalarMultiply(2)), // Position
                         new Vector3D(1, 1, 1), // Scale
@@ -172,37 +198,37 @@ public class Main {
         );
         System.out.println(s.pointToWorld(new Vector3D(100, 200, 300)));
         System.out.println(s.pointToLocal(s.pointToWorld(new Vector3D(100, 200, 300))));
-        
+
         for (int i = 0; i < corners.length; ++i) {
             scene.add(new Cuboid(new ColoredMaterial(
-                        colors[i%colors.length], 0.18f),
-                        s.pointToWorld(corners[i]), // Position
-                        new Vector3D(0.2, 0.2, 0.2),
-                        s.eulerAngles));
+                    colors[i % colors.length], 0.18f),
+                    s.pointToWorld(corners[i]), // Position
+                    new Vector3D(0.2, 0.2, 0.2),
+                    s.eulerAngles));
         }
 
         scene.addLights(
                 new DistantLight(new Vector3D(0.707, 0.707, 0.707), 20, new Color(0xff_ffff80)),
                 new DistantLight(new Vector3D(-0.707, -0.707, -0.707), 50, new Color(0xff_80ffff))
         );
-    
+
         Camera orthogonalCamera = new OrthogonalCamera(
-                new Vector3D(0,0,-10),
-                new Vector3D(Math.toRadians(0),Math.toRadians(0),Math.toRadians(0)),
+                new Vector3D(0, 0, -10),
+                new Vector3D(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0)),
                 10);
-        
+
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(
                 new Vector3D(0, 0, -10),
                 Vector3D.PLUS_I,
                 60,
                 0.01);
         perspectiveCamera.lookAt(new Vector3D(0, 0, 0));
-        
+
         scene.setCamera(true ? perspectiveCamera : orthogonalCamera);
-        
+
         return scene;
     }
-    
+
 
     public static void main(String[] args) {
         String outputFile = "test.png";
@@ -237,11 +263,9 @@ public class Main {
 
                 if (Objects.equals(value, "phong")) {
                     shader = new PhongShader();
-                }
-                else if (Objects.equals(value, "unlit")) {
+                } else if (Objects.equals(value, "unlit")) {
                     shader = new UnlitShader();
-                }
-                else {
+                } else {
                     System.out.format("Unknown option for shader '%s'. Accepted values are 'phong' and 'unlit'. Shading using Phong.", value);
                 }
             }
@@ -253,15 +277,13 @@ public class Main {
         }
 
         // Creating a scene
-        Scene scene = pyramid();
+        Scene scene = teapot();
 
-        if (!stepByStep)
-        {
+        if (!stepByStep) {
             // Rendering scene to image and saving to disk
             BufferedImage image = Raytracer.renderScene(scene, shader, resolutionX, resolutionY);
             saveImage(image, outputFile);
-        }
-        else {
+        } else {
             java.util.List<BufferedImage> images = Raytracer.renderSceneStepByStep(scene, resolutionX, resolutionY);
 
             Path file = Paths.get(outputFile);

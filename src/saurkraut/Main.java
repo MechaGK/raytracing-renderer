@@ -20,6 +20,30 @@ import saurkraut.lights.PointLight;
 import saurkraut.materials.Material;
 
 public class Main {
+    public static Scene pyramid() {
+        Scene scene = new Scene();
+
+        scene.addShapes(
+                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(0, 0, -4), new Vector3D(-4, 0, 0)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, -4)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(0, 0, 4), new Vector3D(4, 0, 0)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, 4))
+        );
+
+        scene.addLights(
+                new DistantLight(new Vector3D(0, -0, 1), 20, new Color(255, 240, 240)),
+                new PointLight(new Vector3D(0, 6, 0), 100, Color.white)
+        );
+
+        scene.setCamera(
+                new PerspectiveCamera(new Vector3D(3, 2, -10), new Vector3D(0, 0, 1), 90, 1)
+        );
+
+        scene.getCamera().lookAt(new Vector3D(0, 1, 0));
+
+        return scene;
+    }
+
     public static Scene createInappropriateScene() {
         Scene scene = new Scene();
 
@@ -188,9 +212,9 @@ public class Main {
         boolean stepByStep = false;
 
         Options options = new Options();
-        options.addOption("o", "output-file", false, "output file name");
-        options.addOption("r", "resolution", false, "resolution of image. 'width'x'height' for example 960x600");
-        options.addOption("s", "shader", false, "shader to render scene with. 'phong' or 'unlit'");
+        options.addOption("o", "output-file", true, "output file name");
+        options.addOption("r", "resolution", true, "resolution of image. 'width'x'height' for example 960x600");
+        options.addOption("s", "shader", true, "shader to render scene with. 'phong' or 'unlit'");
         options.addOption("t", "step", false, "Make multiple images with step by step");
 
         try {
@@ -202,6 +226,7 @@ public class Main {
             }
 
             if (cmd.hasOption("r")) {
+                System.out.println(cmd.getOptionValue("r"));
                 String[] valueStrings = cmd.getOptionValue("r").toLowerCase().split("x");
                 resolutionX = Integer.parseInt(valueStrings[0]);
                 resolutionY = Integer.parseInt(valueStrings[1]);
@@ -228,7 +253,7 @@ public class Main {
         }
 
         // Creating a scene
-        Scene scene = createSimpleScene();
+        Scene scene = pyramid();
 
         if (!stepByStep)
         {

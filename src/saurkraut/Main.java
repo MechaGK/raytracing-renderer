@@ -50,7 +50,7 @@ public class Main {
         Scene scene = new Scene();
 
         scene.setCamera(
-                new PerspectiveCamera(new Vector3D(0, 0, -7), new Vector3D(0, 0, 1), 90, 1)
+                new PerspectiveCamera(new Vector3D(0, 0, -7), new Vector3D(0, 0, 1), 65, 1)
         );
 
         scene.addLights(
@@ -61,7 +61,7 @@ public class Main {
             OBJLoader objLoader = new OBJLoader(new File("teapot.obj"));
 
             scene.addShapes(
-                    new Mesh(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), objLoader)
+                    new Mesh(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, -1.5, 0), objLoader)
             );
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -252,7 +252,6 @@ public class Main {
             }
 
             if (cmd.hasOption("r")) {
-                System.out.println(cmd.getOptionValue("r"));
                 String[] valueStrings = cmd.getOptionValue("r").toLowerCase().split("x");
                 resolutionX = Integer.parseInt(valueStrings[0]);
                 resolutionY = Integer.parseInt(valueStrings[1]);

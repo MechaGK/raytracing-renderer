@@ -108,30 +108,37 @@ public class Main {
         //Shape sphere1 = new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(5, 1, 8), new Vector3D(1* Math.PI*2/4, 1* Math.PI*2/4, 1* Math.PI*2/16));
         //System.out.println(sphere1.directionToLocal(new Vector3D(0, 1, 0)));
 
-        Shape cub;
+        Shape proj;
+        Shape proj2;
         Material mat = new ColoredMaterial(Color.white, 0.18f);
+        Material redMat = new ColoredMaterial(Color.red, 0.18f);
         scene.addShapes(
                 new Plane(mat, new Vector3D(0, 0, 0), new Vector3D(0, 1, 0)),
                 new Plane(mat, new Vector3D(0, 10, 0), new Vector3D(0, -1, 0)),
                 new Plane(mat, new Vector3D(0, 0, 10), new Vector3D(0, 0, -1)),
                 new Plane(mat, new Vector3D(10, 0, 0), new Vector3D(-1, 0, 0)),
                 new Sphere(mat, new Vector3D(-4, 2d, 5), 2),
-                new Sphere(mat, new Vector3D(-7d, 2d, 0), 2),
+                new Sphere(new ColoredMaterial(new Color(0xff_ff00ff), 0.1f, 100, 1f), new Vector3D(-7d, 2d, 0), 2),
                 new Sphere(mat, new Vector3D(8d, 2d, -2), 2),
-                cub = new Cuboid(mat, new Vector3D(0, 4, 0),
+                proj = new Cuboid(redMat, new Vector3D(2, 4, -5),
+                        new Vector3D(0.4, 1, 0.4),
+                        new Vector3D(
+                                Math.toRadians(110),
+                                Math.toRadians(-38),
+                                Math.toRadians(0))),
+                proj2 = new Cuboid(redMat, new Vector3D(-5, 0.4, -5),
                         new Vector3D(0.4, 1, 0.4),
                         new Vector3D(
                                 Math.toRadians(90),
                                 Math.toRadians(45),
-                                Math.toRadians(45)))
+                                Math.toRadians(0)))
                 //new Sphere(mat, cub.pointToWorld(new Vector3D(1.2, 0, 0)), 0.4)
         );
 
         scene.addLights(
                 new PointLight(new Vector3D(-2.2, 8, -2.2), 1000, new Color(0xff_ff8000)),
-                new SpotLight(cub.pointToWorld(new Vector3D(0, 1.5, 0)), cub.directionToWorld(Vector3D.MINUS_J), 0.4f, 1000, new Color(0xff_0080ff))
-                //new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
-                //new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
+                new SpotLight(proj.pointToWorld(new Vector3D(0, 1.001, 0)), proj.directionToWorld(Vector3D.MINUS_J), 50, 55, new Color(0xff_0080ff), 100),
+                new SpotLight(proj2.pointToWorld(new Vector3D(0, 1.001, 0)), proj2.directionToWorld(Vector3D.MINUS_J), 60, 80, new Color(0xff_ffffff), 50)
         );
 
         // Setting up camera
@@ -237,8 +244,8 @@ public class Main {
 
     public static void main(String[] args) {
         String outputFile = "test.png";
-        int resolutionX = 2000;
-        int resolutionY = 2000;
+        int resolutionX = 960;
+        int resolutionY = 600;
         Shader shader = new PhongShader();
         boolean stepByStep = false;
 
@@ -281,7 +288,7 @@ public class Main {
         }
 
         // Creating a scene
-        Scene scene = teapot();
+        Scene scene = createSimpleScene();
 
         if (!stepByStep) {
             // Rendering scene to image and saving to disk

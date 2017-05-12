@@ -3,9 +3,6 @@ package saurkraut.lights;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.awt.*;
-import saurkraut.Ray;
-import saurkraut.RayHit;
-import saurkraut.Raytracer;
 import saurkraut.Scene;
 
 /**
@@ -14,7 +11,8 @@ import saurkraut.Scene;
 public class SpotLight extends Light {
     public Vector3D position;
     public Vector3D direction;
-    public float dotCutOff;
+    private float noIntensityT;
+    private float fullIntensityT;
 
     /**
      * Creates a PointLight
@@ -22,30 +20,27 @@ public class SpotLight extends Light {
      * @param intensity Intensity of the new point light
      * @param color Color of the new point light
      */
-    public SpotLight(Vector3D position, Vector3D direction, float dotCutOff, float intensity, Color color) {
+    public SpotLight(Vector3D position, Vector3D direction, float coneAngleMin, float coneAngleMax, Color color, float intensity) {
         super(color, intensity);
         this.position = position;
         this.direction = direction.normalize();
-        this.dotCutOff = dotCutOff;
+        this.noIntensityT = (float) Math.cos(Math.toRadians(coneAngleMax*0.5));
+        this.fullIntensityT = (float) Math.cos(Math.toRadians(coneAngleMin*0.5));
     }
     
     @Override
     public float getIntensity(Vector3D worldPoint) {
         Vector3D directionToPoint = position.subtract(worldPoint).normalize();
-        float dotted = (float) directionToPoint.dotProduct(direction);
-        if (dotted < dotCutOff) {
-            dotted = 0;
-        }
-        else if (dotted < dotCutOff + 0.1) {
-            dotted -= dotCutOff;
-            dotted *= 10;
-        }
-        else {
-            dotted = 1;
-        }
-        //dotted = (dotted < dotCutOff) ? 0 : 1;
-            //dotted = (dotted < dotCutOff - 0.1f) ? 0 : (dotted - 0.1f) / (dotCutOff - 0.1f);
-        return dotted * intensity / (float) position.distanceSq(worldPoint);
+        float dotProd = (float) directionToPoint.dotProduct(direction);
+        float fallOff;
+        
+        if (dotProd < noIntensityT) fallOff = 0;
+        else if (dotProd >= fullIntensityT) fallOff = 1;
+        else fallOff = (dotProd - noIntensityT)/(fullIntensityT - noIntensityT);
+
+        // Magic constants to have an intensity of 100 be bright
+        // and lower intensities to gracefully decay
+        return fallOff * (100*intensity/(50 + (float)position.distanceSq(worldPoint)));
     }
     
     @Override

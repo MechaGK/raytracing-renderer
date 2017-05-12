@@ -25,6 +25,7 @@ public class Cuboid extends Shape {
         double xSign = Math.copySign(1, locRay.direction.getX());
         double ySign = Math.copySign(1, locRay.direction.getY());
 
+        double normalX = 0, normalY = 0, normalZ = 0;
         double xNear, xFar, yNear, yFar;
 
         xNear = (-xSign - locRay.origin.getX()) * invDirX;
@@ -32,11 +33,28 @@ public class Cuboid extends Shape {
         yNear = (-ySign - locRay.origin.getY()) * invDirY;
         yFar = (ySign - locRay.origin.getY()) * invDirY;
 
-        if (xNear > yFar || yNear > xFar || Double.isNaN(xNear) || Double.isNaN(xFar) || Double.isNaN(yNear) || Double.isNaN(yFar))
+        if (xNear > yFar || yNear > xFar) // || Double.isNaN(xNear) || Double.isNaN(xFar) || Double.isNaN(yNear) || Double.isNaN(yFar))
             return null;
+        
+        double t, tFar;
+        
+        // near hit on x/y plane
+        if (xNear > yNear) {
+            t = xNear;
+            normalX = -xSign;
+        }
+        else {
+            t = yNear;
+            normalY = -ySign;
+        }
 
-        double t = Math.max(xNear, yNear);
-        double tFar = Math.min(xFar, yFar);
+        // far hit on x/y plane
+        if (xFar < yFar) {
+            tFar = xFar;
+        }
+        else {
+            tFar = yFar;
+        }
 
         double zNear, zFar;
         double invDirZ = locRay.invDirection.getZ();
@@ -46,17 +64,28 @@ public class Cuboid extends Shape {
         zFar = (zSign - locRay.origin.getZ()) * invDirZ;
 
         if (t > zFar || zNear >= tFar)
-            return null;
+            return null; // We miss on the z-axis
+        
+        // We hit on the z-axis
 
-        if (zNear > t) t = zNear;
+        if (zNear > t) {
+            t = zNear;
+            normalX = normalY = 0;
+            normalZ = -zSign;
+        }
         
         if (t < 0) {
-            return null;
+            return null; 
         }
         //if (zFar < tFar) tFar = zFar;
 
-        //TODO: Normal calculation can probably be moved to here
-        return new RayHit(pointToWorld(locRay.getPoint(t)), this, getNormal(pointToWorld(locRay.getPoint(t))));
+        //Vector3D normalOld = getNormal(pointToWorld(locRay.getPoint(t)));
+        Vector3D normal = directionToWorld(new Vector3D(normalX, normalY, normalZ));
+
+        //System.out.println(""+ normalOld +", "+ normal +"\n"); YES! THEY ARE THE SAME!
+        
+        
+        return new RayHit(pointToWorld(locRay.getPoint(t)), this, normal);
     }
 
     public Vector3D getNormal(Vector3D point) {

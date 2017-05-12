@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
 import saurkraut.lights.PointLight;
+import saurkraut.lights.SpotLight;
 import saurkraut.materials.Material;
 
 public class Main {
@@ -61,32 +63,35 @@ public class Main {
         Material mat = new ColoredMaterial(Color.white, 0.18f);
         scene.addShapes(
                 new Plane(mat, new Vector3D(0, 0, 0), new Vector3D(0, 1, 0)),
-                //new Sphere(mat, new Vector3D(-4, 2d, 5), 2),
-                //new Sphere(mat, new Vector3D(-7d, 2d, 0), 2),
-                //new Sphere(mat, new Vector3D(8d, 2d, -2), 2),
-                cub = new Cuboid(mat, new Vector3D(10, 5, 0),
-                        new Vector3D(2, 2, 2),
+                new Plane(mat, new Vector3D(0, 10, 0), new Vector3D(0, -1, 0)),
+                new Plane(mat, new Vector3D(0, 0, 10), new Vector3D(0, 0, -1)),
+                new Plane(mat, new Vector3D(10, 0, 0), new Vector3D(-1, 0, 0)),
+                new Sphere(mat, new Vector3D(-4, 2d, 5), 2),
+                new Sphere(mat, new Vector3D(-7d, 2d, 0), 2),
+                new Sphere(mat, new Vector3D(8d, 2d, -2), 2),
+                cub = new Cuboid(mat, new Vector3D(0, 4, 0),
+                        new Vector3D(0.4, 1, 0.4),
                         new Vector3D(
-                                Math.toRadians(0),
-                                Math.toRadians(0),
-                                Math.toRadians(0)))
+                                Math.toRadians(90),
+                                Math.toRadians(45),
+                                Math.toRadians(45)))
                 //new Sphere(mat, cub.pointToWorld(new Vector3D(1.2, 0, 0)), 0.4)
         );
 
         scene.addLights(
-                new PointLight(new Vector3D(1, 1, 1), 1000, Color.red)
-                //new PointLight(new Vector3D(-1, 1, -1), 1000, Color.green)
+                new PointLight(new Vector3D(-2.2, 8, -2.2), 1000, new Color(0xff_ff8000)),
+                new SpotLight(cub.pointToWorld(new Vector3D(0, 1.5, 0)), cub.directionToWorld(Vector3D.MINUS_J), 0.4f, 1000, new Color(0xff_0080ff))
                 //new DistantLight(new Vector3D(0.2, 0.1, 1), 15, new Color(0xff_ff8000)),
                 //new DistantLight(new Vector3D(-0.1, -0.2, 1), 15, new Color(0xff_0080ff))
         );
 
         // Setting up camera
-        Vector3D cameraOrigin = new Vector3D(-5, 4, -12);
+        Vector3D cameraOrigin = new Vector3D(-5, 5, -12);
         
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(5, -7, 5);
-        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 120, 0.1);
-        camera.lookAt(new Vector3D(0, 0, 10));
+        PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 90, 0.1);
+        camera.lookAt(new Vector3D(3, 0, 10));
         scene.setCamera(camera);
         
         return scene;
@@ -138,29 +143,30 @@ public class Main {
                         new Vector3D(1, 1, 1), // Scale
                         new Vector3D(
                                 Math.toRadians(0),
-                                Math.toRadians(40),
+                                Math.toRadians(0),
                                 Math.toRadians(0))) // rotation
-                ,new Cuboid(new ColoredMaterial(
+                /*,new Cuboid(new ColoredMaterial(
                         Color.red, 0.18f),
-                        s.pointToWorld(Vector3D.PLUS_I.scalarMultiply(2)), // Position
-                        new Vector3D(1, 1, 1), // Scale
-                        s.eulerAngles)
+                        s.pointToWorld(Vector3D.PLUS_I.scalarMultiply(1)), // Position
+                        new Vector3D(0.8, 0.8, 0.8), // Scale
+                        s.eulerAngles)*/
         );
-        System.out.println(s.pointToWorld(new Vector3D(100, 200, 300)));
-        System.out.println(s.pointToLocal(s.pointToWorld(new Vector3D(100, 200, 300))));
         
-        for (int i = 0; i < corners.length; ++i) {
-            scene.add(new Cuboid(new ColoredMaterial(
-                        colors[i%colors.length], 0.18f),
-                        s.pointToWorld(corners[i]), // Position
-                        new Vector3D(0.2, 0.2, 0.2),
-                        s.eulerAngles));
-        }
-
         scene.addLights(
-                new DistantLight(new Vector3D(0.707, 0.707, 0.707), 20, new Color(0xff_ffff80)),
-                new DistantLight(new Vector3D(-0.707, -0.707, -0.707), 50, new Color(0xff_80ffff))
+                new PointLight(s.pointToWorld(new Vector3D(-5.1, -4.1, -3.1)), 500, Color.white)
+                //new DistantLight(new Vector3D(0.707, 0.707, 0.707), 20, new Color(0xff_ffff80)),
+                //new DistantLight(new Vector3D(-0.707, -0.707, -0.707), 50, new Color(0xff_80ffff))
         );
+        
+        /*
+        for (int i = 0; i < corners.length; ++i) {
+            scene.add(new Sphere(new ColoredMaterial(
+                        colors[i%colors.length], 1f),
+                        s.pointToWorld(corners[i]), // Position
+                        new Vector3D(0.05, 0.05, 0.05),
+                        s.eulerAngles));
+        }//*/
+
     
         Camera orthogonalCamera = new OrthogonalCamera(
                 new Vector3D(0,0,-10),
@@ -168,9 +174,9 @@ public class Main {
                 10);
         
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera(
-                new Vector3D(0, 0, -10),
+                new Vector3D(-5, -5, -5),
                 Vector3D.PLUS_I,
-                60,
+                25,
                 0.01);
         perspectiveCamera.lookAt(new Vector3D(0, 0, 0));
         
@@ -182,8 +188,8 @@ public class Main {
 
     public static void main(String[] args) {
         String outputFile = "test.png";
-        int resolutionX = 960;
-        int resolutionY = 600;
+        int resolutionX = 2000;
+        int resolutionY = 2000;
         Shader shader = new PhongShader();
         boolean stepByStep = false;
 
@@ -228,7 +234,7 @@ public class Main {
         }
 
         // Creating a scene
-        Scene scene = createSimpleScene();
+        Scene scene = createCuboidTestScene();
 
         if (!stepByStep)
         {

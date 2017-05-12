@@ -27,25 +27,35 @@ public class Triangle extends Plane {
     @Override
     public RayHit intersect(Ray ray) {
         RayHit hit = super.intersect(ray);
+
+        if (hit == null) {
+            return null;
+        }
+
         Vector3D point = hit.point;
 
-        double alpha = area(point, b, c) / area;
-        double beta = area(point, c, a) / area;
-        double gamma = 1d - alpha - beta;
-
-        if (inRange(alpha) && inRange(beta) && inRange(gamma)) {
+        if (sameSide(point, a, b, c) && sameSide(point, b, a, c) && sameSide(point, c, a, b)) {
             return hit;
         }
 
         return null;
     }
 
+    public static boolean sameSide(Vector3D p1, Vector3D p2, Vector3D a, Vector3D b) {
+        Vector3D cp1 = b.subtract(a).crossProduct(p1.subtract(a));
+        Vector3D cp2 = b.subtract(a).crossProduct(p2.subtract(a));
+
+        return (cp1.dotProduct(cp2) >= 0);
+    }
+
+
+
     public static boolean inRange(double v) {
         return 0 <= v && v <= 1;
     }
 
     public static double area(Vector3D a, Vector3D b, Vector3D c) {
-        return b.subtract(a).crossProduct(c.subtract(a)).getNorm() / 2d;
+        return (b.subtract(a)).crossProduct(c.subtract(a)).getNorm() / 2d;
     }
 
     @Override

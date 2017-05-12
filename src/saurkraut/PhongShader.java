@@ -34,7 +34,7 @@ public class PhongShader implements Shader {
         Color cumulativeSpecular = Color.BLACK;
         
         // Move us away from the shape's surface by 0.00001d
-        point = point.add(normal.scalarMultiply(0.00001d));
+        point = point.add(normal.scalarMultiply(0.001d));
         
         for (Light light : scene.getLights()) {
             contribution = light.getContribution(scene, point);

@@ -42,7 +42,7 @@ public class OBJLoader extends ArrayList<ArrayList> {
     }
 
     static private List<Integer> readFace(String s) {
-        Scanner sc = new Scanner(s).useDelimiter("\\s*|/");
+        Scanner sc = new Scanner(s);
         List<Integer> face = new ArrayList<>();
         while (sc.hasNext()) face.add(sc.nextInt() - 1);
         return face;

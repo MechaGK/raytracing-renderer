@@ -114,10 +114,21 @@ public class Cuboid extends Shape {
 
     @Override
     public Color getColor(Vector3D point) {
-        //Replace this with a sensical GridCoordinate.
-        return material.getColor(new SphericalCoordinate(0.5, 0.5));
-
-        //return material.getColor(0.5, 0.5);
+      //Everything in here should be in local space. If it isn't, then something is going to break.
+      
+      //Get the normal from the surface that is hit.
+      Vector3D SurfaceNormal = directionToLocal(getNormal(point));
+      
+      //The local axes for the face.
+      Vector3D YAxis = new Vector3D(SurfaceNormal.getY(), SurfaceNormal.getZ(), -SurfaceNormal.getX()).normalize();
+      Vector3D XAxis = Vector3D.crossProduct(SurfaceNormal, YAxis).normalize();
+      
+      //The scalar coordinates.
+      //The +1.0 moves the -1.0 - 1.0 range into the 0.0 - 2.0 range, and dividing by two reduces that to a 0.0 - 1.0 range, which is what the SphericalCoordinate class works with. This also stretches the texture over the whole cuboid face, thus in a way uses the cuboid diameter instead of the cuoid radius.
+      double x = (Vector3D.dotProduct(pointToLocal(point), XAxis)+1.0)/2;
+      double y = (Vector3D.dotProduct(pointToLocal(point), YAxis)+1.0)/2;
+      
+      return material.getColor(new SphericalCoordinate(x, y));
     }
 
 }

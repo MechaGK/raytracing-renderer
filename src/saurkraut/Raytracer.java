@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Raytracer {
     private static class ImageRayHit {
@@ -53,8 +51,8 @@ public class Raytracer {
      * <p>
      * Only distant lights are supported
      *
-     * @param scene       Scene to render.
-     * @param shader      Shader used for shading
+     * @param scene Scene to render.
+     * @param shader Shader used for shading
      * @param resolutionX Horizontal resolution of the final image
      * @param resolutionY Vertical resolution of the final image
      * @return BufferedImage colored after scene contents
@@ -127,35 +125,23 @@ public class Raytracer {
     }
 
     public static ArrayList<ImageRayHit> getPoints(Scene scene, int resolutionX, int resolutionY) {
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-        final ConcurrentLinkedQueue<ImageRayHit> hits = new ConcurrentLinkedQueue<>();
+        ArrayList<ImageRayHit> hits = new ArrayList<>();
         Iterator<CameraRay> cameraRays = scene.getCamera().raysIterator(resolutionX, resolutionY);
 
+        CameraRay cameraRay;
+        Ray ray;
         while (cameraRays.hasNext()) {
-            final CameraRay cameraRay = cameraRays.next();
-            final Ray ray = cameraRay.ray;
+            cameraRay = cameraRays.next();
+            ray = cameraRay.ray;
 
-            executorService.submit(() -> {
-                RayHit rayHit = scene.castRay(ray);
+            RayHit rayHit = scene.castRay(ray);
 
-                if (rayHit != null) {
-                    hits.add(new ImageRayHit(cameraRay.x, cameraRay.y, ray, rayHit));
-                }
-            });
+            if (rayHit == null) continue; // Nothing hit continue to next ray
+
+            hits.add(new ImageRayHit(cameraRay.x, cameraRay.y, ray, rayHit));
         }
 
-        executorService.shutdown();
-
-        try {
-            executorService.awaitTermination(1, TimeUnit.DAYS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<ImageRayHit> imageRayHits = new ArrayList<>();
-        imageRayHits.addAll(hits);
-        return imageRayHits;
+        return hits;
     }
 
     public static ArrayList<ShadingPoint> shadePoints(Scene scene, Shader shader, List<ImageRayHit> hits) {
@@ -179,10 +165,10 @@ public class Raytracer {
         BufferedImage image = new BufferedImage(resolutionX, resolutionY, BufferedImage.TYPE_INT_ARGB);
 
         if (clearColor != null) {
-            Graphics2D graphics = image.createGraphics();
+            Graphics2D    graphics = image.createGraphics();
 
-            graphics.setPaint(clearColor);
-            graphics.fillRect(0, 0, image.getWidth(), image.getHeight());
+            graphics.setPaint ( clearColor );
+            graphics.fillRect ( 0, 0, image.getWidth(), image.getHeight() );
         }
 
         for (ShadingPoint shadingPoint : shadingPoints) {

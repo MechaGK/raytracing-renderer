@@ -18,7 +18,7 @@ public class Cuboid extends Shape {
 
     @Override
     public RayHit intersect(Ray ray) {
-        Ray locRay = rayToLocal(ray);
+        Ray locRay = new Ray(pointToLocal(ray.origin), vectorToLocal(ray.direction));
 
         double invDirX = locRay.invDirection.getX();
         double invDirY = locRay.invDirection.getY();

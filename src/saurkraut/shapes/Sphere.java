@@ -27,7 +27,7 @@ public class Sphere extends Shape {
     @Override
     public RayHit intersect(Ray ray) {
         // 1. Transform ray to local space
-        Ray locRay = rayToLocal(ray);
+        Ray locRay = new Ray(pointToLocal(ray.origin), vectorToLocal(ray.direction));
                 
         // 2. Now test against unit sphere
         double b = 2 * locRay.direction.dotProduct(locRay.origin);

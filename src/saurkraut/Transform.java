@@ -185,12 +185,4 @@ public class Transform {
                 dx*rC1 + dy*rC2 + dz*rC3
         );
     };
-    
-    public Ray rayToLocal(Ray worldRay) {
-        return new Ray(pointToLocal(worldRay.origin), vectorToLocal(worldRay.direction));
-    }
-    
-    public Ray rayToWorld(Ray localRay) {
-        return new Ray(pointToWorld(localRay.origin), vectorToWorld(localRay.direction));
-    }
 }

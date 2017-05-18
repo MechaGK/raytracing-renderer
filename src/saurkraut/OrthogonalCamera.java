@@ -48,7 +48,7 @@ public class OrthogonalCamera extends Camera {
                     halfHeight - y*yStep, // flipped y axis
                     0);
 
-            Ray ray = rayToWorld(new Ray(rayOrigin, Vector3D.PLUS_K));
+            Ray ray = new Ray(pointToWorld(rayOrigin), directionToWorld(Vector3D.PLUS_K));
             //System.out.println("origin: " + ray.origin + ", direction: " + ray.direction);
             CameraRay cameraRay = new CameraRay(ray, x, y);
 

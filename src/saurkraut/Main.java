@@ -23,6 +23,24 @@ import saurkraut.lights.SpotLight;
 import saurkraut.materials.Material;
 
 public class Main {
+    public static Scene sphere() {
+        Scene scene = new Scene();
+
+        scene.addShapes(
+                new Sphere(new ColoredMaterial(Color.blue, 0.18f), Vector3D.ZERO, 3)
+        );
+
+        scene.addLights(
+                new DistantLight(new Vector3D(-1, 0, 2), 10, Color.white)
+        );
+
+        scene.setCamera(
+                new PerspectiveCamera(new Vector3D(0, 0, -6), new Vector3D(0, 0, 1), 75, 0.1)
+        );
+
+        return scene;
+    }
+
     public static Scene pyramid() {
         Scene scene = new Scene();
 

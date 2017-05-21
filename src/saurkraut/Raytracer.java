@@ -147,15 +147,11 @@ public class Raytracer {
     public static ArrayList<ShadingPoint> shadePoints(Scene scene, Shader shader, List<ImageRayHit> hits) {
         ArrayList<ShadingPoint> shadingPoints = new ArrayList<>();
 
-        Color shapeColor;
         Color lightColor;
-        Color finalColor;
         for (ImageRayHit hit : hits) {
-            shapeColor = hit.shape.getColor(hit.point);
             lightColor = shader.shade(scene, hit.shape, hit.point, hit.normal, hit.ray.direction);
-            finalColor = ColorUtil.multiply(shapeColor, lightColor);
 
-            shadingPoints.add(new ShadingPoint(hit.imageX, hit.imageY, finalColor));
+            shadingPoints.add(new ShadingPoint(hit.imageX, hit.imageY, lightColor));
         }
 
         return shadingPoints;

@@ -32,7 +32,8 @@ public class PhongShader implements Shader {
         Vector3D dirToLight;
         Color cumulativeDiffuse = Color.BLACK;
         float cumulativeSpecular = 0;
-        
+        Color diffuseColor = Color.black;
+
         // Move us away from the shape's surface by 0.00001d
         point = point.add(normal.scalarMultiply(0.001d));
         
@@ -48,6 +49,7 @@ public class PhongShader implements Shader {
                         * Math.max(0f, normal.dotProduct(dirToLight)));
                 Color perLightDiffuse = ColorUtil.multiply(light.getColor(), number);
                 cumulativeDiffuse = ColorUtil.add(cumulativeDiffuse, perLightDiffuse);
+                diffuseColor = ColorUtil.multiply(shape.getColor(point), cumulativeDiffuse);
 
                 // Specular
                 Vector3D R = normal.scalarMultiply(2 * (normal.dotProduct(dirToLight))).subtract(dirToLight);
@@ -57,6 +59,6 @@ public class PhongShader implements Shader {
         }
         cumulativeSpecular = material.specularStrength*Math.min(cumulativeSpecular, 1);
         Color specularColor = new Color(cumulativeSpecular, cumulativeSpecular, cumulativeSpecular);
-        return ColorUtil.add(cumulativeDiffuse, specularColor);
+        return ColorUtil.add(diffuseColor, specularColor);
     }
 }

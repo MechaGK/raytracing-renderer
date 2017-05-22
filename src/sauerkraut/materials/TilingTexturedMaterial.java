@@ -19,10 +19,6 @@ public class TilingTexturedMaterial extends TexturedMaterial {
   
   public Color getColor(Coordinate coord) {
     
-    if(coord.getIntegerX() < 0 || coord.getIntegerY() < 0) {
-      return Color.BLACK;
-    }
-    
     return texture.getColor(coord.getIntegerY() % texture.height, coord.getIntegerX() % texture.width);
     
     //OLD STUFF:

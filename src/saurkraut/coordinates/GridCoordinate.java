@@ -15,10 +15,22 @@ public class GridCoordinate extends Coordinate {
   }
   
   public GridCoordinate(int x, int y, int width, int height) {
-    this.x = x;
-    this.y = y;
+    //this.x = x;
+    //this.y = y;
     this.width = width;
     this.height = height;
+    
+    int x_ = x % width;
+    int y_ = y % height;
+    if (x_ < 0) {
+      x_ += width;
+    }
+    if (y_ < 0) {
+      y_ += height;
+    }
+    
+    this.x = x_;
+    this.y = y_;
   }
   
   public double getScalarSigma() {

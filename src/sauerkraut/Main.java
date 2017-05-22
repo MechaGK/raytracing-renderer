@@ -5,7 +5,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import sauerkraut.lights.DistantLight;
 import sauerkraut.lights.Light;
 import sauerkraut.materials.ColoredMaterial;
-import sauerkraut.shapes.Shape;
+import sauerkraut.shapes.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,8 +20,53 @@ import java.util.*;
 import sauerkraut.lights.PointLight;
 import sauerkraut.lights.SpotLight;
 import sauerkraut.materials.Material;
+import sauerkraut.shapes.Shape;
 
 public class Main {
+    public static Scene benchmark(int numberOfSpheres) {
+        Scene scene = new Scene();
+
+        Random random = new Random();
+
+        for (int i = 0; i < numberOfSpheres; i++) {
+            Color color = new Color(
+                    random.nextInt(256),
+                    random.nextInt(256),
+                    random.nextInt(256));
+
+            Vector3D position = new Vector3D(
+                    (random.nextFloat() - 0.5f) * 10,
+                    (random.nextFloat() - 0.5f) * 10,
+                    (random.nextFloat() - 0.5f) * 10);
+
+            scene.add(new Sphere(new ColoredMaterial(color, 0.18f), position, 0.5));
+        }
+
+        for (int i = 0; i < 10; i++) {
+            Vector3D position = new Vector3D(
+                    (random.nextFloat() - 0.5f) * 11,
+                    (random.nextFloat() - 0.5f) * 11,
+                    (random.nextFloat() - 0.5f) * 11);
+
+            Color color = new Color(
+                    random.nextInt(256),
+                    random.nextInt(256),
+                    random.nextInt(256));
+
+            scene.add(new PointLight(position, (random.nextFloat() + 0.2f) * 20, color));
+        }
+
+        scene.setCamera(
+                new PerspectiveCamera(new Vector3D(0, 0, -10), new Vector3D(0, 0, 1), 90, 1)
+        );
+
+        scene.addLights(
+                new DistantLight(new Vector3D(0, -1, 3), 10, Color.white)
+        );
+
+        return scene;
+    }
+
     public static Scene sphere() {
         Scene scene = new Scene();
 
@@ -160,7 +205,7 @@ public class Main {
 
         // Setting up camera
         Vector3D cameraOrigin = new Vector3D(-5, 5, -12);
-        
+
         // Is only used for initialization. Real direction is set by lookAt just after creation
         Vector3D cameraDirection = new Vector3D(5, -7, 5);
         PerspectiveCamera camera = new PerspectiveCamera(cameraOrigin, cameraDirection, 90, 0.1);
@@ -225,7 +270,7 @@ public class Main {
                         new Vector3D(0.8, 0.8, 0.8), // Scale
                         s.eulerAngles)*/
         );
-        
+
         scene.addLights(
                 new PointLight(s.pointToWorld(new Vector3D(-5.1, -4.1, -3.1)), 500, Color.white)
                 //new DistantLight(new Vector3D(0.707, 0.707, 0.707), 20, new Color(0xff_ffff80)),
@@ -240,7 +285,7 @@ public class Main {
                         new Vector3D(0.05, 0.05, 0.05),
                         s.eulerAngles));
         }//*/
-        
+
         Camera orthogonalCamera = new OrthogonalCamera(
                 new Vector3D(0, 0, -10),
                 new Vector3D(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0)),
@@ -266,11 +311,15 @@ public class Main {
         Shader shader = new PhongShader();
         boolean stepByStep = false;
 
+        // Creating a scene
+        Scene scene = sphere();
+
         Options options = new Options();
         options.addOption("o", "output-file", true, "output file name");
         options.addOption("r", "resolution", true, "resolution of image. 'width'x'height' for example 960x600");
         options.addOption("s", "shader", true, "shader to render scene with. 'phong' or 'unlit'");
         options.addOption("t", "step", false, "Make multiple images with step by step");
+        options.addOption("b", "benchmark", true, "Benchmark with given number of spheres");
 
         try {
             CommandLineParser parser = new DefaultParser();
@@ -298,14 +347,17 @@ public class Main {
                 }
             }
 
+            if (cmd.hasOption("b")) {
+                int numberOfSpheres = Integer.parseInt(cmd.getOptionValue("b"));
+
+                scene = benchmark(numberOfSpheres);
+            }
+
             stepByStep = cmd.hasOption("t");
         } catch (ParseException e) {
             e.printStackTrace();
             outputFile = "test.png";
         }
-
-        // Creating a scene
-        Scene scene = createSimpleScene();
 
         if (!stepByStep) {
             // Rendering scene to image and saving to disk

@@ -39,8 +39,6 @@ public class Scenes {
             scene.add(new Triangle(new ColoredMaterial(color, 0.18f),
                     new Vector3D(points[i].getX(), points[i].getY(), -1),
                     points[i2], points[i3]));
-
-            scene.add(new Sphere(new ColoredMaterial(color, 0.18f), points[i], 0.1));
         }
 
         scene.addLights(

@@ -364,7 +364,7 @@ public class Main {
             BufferedImage image = Raytracer.renderScene(scene, shader, resolutionX, resolutionY);
             saveImage(image, outputFile);
         } else {
-            java.util.List<BufferedImage> images = Raytracer.renderSceneStepByStep(scene, resolutionX, resolutionY);
+            java.util.List<BufferedImage> images = Raytracer.renderSceneStepByStep(scene, resolutionX, resolutionY, shader);
 
             Path file = Paths.get(outputFile);
             if (file.toString().endsWith(".png")) {

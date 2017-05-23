@@ -87,7 +87,7 @@ public class Raytracer {
         return image;
     }
 
-    public static List<BufferedImage> renderSceneStepByStep(Scene scene, int resolutionX, int resolutionY) {
+    public static List<BufferedImage> renderSceneStepByStep(Scene scene, int resolutionX, int resolutionY, Shader shader) {
         ArrayList<ImageRayHit> points = getPoints(scene, resolutionX, resolutionY);
 
         double distance;
@@ -111,8 +111,7 @@ public class Raytracer {
         Shader depthShaderColor = new DepthShader(maxDistance, true);
         ArrayList<ShadingPoint> depthShadedColored = shadePoints(scene, depthShaderColor, points);
 
-        Shader phongShader = new PhongShader();
-        ArrayList<ShadingPoint> phongShaded = shadePoints(scene, phongShader, points);
+        ArrayList<ShadingPoint> phongShaded = shadePoints(scene, shader, points);
 
         List<BufferedImage> images = new ArrayList<>();
 

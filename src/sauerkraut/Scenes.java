@@ -16,6 +16,60 @@ import java.io.FileNotFoundException;
 import java.util.Random;
 
 public class Scenes {
+    public static Scene triangles() {
+        Scene scene = new Scene();
+
+        int length = 8;
+        Vector3D[] points = new Vector3D[length];
+
+        for (int i = 0; i < length; i++) {
+            double v = ((float) i / (float) length) * Math.PI * 2;
+
+            points[i] = new Vector3D(Math.sin(v) * 3, Math.cos(v) * 3, 0);
+        }
+
+        for (int i = 0; i < length; i++) {
+            float h = ((float) i / (float) length);
+
+            int i2 = (i + (length / 3)) % length;
+            int i3 = (i + (2 * length / 3)) % length;
+
+            Color color = Color.getHSBColor(h, 1, 1);
+
+            scene.add(new Triangle(new ColoredMaterial(color, 0.18f),
+                    new Vector3D(points[i].getX(), points[i].getY(), -1),
+                    points[i2], points[i3]));
+
+            scene.add(new Sphere(new ColoredMaterial(color, 0.18f), points[i], 0.1));
+        }
+
+        scene.addLights(
+                new DistantLight(new Vector3D(0, 0, 10), 20, Color.white)
+        );
+
+        scene.setCamera(new PerspectiveCamera(new Vector3D(0, 0, -10), new Vector3D(0, 0, 1), 90, 1));
+
+        return scene;
+    }
+
+    public static Scene problem() {
+        Scene scene = new Scene();
+
+        scene.addShapes(
+                new Plane(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(0, 0, -1)),
+                new Plane(new ColoredMaterial(new Color(100, 100, 100), 0.18f), new Vector3D(0, 0, -0.5), new Vector3D(0, 0, -1)),
+                new Triangle(new ColoredMaterial(Color.blue, 0.18f), new Vector3D(1, 1, -1), new Vector3D(0, -1, -1), new Vector3D(-1, 1, -1))
+        );
+
+        scene.addLights(
+                new DistantLight(new Vector3D(0, 0, 10), 20, Color.white)
+        );
+
+        scene.setCamera(new PerspectiveCamera(new Vector3D(0, 0, -10), new Vector3D(0, 0, 1), 90, 1));
+
+        return scene;
+    }
+
     public static Scene benchmark(int numberOfSpheres, int numberOfLights) {
         Scene scene = new Scene();
 

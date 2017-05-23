@@ -19,7 +19,7 @@ public class Main {
             put("inappropriate", Scenes::inappropriateScene);
             put("test", Scenes::simpleScene);
             put("problem", Scenes::problem);
-            put("triangles", Scenes::triangles);
+            put("colors", Scenes::colors);
         }
     };
 

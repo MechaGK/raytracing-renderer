@@ -16,16 +16,16 @@ import java.io.FileNotFoundException;
 import java.util.Random;
 
 public class Scenes {
-    public static Scene triangles() {
+    public static Scene colors() {
         Scene scene = new Scene();
 
-        int length = 8;
+        int length = 18;
         Vector3D[] points = new Vector3D[length];
 
         for (int i = 0; i < length; i++) {
             double v = ((float) i / (float) length) * Math.PI * 2;
 
-            points[i] = new Vector3D(Math.sin(v) * 3, Math.cos(v) * 3, 0);
+            points[i] = new Vector3D(Math.sin(v) * 5, Math.cos(v) * 5, 0);
         }
 
         for (int i = 0; i < length; i++) {

@@ -11,10 +11,13 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Main {
-
     public static HashMap<String, SceneCreator> scenes = new HashMap<String, SceneCreator>() {
         {
             put("sphere", Scenes::sphere);
+            put("cuboid", Scenes::cuboidTestScene);
+            put("pyramid", Scenes::pyramid);
+            put("inappropriate", Scenes::inappropriateScene);
+            put("test", Scenes::simpleScene);
         }
     };
 
@@ -51,14 +54,20 @@ public class Main {
                 .build());
         options.addOption(Option.builder("b")
                 .longOpt("benchmark")
-                .desc("Benchmark with given number of spheres and point lights")
+                .desc("benchmark with given number of spheres and point lights")
                 .hasArg()
                 .numberOfArgs(2)
                 .argName("spheres> <point lights")
                 .build());
+        options.addOption(Option.builder("s")
+                .longOpt("scene")
+                .desc("scene to render")
+                .hasArg()
+                .argName("scene name")
+                .optionalArg(true)
+                .build());
 
         options.addOption("t", "step", false, "Make multiple images with step by step");
-        options.addOption("s", "scene", true, "scene to render");
         options.addOption("h", "help", false, "show help");
 
         try {
@@ -88,14 +97,17 @@ public class Main {
             if (cmd.hasOption("s")) {
                 if (cmd.hasOption("b")) {
                     System.out.println("Scene option is not compatible with benchmark option");
-                }
-                else {
-                    String value = cmd.getOptionValue("s").toLowerCase();
+                } else {
+                    String value = cmd.getOptionValue("s");
 
-                    if (scenes.containsKey(value)) {
-                        scene = scenes.get(value).create();
+                    if (value != null && scenes.containsKey(value.toLowerCase())) {
+                        scene = scenes.get(value.toLowerCase()).create();
                     } else {
-                        System.out.printf("%s is not a valid scene\nAvailable scenes: \n", value);
+                        if (value != null) {
+                            System.out.printf("%s is not a valid scene\n", value);
+                        }
+
+                        System.out.println("Available scenes:");
                         scenes.keySet().forEach(s -> System.out.printf("\t%s\n", s));
 
                         return;

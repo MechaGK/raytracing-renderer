@@ -23,7 +23,7 @@ import sauerkraut.materials.Material;
 import sauerkraut.shapes.Shape;
 
 public class Main {
-    public static Scene benchmark(int numberOfSpheres) {
+    public static Scene benchmark(int numberOfSpheres, int numberOfLights) {
         Scene scene = new Scene();
 
         Random random = new Random();
@@ -42,7 +42,7 @@ public class Main {
             scene.add(new Sphere(new ColoredMaterial(color, 0.18f), position, 0.5));
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < numberOfLights; i++) {
             Vector3D position = new Vector3D(
                     (random.nextFloat() - 0.5f) * 11,
                     (random.nextFloat() - 0.5f) * 11,
@@ -303,6 +303,11 @@ public class Main {
         return scene;
     }
 
+    public static HashMap<String, SceneCreator> scenes = new HashMap<String, SceneCreator>() {
+        {
+            put("sphere", Main::sphere);
+        }
+    };
 
     public static void main(String[] args) {
         String outputFile = "test.png";
@@ -315,28 +320,52 @@ public class Main {
         Scene scene = sphere();
 
         Options options = new Options();
-        options.addOption("o", "output-file", true, "output file name");
-        options.addOption("r", "resolution", true, "resolution of image. 'width'x'height' for example 960x600");
-        options.addOption("s", "shader", true, "shader to render scene with. 'phong' or 'unlit'");
+        options.addOption(Option.builder("o")
+                .longOpt("output-file")
+                .desc("output file")
+                .hasArg()
+                .argName("file")
+                .build());
+        options.addOption(Option.builder("r")
+                .longOpt("resolution")
+                .desc("resolution of image. 960x600")
+                .hasArg()
+                .numberOfArgs(2)
+                .valueSeparator('x')
+                .argName("width>x<height")
+                .build());
+        options.addOption(Option.builder()
+                .longOpt("shader")
+                .desc("shader to render scene with. 'phong' or 'unlit'")
+                .hasArg()
+                .argName("phong/unlit")
+                .build());
+        options.addOption(Option.builder("b")
+                .longOpt("benchmark")
+                .desc("Benchmark with given number of spheres and point lights")
+                .hasArg()
+                .numberOfArgs(2)
+                .argName("spheres> <point lights")
+                .build());
+
         options.addOption("t", "step", false, "Make multiple images with step by step");
-        options.addOption("b", "benchmark", true, "Benchmark with given number of spheres");
+        options.addOption("s", "scene", true, "scene to render");
+        options.addOption("h", "help", false, "show help");
 
         try {
             CommandLineParser parser = new DefaultParser();
             CommandLine cmd = parser.parse(options, args);
 
-            if (cmd.hasOption("o")) {
-                outputFile = cmd.getOptionValue("o");
-            }
+            outputFile = cmd.getOptionValue("o", "test.png");
 
             if (cmd.hasOption("r")) {
-                String[] valueStrings = cmd.getOptionValue("r").toLowerCase().split("x");
+                String[] valueStrings = cmd.getOptionValues("r");
                 resolutionX = Integer.parseInt(valueStrings[0]);
                 resolutionY = Integer.parseInt(valueStrings[1]);
             }
 
-            if (cmd.hasOption("s")) {
-                String value = cmd.getOptionValue("s").toLowerCase();
+            if (cmd.hasOption("d")) {
+                String value = cmd.getOptionValue("d").toLowerCase();
 
                 if (Objects.equals(value, "phong")) {
                     shader = new PhongShader();
@@ -347,10 +376,36 @@ public class Main {
                 }
             }
 
-            if (cmd.hasOption("b")) {
-                int numberOfSpheres = Integer.parseInt(cmd.getOptionValue("b"));
+            if (cmd.hasOption("s")) {
+                if (cmd.hasOption("b")) {
+                    System.out.println("Scene option is not compatible with benchmark option");
+                }
+                else {
+                    String value = cmd.getOptionValue("s").toLowerCase();
 
-                scene = benchmark(numberOfSpheres);
+                    if (scenes.containsKey(value)) {
+                        scene = scenes.get(value).create();
+                    } else {
+                        System.out.printf("%s is not a valid scene\nAvailable scenes: \n", value);
+                        scenes.keySet().forEach(s -> System.out.printf("\t%s\n", s));
+
+                        return;
+                    }
+                }
+            }
+
+            if (cmd.hasOption("b")) {
+                String[] values = cmd.getOptionValues("b");
+                int numberOfSpheres = Integer.parseInt(values[0]);
+                int numberOfLights = Integer.parseInt(values[1]);
+
+                scene = benchmark(numberOfSpheres, numberOfLights);
+            }
+
+            if (cmd.hasOption("h")) {
+                HelpFormatter formatter = new HelpFormatter();
+                formatter.printHelp("sauerkraut", options);
+                return;
             }
 
             stepByStep = cmd.hasOption("t");

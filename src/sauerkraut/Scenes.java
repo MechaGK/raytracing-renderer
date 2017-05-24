@@ -68,12 +68,20 @@ public class Scenes {
         return scene;
     }
 
-    public static Scene benchmark(int numberOfSpheres, int numberOfLights) {
+    public enum BenchmarkShape {
+        Sphere, Cuboid
+    }
+
+    public enum BenchmarkLight {
+        DirectionalLight, Spotlight, PointLight
+    }
+
+    public static Scene benchmark(int numberOfShapes, int numberOfLights, BenchmarkShape shapeType, BenchmarkLight lightType, boolean defaultLight) {
         Scene scene = new Scene();
 
         Random random = new Random();
 
-        for (int i = 0; i < numberOfSpheres; i++) {
+        for (int i = 0; i < numberOfShapes; i++) {
             Color color = new Color(
                     random.nextInt(256),
                     random.nextInt(256),
@@ -84,7 +92,18 @@ public class Scenes {
                     (random.nextFloat() - 0.5f) * 10,
                     (random.nextFloat() - 0.5f) * 10);
 
-            scene.add(new Sphere(new ColoredMaterial(color, 0.18f), position, 0.5));
+            switch (shapeType) {
+                case Sphere:
+                    scene.add(new Sphere(new ColoredMaterial(color, 0.18f), position, 0.5));
+                    break;
+                case Cuboid:
+                    scene.add(new Cuboid(
+                            new ColoredMaterial(color, 0.18f),
+                            position,
+                            new Vector3D(0.2, 0.2, 0.2),
+                            position));
+                    break;
+            }
         }
 
         for (int i = 0; i < numberOfLights; i++) {
@@ -98,16 +117,28 @@ public class Scenes {
                     random.nextInt(256),
                     random.nextInt(256));
 
-            scene.add(new PointLight(position, (random.nextFloat() + 0.2f) * 20, color));
+            switch (lightType) {
+                case DirectionalLight:
+                    scene.add(new DistantLight(position, (random.nextFloat() + 0.2f) * 20, color));
+                    break;
+                case Spotlight:
+                    scene.add(new SpotLight(position, position, (random.nextFloat() * 15) + 5, (random.nextFloat() * 60) + 30, color, (random.nextFloat() + 0.2f) * 20));
+                    break;
+                case PointLight:
+                    scene.add(new PointLight(position, (random.nextFloat() + 0.2f) * 20, color));
+                    break;
+            }
         }
 
         scene.setCamera(
                 new PerspectiveCamera(new Vector3D(0, 0, -10), new Vector3D(0, 0, 1), 90, 1)
         );
 
-        scene.addLights(
-                new DistantLight(new Vector3D(0, -1, 3), 10, Color.white)
-        );
+        if (defaultLight) {
+            scene.addLights(
+                    new DistantLight(new Vector3D(0, -1, 3), 10, Color.white)
+            );
+        }
 
         return scene;
     }

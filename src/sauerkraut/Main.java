@@ -59,7 +59,23 @@ public class Main {
                 .desc("benchmark with given number of spheres and point lights")
                 .hasArg()
                 .numberOfArgs(2)
-                .argName("spheres> <point lights")
+                .argName("shapes> <lights")
+                .build());
+        options.addOption(Option.builder()
+                .longOpt("benchmark-shape")
+                .desc("shape used for benchmarking")
+                .hasArg()
+                .argName("shape")
+                .build());
+        options.addOption(Option.builder()
+                .longOpt("benchmark-light")
+                .desc("light used for benchmarking")
+                .hasArg()
+                .argName("light")
+                .build());
+        options.addOption(Option.builder()
+                .longOpt("benchmark-no-default-light")
+                .desc("don't add distant light for optics in benchmark scene")
                 .build());
         options.addOption(Option.builder("s")
                 .longOpt("scene")
@@ -122,7 +138,29 @@ public class Main {
                 int numberOfSpheres = Integer.parseInt(values[0]);
                 int numberOfLights = Integer.parseInt(values[1]);
 
-                scene = Scenes.benchmark(numberOfSpheres, numberOfLights);
+                String shapeName = cmd.getOptionValue("benchmark-shape", "sphere").toLowerCase();
+                String lightName = cmd.getOptionValue("benchmark-light", "light").toLowerCase();
+
+                Scenes.BenchmarkShape shapeType = Scenes.BenchmarkShape.Sphere;
+                Scenes.BenchmarkLight lightType = Scenes.BenchmarkLight.PointLight;
+
+                if (shapeName.equals("cube") || shapeName.equals("cuboid")) {
+                    shapeType = Scenes.BenchmarkShape.Cuboid;
+                } else if (!(shapeName.equals("sphere"))){
+                    System.out.printf("Unknown shape %d, using spheres\n", shapeName);
+                    System.out.println("Available shapes:\n\tsphere\n\tcube");
+                }
+
+                if (lightName.equals("distant light") ||lightName.equals("directional") || lightName.equals("distant")) {
+                    lightType = Scenes.BenchmarkLight.DirectionalLight;
+                }else if (lightName.equals("spotlight") || lightName.equals("spot")) {
+                    lightType = Scenes.BenchmarkLight.Spotlight;
+                } else if (!(lightName.equals("point") || lightName.equals("point light"))) {
+                    System.out.printf("Unknown light %d, using point light\n");
+                    System.out.println("Available lights:\n\tpoint light\n\tdistant light\n\tspotlight");
+                }
+
+                scene = Scenes.benchmark(numberOfSpheres, numberOfLights, shapeType, lightType, !cmd.hasOption("benchmark-no-default-light"));
             }
 
             if (cmd.hasOption("h")) {

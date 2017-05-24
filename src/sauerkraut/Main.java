@@ -139,7 +139,7 @@ public class Main {
                 int numberOfLights = Integer.parseInt(values[1]);
 
                 String shapeName = cmd.getOptionValue("benchmark-shape", "sphere").toLowerCase();
-                String lightName = cmd.getOptionValue("benchmark-light", "light").toLowerCase();
+                String lightName = cmd.getOptionValue("benchmark-light", "point").toLowerCase();
 
                 Scenes.BenchmarkShape shapeType = Scenes.BenchmarkShape.Sphere;
                 Scenes.BenchmarkLight lightType = Scenes.BenchmarkLight.PointLight;
@@ -156,7 +156,7 @@ public class Main {
                 }else if (lightName.equals("spotlight") || lightName.equals("spot")) {
                     lightType = Scenes.BenchmarkLight.Spotlight;
                 } else if (!(lightName.equals("point") || lightName.equals("point light"))) {
-                    System.out.printf("Unknown light %d, using point light\n");
+                    System.out.printf("Unknown light %d, using point light\n", lightName);
                     System.out.println("Available lights:\n\tpoint light\n\tdistant light\n\tspotlight");
                 }
 

@@ -25,7 +25,7 @@ public class Triangle extends Plane {
     }
 
     @Override
-    public RayHit intersect(Ray ray) {
+    protected RayHit intersect(Ray ray) {
         RayHit hit = super.intersect(ray);
 
         if (hit == null) {

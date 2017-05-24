@@ -4,6 +4,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import sauerkraut.OBJLoader;
 import sauerkraut.Ray;
 import sauerkraut.RayHit;
+import sauerkraut.Scene;
 import sauerkraut.materials.Material;
 
 import java.awt.*;
@@ -56,8 +57,57 @@ public class Mesh extends Shape {
                 new Vector3D(0, 0, 0));
     }
 
+    // Duplicate code :(
     @Override
-    public RayHit intersect(Ray ray) {
+    public RayHit intersect(Ray ray, Scene scene) {
+        scene.tests.getAndIncrement();
+        scene.boundingboxSavings.getAndDecrement();
+
+        RayHit boundingBoxHit = boundingBox.intersect(ray);
+
+        if (boundingBoxHit == null) {
+            scene.boundingboxSavings.getAndAdd(triangles.size());
+            return null;
+        }
+
+        ArrayList<RayHit> hits = new ArrayList<>();
+        RayHit intersection;
+
+        for (Triangle triangle : triangles) {
+            scene.tests.getAndIncrement();
+            intersection = triangle.intersect(ray);
+
+            if (intersection != null) {
+                hits.add(intersection);
+            }
+        }
+
+        if (hits.isEmpty()) {
+            return null;
+        }
+
+        if (hits.size() == 1) {
+            return hits.get(0);
+        }
+
+        RayHit finalHit = null;
+        double minDistance = Double.MAX_VALUE;
+        double distance;
+
+        for (RayHit hit : hits) {
+            distance = Vector3D.distance(ray.origin, hit.point);
+
+            if (distance < minDistance) {
+                finalHit = hit;
+                minDistance = distance;
+            }
+        }
+
+        return finalHit;
+    }
+
+    @Override
+    protected RayHit intersect(Ray ray) {
         RayHit boundingBoxHit = boundingBox.intersect(ray);
 
         if (boundingBoxHit == null) {

@@ -66,9 +66,15 @@ public class Raytracer {
         ArrayList<ImageRayHit> points = getPoints(scene, resolutionX, resolutionY);
         testingEnd = System.nanoTime();
 
+        int initialIntersectionTests = scene.tests.get();
+        int initialIntersectionSaved = scene.boundingboxSavings.get();
+
         shadingStart = System.nanoTime();
         ArrayList<ShadingPoint> shadingPoints = shadePoints(scene, shader, points);
         shadingEnd = System.nanoTime();
+
+        int shadingIntersectionTests = scene.tests.get() - initialIntersectionTests;
+        int shadingIntersectionSaved = scene.boundingboxSavings.get() - initialIntersectionSaved;
 
         imageStart = System.nanoTime();
         BufferedImage image = createImage(resolutionX, resolutionY, null, shadingPoints);
@@ -84,6 +90,12 @@ public class Raytracer {
         System.out.format("Shading (ms): %d\n", (shadingEnd - shadingStart) / 1000000);
         System.out.format("Total render time (ms): %d\n\n", ((shadingEnd - testingStart) / 1000000));
         System.out.println("---- Numbers");
+        System.out.printf("Initial intersection tests: %d\n", initialIntersectionTests);
+        System.out.printf("Initial intersection tests saved: %d\n", initialIntersectionSaved);
+        System.out.printf("Shading intersection tests: %d\n", shadingIntersectionTests);
+        System.out.printf("Shading intersection tests saved: %d\n", shadingIntersectionSaved);
+        System.out.printf("Total intersection tests: %d\n", initialIntersectionTests + shadingIntersectionTests);
+        System.out.printf("Total intersection saved: %d\n\n", initialIntersectionSaved + shadingIntersectionSaved);
         System.out.printf("Points shaded: %d\n\n", shadingPoints.size());
         System.out.println("----------");
 

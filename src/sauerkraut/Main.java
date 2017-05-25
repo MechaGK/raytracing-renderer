@@ -3,12 +3,14 @@ package sauerkraut;
 import org.apache.commons.cli.*;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 
 public class Main {
     public static HashMap<String, SceneCreator> scenes = new HashMap<String, SceneCreator>() {
@@ -24,11 +26,11 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        String outputFile = "test.png";
+        String outputFile;
         int resolutionX = 960;
         int resolutionY = 600;
         Shader shader = new PhongShader();
-        boolean stepByStep = false;
+        boolean stepByStep;
 
         // Creating a scene
         Scene scene = Scenes.sphere();
@@ -50,9 +52,9 @@ public class Main {
                 .build());
         options.addOption(Option.builder()
                 .longOpt("shader")
-                .desc("shader to render scene with. 'phong' or 'unlit'")
+                .desc("shader to render scene with")
                 .hasArg()
-                .argName("phong/unlit")
+                .argName("shader")
                 .build());
         options.addOption(Option.builder("b")
                 .longOpt("benchmark")
@@ -96,19 +98,35 @@ public class Main {
 
             if (cmd.hasOption("r")) {
                 String[] valueStrings = cmd.getOptionValues("r");
+
                 resolutionX = Integer.parseInt(valueStrings[0]);
                 resolutionY = Integer.parseInt(valueStrings[1]);
             }
 
-            if (cmd.hasOption("d")) {
-                String value = cmd.getOptionValue("d").toLowerCase();
+            if (cmd.hasOption("shader")) {
+                String value = cmd.getOptionValue("shader").toLowerCase();
 
-                if (Objects.equals(value, "phong")) {
+                if (value.equals("phong")) {
                     shader = new PhongShader();
-                } else if (Objects.equals(value, "unlit")) {
+                } else if (value.equals("unlit")) {
                     shader = new UnlitShader();
+                } else if (value.equals("depth")) {
+                    shader = new DepthShader(5, false);
+                } else if (value.equals("depth-color")) {
+                    shader = new DepthShader(5, true);
+                } else if (value.equals("black")) {
+                    shader = new SingleColorShader(Color.BLACK);
                 } else {
-                    System.out.format("Unknown option for shader '%s'. Accepted values are 'phong' and 'unlit'. Shading using Phong.", value);
+                    System.out.format("Unknown option for shader '%s'.\n" +
+                            "Available shaders\n" +
+                            "\tphong\n" +
+                            "\tunlit\n" +
+                            "\tdepth\n" +
+                            "\tdepth-color" +
+                            "\tblack\n", value);
+
+                    System.exit(1); // invalid argument
+                    return;
                 }
             }
 
@@ -128,6 +146,7 @@ public class Main {
                         System.out.println("Available scenes:");
                         scenes.keySet().forEach(s -> System.out.printf("\t%s\n", s));
 
+                        System.exit(1); // invalid argument
                         return;
                     }
                 }
@@ -146,18 +165,24 @@ public class Main {
 
                 if (shapeName.equals("cube") || shapeName.equals("cuboid")) {
                     shapeType = Scenes.BenchmarkShape.Cuboid;
-                } else if (!(shapeName.equals("sphere"))){
-                    System.out.printf("Unknown shape %d, using spheres\n", shapeName);
+                } else if (!(shapeName.equals("sphere"))) {
+                    System.out.printf("Unknown shape %d\n", shapeName);
                     System.out.println("Available shapes:\n\tsphere\n\tcube");
+
+                    System.exit(1); // invalid argument
+                    return;
                 }
 
-                if (lightName.equals("distant light") ||lightName.equals("directional") || lightName.equals("distant")) {
+                if (lightName.equals("distant light") || lightName.equals("directional") || lightName.equals("distant")) {
                     lightType = Scenes.BenchmarkLight.DirectionalLight;
-                }else if (lightName.equals("spotlight") || lightName.equals("spot")) {
+                } else if (lightName.equals("spotlight") || lightName.equals("spot")) {
                     lightType = Scenes.BenchmarkLight.Spotlight;
                 } else if (!(lightName.equals("point") || lightName.equals("point light"))) {
-                    System.out.printf("Unknown light %d, using point light\n", lightName);
+                    System.out.printf("Unknown light %d\n", lightName);
                     System.out.println("Available lights:\n\tpoint light\n\tdistant light\n\tspotlight");
+
+                    System.exit(1); // invalid argument
+                    return;
                 }
 
                 scene = Scenes.benchmark(numberOfSpheres, numberOfLights, shapeType, lightType, !cmd.hasOption("benchmark-no-default-light"));
@@ -172,7 +197,9 @@ public class Main {
             stepByStep = cmd.hasOption("t");
         } catch (ParseException e) {
             e.printStackTrace();
-            outputFile = "test.png";
+
+            System.exit(1); // invalid argument
+            return;
         }
 
         if (!stepByStep) {

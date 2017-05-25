@@ -2,7 +2,6 @@ package sauerkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import sauerkraut.shapes.Shape;
-import sauerkraut.util.ColorUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -118,7 +117,7 @@ public class Raytracer {
 
         maxDistance = Math.min(maxDistance, 50);
 
-        Shader booleanShader = new BooleanShader(Color.white);
+        Shader booleanShader = new SingleColorShader(Color.white);
         ArrayList<ShadingPoint> hitShaded = shadePoints(scene, booleanShader, points);
 
         Shader depthShader = new DepthShader(maxDistance, false);

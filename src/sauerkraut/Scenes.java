@@ -165,19 +165,19 @@ public class Scenes {
         Scene scene = new Scene();
 
         scene.addShapes(
-                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(0, 0, -4), new Vector3D(-4, 0, 0)),
-                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, -4)),
-                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(0, 0, 4), new Vector3D(4, 0, 0)),
-                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, 4))
+                new Triangle(new ColoredMaterial(Color.orange, 0.2f, 2, 0.2f), new Vector3D(0, 5, 0), new Vector3D(0, 0, -4), new Vector3D(-4, 0, 0)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.2f, 2, 0.2f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, -4)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.2f, 2, 0.2f), new Vector3D(0, 5, 0), new Vector3D(0, 0, 4), new Vector3D(4, 0, 0)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.2f, 2, 0.2f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, 4)),
+                new Plane(new ColoredMaterial(Color.orange, 0.3f), new Vector3D(0, 0, 0), new Vector3D(0, 1, 0))
         );
 
         scene.addLights(
-                new DistantLight(new Vector3D(0, -0, 1), 20, new Color(255, 240, 240)),
-                new PointLight(new Vector3D(0, 6, 0), 100, Color.white)
+                new DistantLight(new Vector3D(1, -1, 2), 20, new Color(255, 240, 240))
         );
 
         scene.setCamera(
-                new PerspectiveCamera(new Vector3D(3, 2, -10), new Vector3D(0, 0, 1), 90, 1)
+                new PerspectiveCamera(new Vector3D(3, 2, -10), new Vector3D(0, 0, 1), 75, 1)
         );
 
         scene.getCamera().lookAt(new Vector3D(0, 1, 0));
@@ -188,9 +188,13 @@ public class Scenes {
     public static Scene teapot() {
         Scene scene = new Scene();
 
+        double cameraAngle = Math.PI * 0.85;
+
         scene.setCamera(
-                new PerspectiveCamera(new Vector3D(0, 0, -7), new Vector3D(0, 0, 1), 65, 1)
+                new PerspectiveCamera(new Vector3D(Math.sin(cameraAngle) * 7, 0, Math.cos(cameraAngle) * 7), new Vector3D(0, 0, -1), 60, 1)
         );
+
+        scene.getCamera().lookAt(Vector3D.ZERO);
 
         scene.addLights(
                 new DistantLight(new Vector3D(0, 0, 1), 30, Color.white)

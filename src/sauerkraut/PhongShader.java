@@ -58,7 +58,15 @@ public class PhongShader implements Shader {
             }
         }
         cumulativeSpecular = material.specularStrength*Math.min(cumulativeSpecular, 1);
-        Color specularColor = new Color(cumulativeSpecular, cumulativeSpecular, cumulativeSpecular);
+        Color specularColor = Color.BLACK;
+        try {
+            specularColor = new Color(cumulativeSpecular, cumulativeSpecular, cumulativeSpecular);
+        } catch (java.lang.IllegalArgumentException exception) {
+            System.out.println(material.specularStrength);
+            System.out.println(Math.min(cumulativeSpecular, 1));
+            System.out.println(cumulativeSpecular);
+            System.exit(99);
+        }
         return ColorUtil.add(diffuseColor, specularColor);
     }
 }

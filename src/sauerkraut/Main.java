@@ -22,6 +22,7 @@ public class Main {
             put("test", Scenes::simpleScene);
             put("problem", Scenes::problem);
             put("colors", Scenes::colors);
+            put("teapot", Scenes::teapot);
         }
     };
 

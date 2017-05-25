@@ -112,19 +112,22 @@ public class Main {
                 } else if (value.equals("unlit")) {
                     shader = new UnlitShader();
                 } else if (value.equals("depth")) {
-                    shader = new DepthShader(5, false);
+                    shader = new DepthShader(30, false);
                 } else if (value.equals("depth-color")) {
-                    shader = new DepthShader(5, true);
+                    shader = new DepthShader(30, true);
                 } else if (value.equals("black")) {
                     shader = new SingleColorShader(Color.BLACK);
+                } else if (value.equals("phong-shadow-red")) {
+                    shader = new PhongShadowColorShader(Color.RED);
                 } else {
                     System.out.format("Unknown option for shader '%s'.\n" +
                             "Available shaders\n" +
                             "\tphong\n" +
                             "\tunlit\n" +
                             "\tdepth\n" +
-                            "\tdepth-color" +
-                            "\tblack\n", value);
+                            "\tdepth-color\n" +
+                            "\tblack\n" +
+                            "\tphong-shadow-red\n", value);
 
                     System.exit(1); // invalid argument
                     return;

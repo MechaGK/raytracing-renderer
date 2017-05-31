@@ -16,6 +16,30 @@ import java.io.FileNotFoundException;
 import java.util.Random;
 
 public class Scenes {
+    public static Scene sphereShadow() {
+        Scene scene = new Scene();
+
+        scene.addShapes(
+                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), 1),
+                new Plane(new ColoredMaterial(Color.GRAY, 0.18f), new Vector3D(0, 0, 3), new Vector3D(0, 0, -1)));
+        scene.add(new DistantLight(new Vector3D(0, -1, 2), 10, Color.white));
+
+        scene.setCamera(new PerspectiveCamera(new Vector3D(0, 0, -5), new Vector3D(0, 0, 2), 55, 1));
+
+        return scene;
+    }
+
+    public static Scene sphereShadowThird() {
+        Scene scene = sphereShadow();
+
+        scene.addShapes(
+                new Sphere(new ColoredMaterial(Color.RED, 0.18f), scene.getCamera().position, 0.1));
+
+        scene.setCamera(new PerspectiveCamera(new Vector3D(-6, 0, -1), new Vector3D(10, -1, 0), 90, 1));
+
+        return scene;
+    }
+
     public static Scene colors() {
         Scene scene = new Scene();
 

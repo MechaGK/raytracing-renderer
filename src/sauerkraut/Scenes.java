@@ -68,12 +68,20 @@ public class Scenes {
         return scene;
     }
 
-    public static Scene benchmark(int numberOfSpheres, int numberOfLights) {
+    public enum BenchmarkShape {
+        Sphere, Cuboid
+    }
+
+    public enum BenchmarkLight {
+        DirectionalLight, Spotlight, PointLight
+    }
+
+    public static Scene benchmark(int numberOfShapes, int numberOfLights, BenchmarkShape shapeType, BenchmarkLight lightType, boolean defaultLight) {
         Scene scene = new Scene();
 
         Random random = new Random();
 
-        for (int i = 0; i < numberOfSpheres; i++) {
+        for (int i = 0; i < numberOfShapes; i++) {
             Color color = new Color(
                     random.nextInt(256),
                     random.nextInt(256),
@@ -84,7 +92,18 @@ public class Scenes {
                     (random.nextFloat() - 0.5f) * 10,
                     (random.nextFloat() - 0.5f) * 10);
 
-            scene.add(new Sphere(new ColoredMaterial(color, 0.18f), position, 0.5));
+            switch (shapeType) {
+                case Sphere:
+                    scene.add(new Sphere(new ColoredMaterial(color, 0.18f), position, 0.5));
+                    break;
+                case Cuboid:
+                    scene.add(new Cuboid(
+                            new ColoredMaterial(color, 0.18f),
+                            position,
+                            new Vector3D(0.2, 0.2, 0.2),
+                            position));
+                    break;
+            }
         }
 
         for (int i = 0; i < numberOfLights; i++) {
@@ -98,16 +117,28 @@ public class Scenes {
                     random.nextInt(256),
                     random.nextInt(256));
 
-            scene.add(new PointLight(position, (random.nextFloat() + 0.2f) * 20, color));
+            switch (lightType) {
+                case DirectionalLight:
+                    scene.add(new DistantLight(position, (random.nextFloat() + 0.2f) * 20, color));
+                    break;
+                case Spotlight:
+                    scene.add(new SpotLight(position, position, (random.nextFloat() * 15) + 5, (random.nextFloat() * 60) + 30, color, (random.nextFloat() + 0.2f) * 20));
+                    break;
+                case PointLight:
+                    scene.add(new PointLight(position, (random.nextFloat() + 0.2f) * 20, color));
+                    break;
+            }
         }
 
         scene.setCamera(
                 new PerspectiveCamera(new Vector3D(0, 0, -10), new Vector3D(0, 0, 1), 90, 1)
         );
 
-        scene.addLights(
-                new DistantLight(new Vector3D(0, -1, 3), 10, Color.white)
-        );
+        if (defaultLight) {
+            scene.addLights(
+                    new DistantLight(new Vector3D(0, -1, 3), 10, Color.white)
+            );
+        }
 
         return scene;
     }
@@ -134,19 +165,19 @@ public class Scenes {
         Scene scene = new Scene();
 
         scene.addShapes(
-                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(0, 0, -4), new Vector3D(-4, 0, 0)),
-                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, -4)),
-                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(0, 0, 4), new Vector3D(4, 0, 0)),
-                new Triangle(new ColoredMaterial(Color.orange, 0.1f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, 4))
+                new Triangle(new ColoredMaterial(Color.orange, 0.2f, 2, 0.2f), new Vector3D(0, 5, 0), new Vector3D(0, 0, -4), new Vector3D(-4, 0, 0)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.2f, 2, 0.2f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, -4)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.2f, 2, 0.2f), new Vector3D(0, 5, 0), new Vector3D(0, 0, 4), new Vector3D(4, 0, 0)),
+                new Triangle(new ColoredMaterial(Color.orange, 0.2f, 2, 0.2f), new Vector3D(0, 5, 0), new Vector3D(4, 0, 0), new Vector3D(0, 0, 4)),
+                new Plane(new ColoredMaterial(Color.orange, 0.3f), new Vector3D(0, 0, 0), new Vector3D(0, 1, 0))
         );
 
         scene.addLights(
-                new DistantLight(new Vector3D(0, -0, 1), 20, new Color(255, 240, 240)),
-                new PointLight(new Vector3D(0, 6, 0), 100, Color.white)
+                new DistantLight(new Vector3D(1, -1, 2), 20, new Color(255, 240, 240))
         );
 
         scene.setCamera(
-                new PerspectiveCamera(new Vector3D(3, 2, -10), new Vector3D(0, 0, 1), 90, 1)
+                new PerspectiveCamera(new Vector3D(3, 2, -10), new Vector3D(0, 0, 1), 75, 1)
         );
 
         scene.getCamera().lookAt(new Vector3D(0, 1, 0));
@@ -157,9 +188,13 @@ public class Scenes {
     public static Scene teapot() {
         Scene scene = new Scene();
 
+        double cameraAngle = Math.PI * 0.85;
+
         scene.setCamera(
-                new PerspectiveCamera(new Vector3D(0, 0, -7), new Vector3D(0, 0, 1), 65, 1)
+                new PerspectiveCamera(new Vector3D(Math.sin(cameraAngle) * 7, 0, Math.cos(cameraAngle) * 7), new Vector3D(0, 0, -1), 60, 1)
         );
+
+        scene.getCamera().lookAt(Vector3D.ZERO);
 
         scene.addLights(
                 new DistantLight(new Vector3D(0, 0, 1), 30, Color.white)

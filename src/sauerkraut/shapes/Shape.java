@@ -4,6 +4,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import sauerkraut.RayHit;
+import sauerkraut.Scene;
 import sauerkraut.materials.Material;
 import sauerkraut.Ray;
 
@@ -40,7 +41,12 @@ public abstract class Shape extends Transform {
      * @param ray The ray which to test against
      * @return Closest intersection point in front of the ray. Null if none.
      */
-    public abstract RayHit intersect(Ray ray);
+    protected abstract RayHit intersect(Ray ray);
+
+    public RayHit intersect(Ray ray, Scene scene) {
+        scene.tests.getAndIncrement();
+        return intersect(ray);
+    }
 
     /**
      * Returns the color at the point based on material only

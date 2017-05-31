@@ -4,10 +4,10 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import java.awt.*;
 
-public class BooleanShader implements Shader {
+public class SingleColorShader implements Shader {
     private final Color color;
 
-    public BooleanShader(Color color) {
+    public SingleColorShader(Color color) {
         this.color = color;
     }
 

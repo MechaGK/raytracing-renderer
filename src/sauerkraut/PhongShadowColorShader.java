@@ -2,18 +2,22 @@ package sauerkraut;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import sauerkraut.lights.Light;
-import sauerkraut.util.ColorUtil;
+import sauerkraut.materials.Material;
 import sauerkraut.shapes.Shape;
+import sauerkraut.util.ColorUtil;
 
 import java.awt.*;
-import sauerkraut.lights.DistantLight;
-import sauerkraut.lights.PointLight;
-import sauerkraut.materials.Material;
 
 /**
  * Class for shading based on Phong
  */
-public class PhongShader implements Shader {
+public class PhongShadowColorShader implements Shader {
+    Color shadowColor;
+
+    public PhongShadowColorShader(Color shadowColor) {
+        this.shadowColor = shadowColor;
+    }
+
     /**
      * Calculate shading at point based on phong model
      * Based on
@@ -27,8 +31,9 @@ public class PhongShader implements Shader {
      */
     public Color shade(Scene scene, Shape shape, Vector3D point, Vector3D normal, Vector3D viewDirection) {
         final Material material = shape.getMaterial();
-        
+
         float contribution;
+        float totalContribution = 0;
         Vector3D dirToLight;
         Color cumulativeDiffuse = Color.BLACK;
         float cumulativeSpecular = 0;
@@ -36,12 +41,13 @@ public class PhongShader implements Shader {
 
         // Move us away from the shape's surface by 0.00001d
         point = point.add(normal.scalarMultiply(0.001d));
-        
+
         for (Light light : scene.getLights()) {
             contribution = light.getContribution(scene, point);
-            
+            totalContribution += contribution;
+
             if (contribution > 0) {
-                
+
                 dirToLight = light.directionFromPoint(point);
 
                  // Diffuse
@@ -61,12 +67,18 @@ public class PhongShader implements Shader {
         Color specularColor = Color.BLACK;
         try {
             specularColor = new Color(cumulativeSpecular, cumulativeSpecular, cumulativeSpecular);
-        } catch (java.lang.IllegalArgumentException exception) {
+        } catch (IllegalArgumentException exception) {
             System.out.println(material.specularStrength);
             System.out.println(Math.min(cumulativeSpecular, 1));
             System.out.println(cumulativeSpecular);
             System.exit(99);
         }
-        return ColorUtil.add(diffuseColor, specularColor);
+
+        if (totalContribution > 0) {
+            return ColorUtil.add(diffuseColor, specularColor);
+        }
+        else {
+            return this.shadowColor;
+        }
     }
 }

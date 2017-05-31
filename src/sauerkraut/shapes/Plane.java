@@ -37,7 +37,7 @@ public class Plane extends Shape {
     }
 
     @Override
-    public RayHit intersect(Ray ray) {
+    protected RayHit intersect(Ray ray) {
         double test = ray.direction.dotProduct(normal);
 
         if (test == 0) {

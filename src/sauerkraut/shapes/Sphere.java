@@ -25,7 +25,7 @@ public class Sphere extends Shape {
     }
 
     @Override
-    public RayHit intersect(Ray ray) {
+    protected RayHit intersect(Ray ray) {
         // 1. Transform ray to local space
         Ray locRay = new Ray(pointToLocal(ray.origin), vectorToLocal(ray.direction));
                 

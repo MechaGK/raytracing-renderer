@@ -4,6 +4,8 @@ import sauerkraut.lights.Light;
 import sauerkraut.shapes.Shape;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 /**
@@ -15,6 +17,8 @@ public class Scene {
     private ArrayList<Light> lights = new ArrayList<>();
     
     private Camera camera;
+    public AtomicInteger tests = new AtomicInteger(0);
+    public AtomicInteger boundingboxSavings = new AtomicInteger(0);
 
     public void setCamera(Camera camera) {
         this.camera = camera;
@@ -69,7 +73,7 @@ public class Scene {
         double distance;
 
         for (Shape shape : getShapes()) {
-            hit = shape.intersect(ray);
+            hit = shape.intersect(ray, this);
 
             if (hit == null) continue;
             distance = hit.point.distanceSq(ray.origin);
@@ -91,14 +95,14 @@ public class Scene {
     
     public boolean rayFree(Ray ray) {
         for (Shape shape : getShapes())
-            if (shape.intersect(ray) != null) return false;
+            if (shape.intersect(ray, this) != null) return false;
         return true;
     }
     
     public boolean rayFree(Ray ray, double maxDistanceSquared) {
         RayHit hit;
         for (Shape shape : getShapes()) {
-            hit = shape.intersect(ray);
+            hit = shape.intersect(ray, this);
             if (hit != null && hit.point.distanceSq(ray.origin) < maxDistanceSquared) return false;
         }
         return true;

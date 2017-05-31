@@ -23,6 +23,8 @@ public class Main {
             put("problem", Scenes::problem);
             put("colors", Scenes::colors);
             put("teapot", Scenes::teapot);
+            put("sphere-shadow", Scenes::sphereShadow);
+            put("sphere-shadow-third", Scenes::sphereShadowThird);
         }
     };
 

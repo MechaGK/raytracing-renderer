@@ -8,15 +8,135 @@ import sauerkraut.lights.PointLight;
 import sauerkraut.lights.SpotLight;
 import sauerkraut.materials.ColoredMaterial;
 import sauerkraut.materials.Material;
+import sauerkraut.materials.TilingStretchedTexturedMaterial;
+import sauerkraut.materials.TilingTexturedMaterial;
 import sauerkraut.shapes.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Random;
 
 public class Scenes {
+    public static Scene mainImage() {
+        Scene scene = new Scene();
+
+        Vector3D[] walls = new Vector3D[]{
+                new Vector3D(0, 2.5, 5),
+                new Vector3D(5, 2.5, 0),
+                new Vector3D(0, 2.5, -5),
+        };
+
+        BufferedImage tapet = null;
+
+        try {
+            tapet = ImageIO.read(new File("tapet.jpg"));
+        } catch (IOException e) {
+            System.out.println(":(");
+            System.exit(1234);
+        }
+
+        //Material wallMaterial = new TilingStretchedTexturedMaterial(0.35f, tapet, 2, 4);
+        Material wallMaterial = new ColoredMaterial(Color.white, 0.35f, 10000, 0f);
+
+        for (Vector3D wallPosition : walls) {
+            scene.add(new Cuboid(wallMaterial, wallPosition, new Vector3D(0.25 + wallPosition.getZ(), 2.5, 0.25 + wallPosition.getX()), Vector3D.ZERO));
+        }
+
+        scene.addShapes(new Cuboid(wallMaterial, new Vector3D(-5, 2.5, -2), new Vector3D(0.25, 2.5, 3), Vector3D.ZERO));
+        scene.addShapes(new Cuboid(wallMaterial, new Vector3D(-5, 2.5, 4.5), new Vector3D(0.25, 2.5, 1), Vector3D.ZERO));
+
+        scene.addShapes(new Cuboid(wallMaterial, new Vector3D(-5, 1, 2.25), new Vector3D(0.25, 1, 1.25), Vector3D.ZERO));
+        scene.addShapes(new Cuboid(wallMaterial, new Vector3D(-5, 4.75, 2.25), new Vector3D(0.25, 0.5, 1.25), Vector3D.ZERO));
+
+        scene.addShapes(new Cuboid(wallMaterial, new Vector3D(-5, 3.125, 2.25), new Vector3D(0.25, 0.1, 1.25), Vector3D.ZERO));
+        scene.addShapes(new Cuboid(wallMaterial, new Vector3D(-5, 3.125, 2.25), new Vector3D(0.25, 1.125, 0.1), Vector3D.ZERO));
+
+        BufferedImage floor = null;
+
+        try {
+            floor = ImageIO.read(new File("floor.jpg"));
+        } catch (IOException e) {
+            System.out.println(":(");
+            System.exit(1234);
+        }
+
+        //Material floorMaterial = new ColoredMaterial(new Color(0xFFB74D), 0.35f);
+        Material floorMaterial = new TilingStretchedTexturedMaterial(0.35f, floor, 2, 2);
+        Material roofMaterial = new ColoredMaterial(new Color(0xFFB74D), 0.1f);
+        scene.addShapes(
+                new Cuboid(floorMaterial, new Vector3D(0, 0, 0), new Vector3D(5.25, 0.1, 5.25), Vector3D.ZERO),
+                new Cuboid(roofMaterial, new Vector3D(0, 5, 0), new Vector3D(5.25, 0.1, 5.25), Vector3D.ZERO)
+        );
+
+        scene.setCamera(new PerspectiveCamera(new Vector3D(0, 2.8, -4.8), new Vector3D(0, -3.5, 10), 90, 0.1));
+
+        scene.add(new DistantLight(new Vector3D(10, -3, 1), 200, Color.white));
+        scene.add(new PointLight(new Vector3D(0, 4.5, 0), 90, Color.white));
+
+        scene.add(new Plane(new ColoredMaterial(new Color(0x2196F3), 1, 1, 0),
+                new Vector3D(0, 0, 12), new Vector3D(0, 0, -1)));
+
+        scene.add(new DistantLight(new Vector3D(0, 0, 1), 500, Color.white));
+
+        scene.addShapes(
+                new Sphere(new ColoredMaterial(Color.getHSBColor(1f / 4f, 1, 1), 0.18f), new Vector3D(-3, 0.7, -1), 0.7),
+                new Sphere(new ColoredMaterial(Color.getHSBColor(2f / 4f, 1, 1), 0.18f), new Vector3D(-1, 0.7, -2), 0.7),
+                new Sphere(new ColoredMaterial(Color.getHSBColor(3f / 4f, 1, 1), 0.18f), new Vector3D(1, 0.7, -2), 0.7),
+                new Sphere(new ColoredMaterial(Color.getHSBColor(4f / 4f, 1, 1), 0.18f), new Vector3D(3, 0.7, -1), 0.7)
+        );
+
+        Cuboid tabletop;
+        Cuboid chair;
+
+        BufferedImage polstring = null;
+
+        try {
+            polstring = ImageIO.read(new File("polstring.png"));
+        } catch (IOException e) {
+            System.out.println(":(");
+            System.exit(1234);
+        }
+
+        Material polstringMaterial = new TilingStretchedTexturedMaterial(0.2f, polstring, 10, 10);
+
+        scene.addShapes(
+                tabletop = new Cuboid(new ColoredMaterial(new Color(0x795548), 0.35f), new Vector3D(-1, 1.9, 2), new Vector3D(1, 0.1, 1), new Vector3D(0, 5, 0)),
+                new Cuboid(new ColoredMaterial(new Color(0x795548), 0.35f), tabletop.pointToWorld(new Vector3D(0.8, -10, 0.8)), new Vector3D(0.1, 1, 0.1), new Vector3D(0, 5, 0)),
+                new Cuboid(new ColoredMaterial(new Color(0x795548), 0.35f), tabletop.pointToWorld(new Vector3D(-0.8, -10, 0.8)), new Vector3D(0.1, 1, 0.1), new Vector3D(0, 5, 0)),
+                new Cuboid(new ColoredMaterial(new Color(0x795548), 0.35f), tabletop.pointToWorld(new Vector3D(0.8, -10, -0.8)), new Vector3D(0.1, 1, 0.1), new Vector3D(0, 5, 0)),
+                new Cuboid(new ColoredMaterial(new Color(0x795548), 0.35f), tabletop.pointToWorld(new Vector3D(-0.8, -10, -0.8)), new Vector3D(0.1, 1, 0.1), new Vector3D(0, 5, 0)),
+                chair = new Cuboid(new ColoredMaterial(new Color(0xA1887F), 0.35f), new Vector3D(1, 0.6, 2), new Vector3D(0.4, 0.6, 0.4), new Vector3D(0, -5, 0)),
+                new Sphere(polstringMaterial, chair.pointToWorld(new Vector3D(0, 1, 0)), new Vector3D(0.5, 0.2, 0.5), Vector3D.ZERO)
+        );
+
+
+        return scene;
+    }
+
+    public static Scene illustration() {
+        Scene scene = new Scene();
+
+        scene.addShapes(
+                new Cuboid(new ColoredMaterial(new Color(0x0000FF), 0.18f), Vector3D.ZERO, cubeSize, cubeRotation),
+                new Cuboid(new ColoredMaterial(new Color(0xFF0000), 0.18f), new Vector3D(0, 0, 5), cubeSize, cubeRotation)
+        );
+
+        scene.addLights(
+                new PointLight(new Vector3D(0, 5, 5), 240, Color.white)
+        );
+
+        scene.setCamera(new PerspectiveCamera(new Vector3D(0, 5, -5), new Vector3D(0, 0, 1), 55, 1));
+        scene.getCamera().lookAt(Vector3D.ZERO);
+
+        return scene;
+    }
+
+
     static Vector3D cubeSize = new Vector3D(1, 1, 1);
     static Vector3D cubeRotation = new Vector3D(0, 0, 0);
 
@@ -37,7 +157,7 @@ public class Scenes {
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                scene.add(new Cuboid(new ColoredMaterial(colors[1+i+(j*2)], 0.18f, 1000), new Vector3D(-1 + (i * 2), 1, -1 + (j * 2)), cubeSize, cubeRotation));
+                scene.add(new Cuboid(new ColoredMaterial(colors[1 + i + (j * 2)], 0.18f, 1000), new Vector3D(-1 + (i * 2), 1, -1 + (j * 2)), cubeSize, cubeRotation));
             }
         }
 
@@ -51,13 +171,13 @@ public class Scenes {
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                scene.add(new Cuboid(new ColoredMaterial(colors[1+i+(j*2)], 0.18f, 1000), new Vector3D(-1 + (i * 2), 3, -1 + (j * 2)), cubeSize, cubeRotation));
+                scene.add(new Cuboid(new ColoredMaterial(colors[1 + i + (j * 2)], 0.18f, 1000), new Vector3D(-1 + (i * 2), 3, -1 + (j * 2)), cubeSize, cubeRotation));
             }
         }
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                scene.add(new Cuboid(new ColoredMaterial(colors[5+i+(j*3)], 0.18f, 1000), new Vector3D(-2 + (i * 2), 1, -2 + (j * 2)), cubeSize, cubeRotation));
+                scene.add(new Cuboid(new ColoredMaterial(colors[5 + i + (j * 3)], 0.18f, 1000), new Vector3D(-2 + (i * 2), 1, -2 + (j * 2)), cubeSize, cubeRotation));
             }
         }
 
@@ -72,7 +192,7 @@ public class Scenes {
             colors = new Color[14];
 
             for (int i = 0; i < 14; i++) {
-                colors[i] = Color.getHSBColor((float)i/(float)13, 1, 1);
+                colors[i] = Color.getHSBColor((float) i / (float) 13, 1, 1);
             }
         }
 

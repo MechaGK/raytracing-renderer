@@ -22,7 +22,7 @@ public class TilingStretchedTexturedMaterial extends TexturedMaterial {
   }
   
   public Color getColor(Coordinate coord) {
-    return texture.getColor(((int)(coord.getScalarTheta() * texture.height * ytiles)) % texture.height, texture.width -1 - (((int)(coord.getScalarSigma() * texture.width * xtiles)) % texture.width));
+    return texture.getColor(((int)(coord.getScalarTheta() * texture.height * ytiles)) % texture.height, (texture.width -1 - (((int)(coord.getScalarSigma() * texture.width * xtiles))) % texture.width));
     //return texture.getColor(((int)(coord.getScalarTheta() * texture.height)) % texture.height, ((int)(coord.getScalarSigma() * texture.width)) % texture.width);
     
     //return texture.getColor(((int)((theta) * texture.height)) % texture.height, texture.width -1 - (((int)(sigma * texture.width)) % texture.width)); //Proper!

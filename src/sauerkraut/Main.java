@@ -28,6 +28,8 @@ public class Main {
             put("scene1", Scenes::scene1);
             put("scene2", Scenes::scene2);
             put("scene3", Scenes::scene3);
+            put("illustration", Scenes::illustration);
+            put("main", Scenes::mainImage);
         }
     };
 

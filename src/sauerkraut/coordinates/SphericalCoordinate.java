@@ -22,11 +22,11 @@ public class SphericalCoordinate extends Coordinate {
   }
   
   public double getScalarSigma() {
-    return sigma;
+    return Math.abs(sigma);
   }
   
   public double getScalarTheta() {
-    return theta;
+    return Math.abs(theta);
   }
   
   public int getIntegerX() {

@@ -1,5 +1,6 @@
 package sauerkraut;
 
+import org.apache.commons.math3.geometry.Vector;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import sauerkraut.lights.DistantLight;
 import sauerkraut.lights.Light;
@@ -16,11 +17,93 @@ import java.io.FileNotFoundException;
 import java.util.Random;
 
 public class Scenes {
+    static Vector3D cubeSize = new Vector3D(1, 1, 1);
+    static Vector3D cubeRotation = new Vector3D(0, 0, 0);
+
+    static Color[] colors = null;
+
+
+    public static Scene scene1() {
+        Scene scene = baseScene();
+
+        scene.add(new Cuboid(new ColoredMaterial(colors[0], 0.18f, 1000), new Vector3D(0, 1, 0), cubeSize, cubeRotation));
+        return scene;
+    }
+
+    public static Scene scene2() {
+        Scene scene = baseScene();
+
+        scene.add(new Cuboid(new ColoredMaterial(colors[0], 0.18f, 1000), new Vector3D(0, 3, 0), cubeSize, cubeRotation));
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                scene.add(new Cuboid(new ColoredMaterial(colors[1+i+(j*2)], 0.18f, 1000), new Vector3D(-1 + (i * 2), 1, -1 + (j * 2)), cubeSize, cubeRotation));
+            }
+        }
+
+        return scene;
+    }
+
+    public static Scene scene3() {
+        Scene scene = baseScene();
+
+        scene.add(new Cuboid(new ColoredMaterial(colors[0], 0.18f, 1000), new Vector3D(0, 5, 0), cubeSize, cubeRotation));
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                scene.add(new Cuboid(new ColoredMaterial(colors[1+i+(j*2)], 0.18f, 1000), new Vector3D(-1 + (i * 2), 3, -1 + (j * 2)), cubeSize, cubeRotation));
+            }
+        }
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                scene.add(new Cuboid(new ColoredMaterial(colors[5+i+(j*3)], 0.18f, 1000), new Vector3D(-2 + (i * 2), 1, -2 + (j * 2)), cubeSize, cubeRotation));
+            }
+        }
+
+        return scene;
+    }
+
+
+    public static Scene baseScene() {
+        Scene scene = new Scene();
+
+        if (colors == null) {
+            colors = new Color[14];
+
+            for (int i = 0; i < 14; i++) {
+                colors[i] = Color.getHSBColor((float)i/(float)13, 1, 1);
+            }
+        }
+
+
+        Vector3D lightDirection = new Vector3D(-2, -5, 10);
+
+        scene.addShapes(
+                new Plane(new ColoredMaterial(Color.white, 0.18f, 1000), Vector3D.ZERO, new Vector3D(0, 1, 0))
+        );
+
+        scene.addLights(
+                new PointLight(new Vector3D(-3, 4.5, -3), 100, new Color(0xF44336)),
+                new PointLight(new Vector3D(3, 4.5, -3), 100, new Color(0x4CAF50)),
+                new PointLight(new Vector3D(3, 4.5, 3), 100, new Color(0x2196F3)),
+                new PointLight(new Vector3D(-3, 4.5, 3), 100, new Color(0xFFC107))
+        );
+
+        scene.add(new DistantLight(lightDirection, 8, Color.white));
+
+        scene.setCamera(new PerspectiveCamera(new Vector3D(6, 8, -6), new Vector3D(1, -1, 1), 90, 1));
+        scene.getCamera().lookAt(new Vector3D(0, 1, 0));
+
+        return scene;
+    }
+
     public static Scene sphereShadow() {
         Scene scene = new Scene();
 
         scene.addShapes(
-                new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), 1),
+                //new Sphere(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), 1),
+                new Cuboid(new ColoredMaterial(Color.white, 0.18f), new Vector3D(0, 0, 0), new Vector3D(1, 1, 1), Vector3D.ZERO),
                 new Plane(new ColoredMaterial(Color.GRAY, 0.18f), new Vector3D(0, 0, 3), new Vector3D(0, 0, -1)));
         scene.add(new DistantLight(new Vector3D(0, -1, 2), 10, Color.white));
 

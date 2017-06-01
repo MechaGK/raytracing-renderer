@@ -25,6 +25,9 @@ public class Main {
             put("teapot", Scenes::teapot);
             put("sphere-shadow", Scenes::sphereShadow);
             put("sphere-shadow-third", Scenes::sphereShadowThird);
+            put("scene1", Scenes::scene1);
+            put("scene2", Scenes::scene2);
+            put("scene3", Scenes::scene3);
         }
     };
 
